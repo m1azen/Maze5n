@@ -35,3 +35,66 @@ document.addEventListener("DOMContentLoaded", function () {
 
     moveImage(); // تشغيل الحركة عند تحميل الصفحة
 });
+function toggleMenu() {
+    const navButtons = document.getElementById('navButtons');
+    navButtons.style.display = navButtons.style.display === 'flex' ? 'none' : 'flex';
+  }
+  document.getElementById("accountButton").addEventListener("click", function() {
+    const dropdown = document.getElementById("accountDropdown");
+    dropdown.classList.toggle("show");
+  });
+  
+  // إغلاق القائمة لو المستخدم ضغط براها
+  window.onclick = function(event) {
+    if (!event.target.matches('#accountButton')) {
+      const dropdowns = document.getElementsByClassName("dropdown-content");
+      for (let i = 0; i < dropdowns.length; i++) {
+        const openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
+        }
+      }
+    }
+  }
+// تسجيل الدخول وتخزين البيانات
+function login(username, email) {
+    const userData = {
+      username: username,
+      email: email,
+    };
+    localStorage.setItem('userData', JSON.stringify(userData));
+    alert('Login successful!');
+    window.location.href = 'index.html';
+  }
+  
+  // عرض بيانات المستخدم عند الضغط على "My Account"
+  document.getElementById('accountButton').onclick = function() {
+    const dropdownContent = document.getElementById('dropdownContent');
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    
+    if (userData) {
+      document.getElementById('displayUsername').textContent = userData.username;
+      document.getElementById('displayEmail').textContent = userData.email;
+      dropdownContent.style.display = dropdownContent.style.display === 'none' ? 'block' : 'none';
+    } else {
+      alert('No account data found. Please log in.');
+    }
+  };
+  
+  // تسجيل الخروج
+  function logout() {
+    localStorage.removeItem('userData');
+    alert('Logout successful!');
+    window.location.href = 'login.html';
+  }
+  
+  // التأكد من بقاء المستخدم مسجل الدخول
+  window.onload = function() {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    if (userData) {
+      document.getElementById('accountButton').textContent = `Welcome, ${userData.username}`;
+      document.querySelector('button[onclick="window.location.href=\'login.html\'"]').style.display = 'none';
+      document.querySelector('button[onclick="window.location.href=\'createanaccount.html\'"]').style.display = 'none';
+    }
+  };
+    
