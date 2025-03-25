@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="createanaccount.css" />
+  <script src="script.js" defer></script>
   <title>Create an Account</title>
 </head>
 <body>
@@ -19,25 +20,19 @@
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" required />
 
+      <label for="confirmPassword">Confirm Password:</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" required />
+
       <button type="submit">Create Account</button>
     </form>
   </div>
 
+  <!-- رسالة تظهر كإشعار -->
   <div class="message-overlay" id="messageOverlay" style="display: none;">
     <div class="message-box">
       <p id="welcomeMessage"></p>
       <button id="ok-button" style="display: none;" onclick="window.location.href='html.html'">OK</button>
     </div>
   </div>
-
-  <script>
-    document.getElementById('accountForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const username = document.getElementById('username').value;
-      document.getElementById('welcomeMessage').innerText = `Account created successfully!\nWelcome, ${username}!`;
-      document.getElementById('messageOverlay').style.display = 'flex';
-      document.getElementById('ok-button').style.display = 'block';
-    });
-  </script>
 </body>
 </html>
