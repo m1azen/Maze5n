@@ -68,27 +68,41 @@ a:hover {
   text-decoration: underline;
 }
 
-/* تصميم نافذة الترحيب */
-.welcome-modal {
+/* رسالة الترحيب كإشعار */
+.message-overlay {
   display: none;
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+}
+
+.message-box {
   background-color: white;
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.1);
   text-align: center;
-  width: 90%;
-  max-width: 400px;
+  animation: fadeIn 0.5s ease;
 }
 
-.welcome-modal h2 {
-  color: #007bff;
+/* تأثير ظهور الرسالة */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.welcome-modal button {
+#ok-button {
   margin-top: 20px;
   background-color: #007bff;
   color: white;
@@ -99,16 +113,11 @@ a:hover {
   transition: background-color 0.3s;
 }
 
-.welcome-modal button:hover {
+#ok-button:hover {
   background-color: #0056b3;
 }
 
-/* إخفاء زر Ok إلى حين إظهار رسالة الترحيب */
-#ok-button {
-  display: none;
-}
-
-/* تنسيق الرابط للسؤال "هل لديك حساب؟" */
+/* تنسيق رابط تسجيل الدخول */
 .login-prompt {
   margin-top: 20px;
   text-align: center;
@@ -121,4 +130,12 @@ a:hover {
 
 .login-prompt a:hover {
   text-decoration: underline;
+}
+
+/* استجابة للشاشات الصغيرة */
+@media (max-width: 480px) {
+  .container, .message-box {
+    width: 90%;
+    padding: 30px;
+  }
 }
