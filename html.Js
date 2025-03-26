@@ -44,57 +44,44 @@ function toggleMenu() {
     dropdown.classList.toggle("show");
   });
   
-  // إغلاق القائمة لو المستخدم ضغط براها
-  window.onclick = function(event) {
-    if (!event.target.matches('#accountButton')) {
-      const dropdowns = document.getElementsByClassName("dropdown-content");
-      for (let i = 0; i < dropdowns.length; i++) {
-        const openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains('show')) {
-          openDropdown.classList.remove('show');
-        }
-      }
-    }
+// التأكد من حالة تسجيل الدخول عند تحميل الصفحة
+window.onload = function () {
+  const username = localStorage.getItem('username');
+  const email = localStorage.getItem('email');
+
+  if (username && email) {
+    // إظهار بيانات المستخدم
+    document.getElementById('displayUsername').textContent = username;
+    document.getElementById('displayEmail').textContent = email;
+    document.getElementById('accountButton').style.display = 'block';
+    document.getElementById('loginButton').style.display = 'none';
+    document.getElementById('createAccountButton').style.display = 'none';
+  } else {
+    // في حالة عدم وجود بيانات
+    document.getElementById('accountButton').style.display = 'none';
+    document.getElementById('loginButton').style.display = 'block';
+    document.getElementById('createAccountButton').style.display = 'block';
   }
-// تسجيل الدخول وتخزين البيانات
-function login(username, email) {
-    const userData = {
-      username: username,
-      email: email,
-    };
-    localStorage.setItem('userData', JSON.stringify(userData));
-    alert('Login successful!');
-    window.location.href = 'index.html';
-  }
-  
-  // عرض بيانات المستخدم عند الضغط على "My Account"
-  document.getElementById('accountButton').onclick = function() {
-    const dropdownContent = document.getElementById('dropdownContent');
-    const userData = JSON.parse(localStorage.getItem('userData'));
-    
-    if (userData) {
-      document.getElementById('displayUsername').textContent = userData.username;
-      document.getElementById('displayEmail').textContent = userData.email;
-      dropdownContent.style.display = dropdownContent.style.display === 'none' ? 'block' : 'none';
-    } else {
-      alert('No account data found. Please log in.');
-    }
-  };
-  
-  // تسجيل الخروج
-  function logout() {
-    localStorage.removeItem('userData');
-    alert('Logout successful!');
-    window.location.href = 'login.html';
-  }
-  
-  // التأكد من بقاء المستخدم مسجل الدخول
-  window.onload = function() {
-    const userData = JSON.parse(localStorage.getItem('userData'));
-    if (userData) {
-      document.getElementById('accountButton').textContent = `Welcome, ${userData.username}`;
-      document.querySelector('button[onclick="window.location.href=\'login.html\'"]').style.display = 'none';
-      document.querySelector('button[onclick="window.location.href=\'createanaccount.html\'"]').style.display = 'none';
-    }
-  };
-    
+};
+
+// إظهار القائمة المنسدلة
+document.getElementById('accountButton').addEventListener('click', function () {
+  const dropdown = document.getElementById('dropdownContent');
+  dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+});
+
+// تسجيل الخروج
+function logout() {
+  localStorage.removeItem('username');
+  localStorage.removeItem('email');
+  alert('You have been logged out.');
+  window.location.reload();
+}
+function showAccountDetails() {
+  // جلب البيانات من Local Storage
+  const username = localStorage.getItem("username") || "Unknown User";
+  const email = localStorage.getItem("email") || "Unknown Email";
+
+  // عرض البيانات في رسالة منبثقة
+  alert(`Username: ${username}\nEmail: ${email}`);
+}
