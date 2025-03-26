@@ -1,121 +1,73 @@
-document.addEventListener('DOMContentLoaded', function() {
-  checkSuspendedAccounts();
-  displayAccounts();
-});
+document.getElementById('loginForm').addEventListener('submit', function(event) {
+  event.preventDefault();
 
-// التحقق من الحسابات الموقوفة تلقائيًا
-function checkSuspendedAccounts() {
-  const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-  const currentTime = new Date().getTime();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
 
-  accounts.forEach(account => {
-    if (account.status === 'Suspended' && account.suspendUntil) {
-      if (currentTime >= account.suspendUntil) {
-        account.status = 'Active';
-        delete account.suspendUntil;
-        console.log(`تم إعادة تنشيط الحساب: ${account.email}`);
-      }
-    }
-  });
-
-  localStorage.setItem('accounts', JSON.stringify(accounts));
-}
-
-// عرض الحسابات في الجدول
-function displayAccounts() {
-  const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-  const tableBody = document.getElementById('accountsTable');
-
-  if (accounts.length === 0) {
-    tableBody.innerHTML = '<tr><td colspan="5">لا توجد حسابات مسجلة</td></tr>';
+  if (!email || !password) {
+    showMessage('يرجى إدخال البريد الإلكتروني وكلمة المرور.', false);
     return;
   }
 
-  tableBody.innerHTML = ''; // تفريغ الجدول قبل إعادة ملئه
+  const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+  const user = accounts.find(account => account.email === email);
 
-  accounts.forEach((account, index) => {
-    const statusText = account.status === 'Suspended' && account.suspendUntil
-      ? `موقوف حتى ${new Date(account.suspendUntil).toLocaleDateString()}`
-      : account.status || 'نشط';
-
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${account.username}</td>
-      <td>${account.email}</td>
-      <td>
-        <input type="password" value="${account.password}" id="password-${index}" disabled />
-        <button onclick="togglePassword(${index})">👁️</button>
-      </td>
-      <td>${statusText}</td>
-      <td>
-        <button onclick="changePassword(${index})">تعديل كلمة المرور</button>
-        <button onclick="deleteAccount(${index})">حذف الحساب</button>
-        ${
-          account.status === 'Suspended'
-            ? `<button onclick="unsuspendAccount(${index})">فك الإيقاف</button>`
-            : `<button onclick="suspendAccount(${index})">إيقاف الحساب</button>`
-        }
-      </td>
-    `;
-    tableBody.appendChild(row);
-  });
-}
-
-// إظهار وإخفاء كلمة المرور
-function togglePassword(index) {
-  const passwordInput = document.getElementById(`password-${index}`);
-  passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
-}
-
-// تعديل كلمة المرور
-function changePassword(index) {
-  const newPassword = prompt('أدخل كلمة المرور الجديدة:');
-  if (newPassword) {
-    const accounts = JSON.parse(localStorage.getItem('accounts'));
-    accounts[index].password = newPassword;
-    localStorage.setItem('accounts', JSON.stringify(accounts));
-    alert('تم تحديث كلمة المرور بنجاح!');
-    displayAccounts();
+  if (!user) {
+    showMessage('البريد الإلكتروني أو كلمة المرور غير صحيحة. حاول مرة أخرى.', false);
+    return;
   }
-}
 
-// حذف الحساب
-function deleteAccount(index) {
-  if (confirm('هل أنت متأكد من حذف هذا الحساب؟')) {
-    const accounts = JSON.parse(localStorage.getItem('accounts'));
-    accounts.splice(index, 1);
-    localStorage.setItem('accounts', JSON.stringify(accounts));
-    alert('تم حذف الحساب بنجاح!');
-    displayAccounts();
+  // التحقق من حالة الحساب
+  if (user.status) {
+    if (user.status.includes('موقوف بسبب مخالفة')) {
+      showMessage('تم إيقاف حسابك بسبب مخالفة. يرجى التواصل مع الدعم على الرقم: 01006473018', false);
+      return;
+    }
+
+    const suspensionDate = user.status.match(/\d{1,2}\/\d{1,2}\/\d{4}/);
+    const currentDate = new Date();
+    if (suspensionDate) {
+      const endDate = new Date(suspensionDate[0]);
+      if (currentDate <= endDate) {
+        showMessage(`عذرًا، حسابك موقوف حتى ${endDate.toLocaleDateString()}.`, false);
+        return;
+      } else {
+        user.status = 'نشط';
+        localStorage.setItem('accounts', JSON.stringify(accounts));
+        showMessage('تم رفع الإيقاف عن حسابك. يمكنك تسجيل الدخول الآن.', true);
+        return;
+      }
+    }
   }
-}
 
-// إيقاف الحساب
-function suspendAccount(index) {
-  const days = prompt('كم يوم تريد إيقاف الحساب؟');
-  if (days && !isNaN(days) && days > 0) {
-    const accounts = JSON.parse(localStorage.getItem('accounts'));
-    const suspensionDate = new Date();
-    const suspendUntil = suspensionDate.getTime() + parseInt(days) * 24 * 60 * 60 * 1000;
-
-    accounts[index].status = 'Suspended';
-    accounts[index].suspendUntil = suspendUntil;
-    localStorage.setItem('accounts', JSON.stringify(accounts));
-    alert(`تم إيقاف الحساب لمدة ${days} يومًا!`);
-    displayAccounts();
+  if (user.password !== password) {
+    showMessage('البريد الإلكتروني أو كلمة المرور غير صحيحة. حاول مرة أخرى.', false);
+    return;
   }
-}
 
-// فك الإيقاف
-function unsuspendAccount(index) {
-  const accounts = JSON.parse(localStorage.getItem('accounts'));
-  if (accounts[index].status === 'Suspended') {
-    accounts[index].status = 'Active';
-    delete accounts[index].suspendUntil;
-    localStorage.setItem('accounts', JSON.stringify(accounts));
-    alert('تم فك الإيقاف عن الحساب بنجاح!');
-    displayAccounts();
+  localStorage.setItem('loggedInUser', JSON.stringify(user));
+  showMessage(`مرحبًا ${user.username}! تم تسجيل الدخول بنجاح.`, true);
+});
+
+// دالة لعرض الرسائل
+function showMessage(message, success) {
+  const welcomeMessage = document.getElementById('welcomeMessage');
+  welcomeMessage.innerText = message;
+
+  const messageOverlay = document.getElementById('messageOverlay');
+  messageOverlay.style.display = 'flex';
+
+  const okButton = document.getElementById('ok-button');
+  
+  if (success) {
+    okButton.style.display = 'block';
+    okButton.onclick = function() {
+      window.location.href = 'html.html';
+    };
   } else {
-    alert('هذا الحساب ليس موقوفًا.');
+    okButton.style.display = 'block';
+    okButton.onclick = function() {
+      messageOverlay.style.display = 'none';
+    };
   }
 }
