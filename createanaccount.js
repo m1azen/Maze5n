@@ -13,13 +13,13 @@ document.getElementById('accountForm').addEventListener('submit', async function
 
   // ✅ التحقق من إدخال جميع الحقول
   if (!username || !email || !password || !confirmPassword) {
-    alert('❌ يرجى ملء جميع الحقول.');
+    showMessage('❌ يرجى ملء جميع الحقول.', false);
     return;
   }
 
   // ✅ التحقق من تطابق كلمتي المرور
   if (password !== confirmPassword) {
-    alert('❌ كلمات المرور غير متطابقة. حاول مرة أخرى.');
+    showMessage('❌ كلمات المرور غير متطابقة. حاول مرة أخرى.', false);
     return;
   }
 
@@ -29,14 +29,14 @@ document.getElementById('accountForm').addEventListener('submit', async function
     // ✅ التحقق من أن البريد الإلكتروني غير مسجل مسبقًا
     const emailCheck = await usersRef.where("email", "==", email).get();
     if (!emailCheck.empty) {
-      alert('❌ يوجد حساب مسجل بهذا البريد الإلكتروني. الرجاء استخدام بريد آخر.');
+      showMessage('❌ يوجد حساب مسجل بهذا البريد الإلكتروني. الرجاء استخدام بريد آخر.', false);
       return;
     }
 
     // ✅ التحقق من أن اسم المستخدم غير مسجل مسبقًا
     const usernameCheck = await usersRef.where("username", "==", username).get();
     if (!usernameCheck.empty) {
-      alert('❌ اسم المستخدم مأخوذ. الرجاء اختيار اسم آخر.');
+      showMessage('❌ اسم المستخدم مأخوذ. الرجاء اختيار اسم آخر.', false);
       return;
     }
 
@@ -52,14 +52,30 @@ document.getElementById('accountForm').addEventListener('submit', async function
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    // ✅ حفظ اسم المستخدم في Local Storage للترحيب به بعد التسجيل
-    localStorage.setItem('newUser', username);
-
-    // ✅ عرض رسالة ترحيب ثم توجيه المستخدم إلى تسجيل الدخول
-    alert(`🎉 مرحبًا، ${username}! تم إنشاء حسابك بنجاح.`);
-    window.location.href = 'login.html';
+    // ✅ عرض رسالة ترحيب خاصة
+    showMessage(`🎉 مرحبًا، ${username}! تم إنشاء حسابك بنجاح.`, true);
   } catch (error) {
     console.error("⚠️ خطأ أثناء إنشاء الحساب:", error);
-    alert("❌ حدث خطأ أثناء إنشاء الحساب. حاول مرة أخرى.");
+    showMessage("❌ حدث خطأ أثناء إنشاء الحساب. حاول مرة أخرى.", false);
   }
 });
+
+// ✅ دالة عرض الرسائل المنبثقة
+function showMessage(message, success) {
+  const messageOverlay = document.getElementById('messageOverlay');
+  const messageText = document.getElementById('messageText');
+  const okButton = document.getElementById('ok-button');
+
+  messageText.innerHTML = message;
+  messageOverlay.style.display = 'flex';
+
+  if (success) {
+    okButton.onclick = function() {
+      window.location.href = 'html.html';
+    };
+  } else {
+    okButton.onclick = function() {
+      messageOverlay.style.display = 'none';
+    };
+  }
+}
