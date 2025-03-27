@@ -4,56 +4,56 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // التحقق من الحسابات الموقوفة تلقائيًا
-function checkSuspendedAccounts() {
-  const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-  const currentTime = new Date().getTime();
+async function checkSuspendedAccounts() {
+  const usersRef = db.collection("users");
+  const snapshot = await usersRef.get();
+  const currentDate = new Date();
 
-  accounts.forEach(account => {
-    if (account.status === 'Suspended' && account.suspendUntil) {
-      if (currentTime >= account.suspendUntil) {
-        account.status = 'Active';
-        delete account.suspendUntil;
-        console.log(`تم إعادة تنشيط الحساب: ${account.email}`);
+  snapshot.forEach(async doc => {
+    const userData = doc.data();
+    if (userData.status.includes('موقوف حتى')) {
+      const suspensionDate = new Date(userData.status.match(/\d{1,2}\/\d{1,2}\/\d{4}/)[0]);
+      if (currentDate >= suspensionDate) {
+        await usersRef.doc(doc.id).update({ status: 'نشط' });
+        console.log(`تم إعادة تنشيط الحساب: ${userData.email}`);
       }
     }
   });
-
-  localStorage.setItem('accounts', JSON.stringify(accounts));
 }
 
 // عرض الحسابات في الجدول
-function displayAccounts() {
-  const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+async function displayAccounts() {
+  const usersRef = db.collection("users");
+  const snapshot = await usersRef.get();
   const tableBody = document.getElementById('accountsTable');
 
-  if (accounts.length === 0) {
+  if (snapshot.empty) {
     tableBody.innerHTML = '<tr><td colspan="5">لا توجد حسابات مسجلة</td></tr>';
     return;
   }
 
   tableBody.innerHTML = ''; // تفريغ الجدول قبل إعادة ملئه
 
-  accounts.forEach((account, index) => {
-    const statusText = account.status === 'Suspended' && account.suspendUntil
-      ? `موقوف حتى ${new Date(account.suspendUntil).toLocaleDateString()}`
-      : account.status || 'نشط';
+  snapshot.forEach((doc, index) => {
+    const userData = doc.data();
+    const statusText = userData.status.includes('موقوف حتى') ? userData.status : (userData.status || 'نشط');
 
     const row = document.createElement('tr');
     row.innerHTML = `
-      <td>${account.username}</td>
-      <td>${account.email}</td>
+      <td>${userData.username}</td>
+      <td>${userData.email}</td>
       <td>
-        <input type="password" value="${account.password}" id="password-${index}" disabled />
-        <button onclick="togglePassword(${index})">👁️</button>
+        <input type="password" value="${userData.password}" id="password-${doc.id}" disabled />
+        <button onclick="togglePassword('${doc.id}')">👁️</button>
       </td>
       <td>${statusText}</td>
       <td>
-        <button onclick="changePassword(${index})">تعديل كلمة المرور</button>
-        <button onclick="deleteAccount(${index})">حذف الحساب</button>
+        <button onclick="changePassword('${doc.id}')">تعديل كلمة المرور</button>
+        <button onclick="deleteAccount('${doc.id}')">حذف الحساب</button>
         ${
-          account.status === 'Suspended'
-            ? `<button onclick="unsuspendAccount(${index})">فك الإيقاف</button>`
-            : `<button onclick="suspendAccount(${index})">إيقاف الحساب</button>`
+          userData.status.includes('موقوف') 
+            ? `<button onclick="unsuspendAccount('${doc.id}')">فك الإيقاف</button>`
+            : `<button onclick="suspendAccount('${doc.id}')">إيقاف الحساب</button>`
         }
       </td>
     `;
@@ -62,83 +62,56 @@ function displayAccounts() {
 }
 
 // إظهار وإخفاء كلمة المرور
-function togglePassword(index) {
-  const passwordInput = document.getElementById(`password-${index}`);
+function togglePassword(userId) {
+  const passwordInput = document.getElementById(`password-${userId}`);
   passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
 }
 
 // تعديل كلمة المرور
-function changePassword(index) {
+async function changePassword(userId) {
   const newPassword = prompt('أدخل كلمة المرور الجديدة:');
   if (newPassword) {
-    const accounts = JSON.parse(localStorage.getItem('accounts'));
-    accounts[index].password = newPassword;
-    localStorage.setItem('accounts', JSON.stringify(accounts));
+    await db.collection("users").doc(userId).update({ password: newPassword });
     alert('تم تحديث كلمة المرور بنجاح!');
     displayAccounts();
   }
 }
 
 // حذف الحساب
-function deleteAccount(index) {
+async function deleteAccount(userId) {
   if (confirm('هل أنت متأكد من حذف هذا الحساب؟')) {
-    const accounts = JSON.parse(localStorage.getItem('accounts'));
-    accounts.splice(index, 1);
-    localStorage.setItem('accounts', JSON.stringify(accounts));
+    await db.collection("users").doc(userId).delete();
     alert('تم حذف الحساب بنجاح!');
     displayAccounts();
   }
 }
 
 // إيقاف الحساب
-function suspendAccount(index) {
-  const days = prompt('كم يوم تريد إيقاف الحساب؟');
-  if (days && !isNaN(days) && days > 0) {
-    const accounts = JSON.parse(localStorage.getItem('accounts'));
-    const suspensionDate = new Date();
-    const suspendUntil = suspensionDate.getTime() + parseInt(days) * 24 * 60 * 60 * 1000;
-
-    accounts[index].status = 'Suspended';
-    accounts[index].suspendUntil = suspendUntil;
-    localStorage.setItem('accounts', JSON.stringify(accounts));
-    alert(`تم إيقاف الحساب لمدة ${days} يومًا!`);
-    displayAccounts();
-  }
-}
-
-// فك الإيقاف
-function unsuspendAccount(index) {
-  const accounts = JSON.parse(localStorage.getItem('accounts'));
-  if (accounts[index].status === 'Suspended') {
-    accounts[index].status = 'Active';
-    delete accounts[index].suspendUntil;
-    localStorage.setItem('accounts', JSON.stringify(accounts));
-    alert('تم فك الإيقاف عن الحساب بنجاح!');
-    displayAccounts();
-  } else {
-    alert('هذا الحساب ليس موقوفًا.');
-  }
-}
-// إيقاف الحساب
-function suspendAccount(index) {
+async function suspendAccount(userId) {
   const reason = prompt('هل ترغب في إيقاف الحساب بسبب مخالفة؟ إذا نعم، اكتب "مخالفة" أو اكتب عدد الأيام للإيقاف المؤقت:');
 
   if (!reason) return;
 
-  const accounts = JSON.parse(localStorage.getItem('accounts'));
+  const usersRef = db.collection("users").doc(userId);
 
   if (reason.toLowerCase() === 'مخالفة') {
-    accounts[index].status = 'موقوف بسبب مخالفة. تواصل مع الدعم على الرقم: 01006473018';
+    await usersRef.update({ status: 'موقوف بسبب مخالفة. تواصل مع الدعم على الرقم: 01006473018' });
   } else if (!isNaN(reason) && reason > 0) {
     const suspensionDate = new Date();
     suspensionDate.setDate(suspensionDate.getDate() + parseInt(reason));
-    accounts[index].status = `موقوف حتى ${suspensionDate.toLocaleDateString()}`;
+    await usersRef.update({ status: `موقوف حتى ${suspensionDate.toLocaleDateString()}` });
   } else {
     alert('يرجى إدخال "مخالفة" أو عدد أيام صالح.');
     return;
   }
 
-  localStorage.setItem('accounts', JSON.stringify(accounts));
   alert('تم تحديث حالة الحساب بنجاح!');
-  location.reload();
+  displayAccounts();
+}
+
+// فك الإيقاف
+async function unsuspendAccount(userId) {
+  await db.collection("users").doc(userId).update({ status: 'نشط' });
+  alert('تم فك الإيقاف عن الحساب بنجاح!');
+  displayAccounts();
 }
