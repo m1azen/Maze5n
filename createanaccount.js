@@ -1,4 +1,4 @@
-document.getElementById('accountForm').addEventListener('submit', function(event) {
+document.getElementById('accountForm').addEventListener('submit', async function(event) {
   event.preventDefault();
 
   // جلب القيم من الحقول
@@ -9,59 +9,39 @@ document.getElementById('accountForm').addEventListener('submit', function(event
 
   // التحقق من إدخال كل البيانات
   if (!username || !email || !password || !confirmPassword) {
-    showMessage('يرجى ملء جميع الحقول.', false);
+    alert('يرجى ملء جميع الحقول.');
     return;
   }
 
   // التحقق من تطابق كلمة المرور
   if (password !== confirmPassword) {
-    showMessage('كلمات المرور غير متطابقة. حاول مرة أخرى.', false);
+    alert('كلمات المرور غير متطابقة. حاول مرة أخرى.');
     return;
   }
 
-  // التحقق من صحة الإيميل
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    showMessage('يرجى إدخال بريد إلكتروني صالح.', false);
-    return;
+  try {
+    // التحقق من وجود الحساب مسبقًا في Firestore
+    const usersRef = db.collection("users");
+    const querySnapshot = await usersRef.where("email", "==", email).get();
+    
+    if (!querySnapshot.empty) {
+      alert('يوجد حساب مسجل بهذا البريد الإلكتروني. الرجاء استخدام بريد آخر.');
+      return;
+    }
+
+    // إضافة الحساب الجديد إلى Firestore
+    await usersRef.add({
+      username: username,
+      email: email,
+      password: password,  // ملاحظة: يفضل تشفيرها قبل التخزين في بيئة الإنتاج
+      status: "نشط", // جميع الحسابات تبدأ كـ "نشط"
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert(`تم إنشاء الحساب بنجاح! مرحبًا، ${username}!`);
+    window.location.href = 'login.html';
+  } catch (error) {
+    console.error("Error adding document: ", error);
+    alert("حدث خطأ أثناء إنشاء الحساب. حاول مرة أخرى.");
   }
-
-  // استرجاع الحسابات المخزنة من LocalStorage
-  let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-
-  // التأكد من عدم تكرار البريد الإلكتروني
-  if (accounts.some(account => account.email === email)) {
-    showMessage('يوجد حساب مسجل بهذا البريد الإلكتروني. الرجاء استخدام بريد آخر.', false);
-    return;
-  }
-
-  // إضافة الحساب الجديد
-  const newAccount = { username, email, password, status: 'Active' };
-  accounts.push(newAccount);
-  localStorage.setItem('accounts', JSON.stringify(accounts));
-
-  // رسالة ترحيبية
-  showMessage(`تم إنشاء الحساب بنجاح! مرحبًا، ${username}!`, true);
 });
-
-// دالة لعرض الرسائل
-function showMessage(message, success) {
-  const welcomeMessage = document.getElementById('welcomeMessage');
-  welcomeMessage.innerText = message;
-
-  const messageOverlay = document.getElementById('messageOverlay');
-  messageOverlay.style.display = 'flex';
-
-  const okButton = document.getElementById('ok-button');
-  
-  if (success) {
-    okButton.style.display = 'block';
-
-    // إزالة أي Event Listener سابق لتجنب التكرار
-    okButton.onclick = function() {
-      window.location.href = 'html.html';
-    };
-  } else {
-    okButton.style.display = 'none';
-  }
-}
