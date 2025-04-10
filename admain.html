@@ -1,29 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel</title>
+  <title>لوحة تحكم المشرف</title>
   <link rel="stylesheet" href="admain.css" />
-</head>
-<body>
-  <div class="container">
-    <h1>Admin Panel</h1>
-    <div class="login-section">
-      <label for="adminPassword">Enter Admin Password:</label>
-      <input type="password" id="adminPassword" placeholder="Enter password" />
-      <button id="loginBtn">Login</button>
-      <p id="loginMessage"></p>
-    </div>
-    <div class="admin-actions" style="display: none;">
-      <h2>Manage Accounts</h2>
-      <div id="accounts"></div>
-    </div>
-  </div>
-
-  <!-- JavaScript -->
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js"></script>
   <script src="admain.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>✨ لوحة تحكم المشرف ✨</h1>
+  </header>
+  <main>
+    <section id="accounts-section">
+      <h2>👤 إدارة الحسابات</h2>
+      <div id="accounts"></div>
+    </section>
+    <section id="actions-section">
+      <h2>⚙️ التحكم والإحصائيات</h2>
+      <button id="reloadBtn">🔄 تحديث البيانات</button>
+      <button id="addMessageBtn">💬 إضافة رسالة</button>
+      <button id="viewStatsBtn">📊 عرض الإحصائيات</button>
+    </section>
+  </main>
+  <footer>
+    <p>© 2025 لوحة تحكم المشرف | تصميم احترافي</p>
+  </footer>
 </body>
 </html>
