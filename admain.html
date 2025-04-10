@@ -1,41 +1,29 @@
-a<!DOCTYPE html>
-<html lang="ar">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - مازن جلال</title>
-    <link rel="stylesheet" href="admain.css">
-    <script type="module" src="admain.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="admain.css" />
 </head>
 <body>
-
-    <!-- شاشة تسجيل الدخول -->
-    <div id="login-screen">
-        <h2>تسجيل الدخول</h2>
-        <input type="password" id="password" placeholder="أدخل كلمة المرور">
-        <button id="login-button">تسجيل الدخول</button>
-        <p id="error-message" style="color: red; display: none;">كلمة المرور خاطئة!</p>
+  <div class="container">
+    <h1>Admin Panel</h1>
+    <div class="login-section">
+      <label for="adminPassword">Enter Admin Password:</label>
+      <input type="password" id="adminPassword" placeholder="Enter password" />
+      <button id="loginBtn">Login</button>
+      <p id="loginMessage"></p>
     </div>
-
-    <!-- لوحة التحكم -->
-    <div id="admin-dashboard" style="display: none;">
-        <h2>لوحة التحكم</h2>
-        <button id="load-users">تحميل الحسابات</button>
-        <div id="user-list"></div>
-
-        <h3>الرسالة العامة</h3>
-        <textarea id="general-message" placeholder="اكتب الرسالة العامة"></textarea>
-        <button id="save-general-message">حفظ الرسالة</button>
-        <p id="message-status" style="display: none;"></p>
+    <div class="admin-actions" style="display: none;">
+      <h2>Manage Accounts</h2>
+      <div id="accounts"></div>
     </div>
+  </div>
 
-    <!-- عرض حساب المستخدم -->
-    <div id="user-account" style="display: none;">
-        <h3>تفاصيل الحساب</h3>
-        <div id="account-info"></div>
-        <button onclick="document.getElementById('user-account').style.display = 'none'">إغلاق</button>
-    </div>
-
-    <script src="admain.js"></script>
+  <!-- JavaScript -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js"></script>
+  <script src="admain.js" defer></script>
 </body>
 </html>
