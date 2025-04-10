@@ -1,165 +1,86 @@
-/* تنسيق الجسم العام */
+/* التنسيق العام */
 body {
-    font-family: 'Arial', sans-serif;
-    direction: rtl;
-    background-color: #f0f4f8;
-    margin: 0;
-    padding: 0;
-}
-
-/* تنسيق صفحة تسجيل الدخول */
-#login-container {
-    width: 350px;
-    margin: 150px auto;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    animation: fadeIn 1s ease-in;
-}
-
-#login-container input {
-    width: 100%;
-    padding: 12px;
-    margin: 15px 0;
-    border: 2px solid #007bff;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
-}
-
-#login-container input:focus {
-    border-color: #0056b3;
-    outline: none;
-}
-
-#login-container button {
-    width: 100%;
-    padding: 12px;
-    background-color: #007bff;
-    color: white;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#login-container button:hover {
-    background-color: #0056b3;
-}
-
-#error-message {
-    margin-top: 15px;
-    font-size: 14px;
-}
-
-/* تنسيق لوحة التحكم */
-.admin-dashboard {
-    width: 85%;
-    margin: 40px auto;
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 1s ease-in;
-}
-
-h1 {
-    text-align: center;
-    color: #333;
-    font-size: 28px;
-    margin-bottom: 20px;
-}
-
-.admin-actions {
+    font-family: Arial, sans-serif;
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+#login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-form {
+    text-align: center;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+input {
+    padding: 10px;
+    width: 200px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 button {
-    padding: 12px 25px;
-    background-color: #28a745;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 10px;
+    background-color: #4CAF50;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #218838;
+    background-color: #45a049;
+}
+
+#show-password-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#show-password-btn:focus {
+    outline: none;
+}
+
+.admin-dashboard {
+    text-align: center;
+    display: none;
 }
 
 #user-list {
     margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
 }
 
 .user-card {
-    background-color: #f8f9fa;
+    background-color: #fff;
+    border: 1px solid #ddd;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.user-card h3 {
-    color: #007bff;
-    font-size: 22px;
-}
-
-.user-card p {
-    color: #555;
-    font-size: 16px;
-}
-
-button#stop-account,
-button#reset-password,
-button#delete-account {
-    margin-left: 10px;
-    padding: 10px 20px;
+    margin-bottom: 20px;
     border-radius: 8px;
-    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-button#stop-account {
-    background-color: #f39c12;
-}
-
-button#stop-account:hover {
-    background-color: #e67e22;
-}
-
-button#reset-password {
-    background-color: #e74c3c;
-}
-
-button#reset-password:hover {
-    background-color: #c0392b;
-}
-
-button#delete-account {
-    background-color: #16a085;
-}
-
-button#delete-account:hover {
-    background-color: #1abc9c;
-}
-
-/* إضافة تأثيرات تحرك العناصر */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+#load-users, #export-data {
+    margin-top: 20px;
 }
