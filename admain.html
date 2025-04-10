@@ -5,12 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة تحكم المدير</title>
     <link rel="stylesheet" href="admain.css">
-      <script type="module" src="admain.js"></script>
 </head>
 <body>
+    <!-- شاشة تسجيل الدخول -->
+    <div id="login-screen" class="login-screen">
+        <h2>تسجيل الدخول</h2>
+        <input type="password" id="password" placeholder="أدخل كلمة المرور" />
+        <button id="login-button">دخول</button>
+        <p id="error-message" style="color: red; display: none;">كلمة المرور غير صحيحة!</p>
+    </div>
 
-    <!-- لوحة تحكم المدير -->
-    <div id="admin-dashboard" class="admin-dashboard">
+    <!-- لوحة تحكم المدير (تظهر بعد تسجيل الدخول) -->
+    <div id="admin-dashboard" class="admin-dashboard" style="display: none;">
         <h1>📊 لوحة تحكم المدير</h1>
         
         <!-- رسالة عامة للمستخدمين -->
@@ -25,16 +31,11 @@
         <button id="export-data">تحميل البيانات بتنسيق Excel</button>
     </div>
 
-    <!-- صفحة الحساب (MyAccount) -->
-    <div id="user-account" style="display: none;">
-        <h1>حساب المستخدم</h1>
-        <div id="user-message"></div>
-        <div id="account-info"></div>
-    </div>
-
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js"></script>
-    <script src="script.js"></script>
+    
+    <!-- ربط JavaScript هنا -->
+    <script src="admain.js"></script>
 </body>
 </html>
