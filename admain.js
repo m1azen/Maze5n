@@ -1,6 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js';
-import { getAuth } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDocs, collection, updateDoc, getDoc } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js';
+import { getAuth, updatePassword } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js';
+import { getFirestore, doc, setDoc, getDocs, collection, updateDoc, getDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js';
 
 const firebaseConfig = {
     apiKey: "your-api-key",
@@ -74,7 +74,34 @@ async function blockAccount(userId) {
 }
 
 async function resetPassword(userId) {
-    // منطق إعادة تعيين كلمة المرور
+    const userRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userRef);
+    const userEmail = userDoc.data().email;
+
+    // التحقق من أن المستخدم هو المستخدم الحالي
+    const user = auth.currentUser;
+    if (!user) {
+        alert("لم تقم بتسجيل الدخول كمستخدم.");
+        return;
+    }
+
+    if (user.email !== userEmail) {
+        alert("لا يمكنك تغيير كلمة المرور لمستخدم آخر.");
+        return;
+    }
+
+    // هنا يتم تعيين كلمة المرور الجديدة للمستخدم
+    const newPassword = prompt("أدخل كلمة المرور الجديدة:");
+
+    if (newPassword) {
+        try {
+            await updatePassword(user, newPassword);  // تغيير كلمة المرور في Firebase
+            alert('تم تغيير كلمة المرور بنجاح!');
+        } catch (error) {
+            console.error("حدث خطأ أثناء تغيير كلمة المرور:", error);
+            alert('فشل في تغيير كلمة المرور');
+        }
+    }
 }
 
 async function deleteAccount(userId) {
