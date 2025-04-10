@@ -1,3 +1,20 @@
+// إعداد Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "API_KEY_HERE",
+  authDomain: "PROJECT_ID.firebaseapp.com",
+  projectId: "PROJECT_ID",
+  storageBucket: "PROJECT_ID.appspot.com",
+  messagingSenderId: "SENDER_ID",
+  appId: "APP_ID",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// تسجيل الدخول
 document.getElementById('loginForm').addEventListener('submit', async function(event) {
   event.preventDefault();
 
@@ -5,17 +22,17 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
   const password = document.getElementById('password').value;
 
   if (!email || !password) {
-    showMessage('يرجى إدخال البريد الإلكتروني وكلمة المرور.', false);
+    showMessage('❌ يرجى إدخال البريد الإلكتروني وكلمة المرور.', false);
     return;
   }
 
   try {
-    // البحث عن الحساب في Firestore
-    const usersRef = db.collection("users");
-    const querySnapshot = await usersRef.where("email", "==", email).get();
+    const usersRef = collection(db, "users");
+    const emailQuery = query(usersRef, where("email", "==", email));
+    const querySnapshot = await getDocs(emailQuery);
 
     if (querySnapshot.empty) {
-      showMessage('البريد الإلكتروني أو كلمة المرور غير صحيحة. حاول مرة أخرى.', false);
+      showMessage('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة. حاول مرة أخرى.', false);
       return;
     }
 
@@ -25,23 +42,18 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     });
 
     // التحقق من حالة الحساب
-    if (userData.status) {
-      if (userData.status.includes('موقوف بسبب مخالفة')) {
-        showMessage('تم إيقاف حسابك بسبب مخالفة. يرجى التواصل مع الدعم على الرقم: 01006473018', false);
-        return;
-      }
-
+    if (userData.status && userData.status.includes('موقوف')) {
       const suspensionDate = userData.status.match(/\d{1,2}\/\d{1,2}\/\d{4}/);
       const currentDate = new Date();
+
       if (suspensionDate) {
         const endDate = new Date(suspensionDate[0]);
         if (currentDate <= endDate) {
-          showMessage(`عذرًا، حسابك موقوف حتى ${endDate.toLocaleDateString()}.`, false);
+          showMessage(`❌ حسابك موقوف حتى ${endDate.toLocaleDateString()}.`, false);
           return;
         } else {
-          // تحديث الحالة إلى "نشط" عند انتهاء الإيقاف
-          await usersRef.doc(userData.id).update({ status: 'نشط' });
-          showMessage('تم رفع الإيقاف عن حسابك. يمكنك تسجيل الدخول الآن.', true);
+          await updateDoc(doc(db, "users", userData.id), { status: 'نشط' });
+          showMessage('✅ تم رفع الإيقاف عن حسابك. يمكنك تسجيل الدخول الآن.', true);
           return;
         }
       }
@@ -49,16 +61,15 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
     // التحقق من كلمة المرور
     if (userData.password !== password) {
-      showMessage('البريد الإلكتروني أو كلمة المرور غير صحيحة. حاول مرة أخرى.', false);
+      showMessage('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة. حاول مرة أخرى.', false);
       return;
     }
 
-    // تأكيد تسجيل الدخول
-    showMessage(`مرحبًا ${userData.username}! تم تسجيل الدخول بنجاح.`, true);
+    showMessage(`🎉 مرحبًا ${userData.username}! تم تسجيل الدخول بنجاح.`, true);
 
   } catch (error) {
-    console.error("Error logging in: ", error);
-    showMessage("حدث خطأ أثناء تسجيل الدخول. حاول مرة أخرى.", false);
+    console.error("⚠️ خطأ أثناء تسجيل الدخول: ", error);
+    showMessage('❌ حدث خطأ أثناء تسجيل الدخول. حاول مرة أخرى.', false);
   }
 });
 
@@ -71,16 +82,12 @@ function showMessage(message, success) {
   messageOverlay.style.display = 'flex';
 
   const okButton = document.getElementById('ok-button');
-  
-  if (success) {
-    okButton.style.display = 'block';
-    okButton.onclick = function() {
+  okButton.style.display = 'block';
+  okButton.onclick = function() {
+    if (success) {
       window.location.href = 'html.html';
-    };
-  } else {
-    okButton.style.display = 'block';
-    okButton.onclick = function() {
+    } else {
       messageOverlay.style.display = 'none';
-    };
-  }
+    }
+  };
 }
