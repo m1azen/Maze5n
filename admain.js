@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, updateDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "API_KEY_HERE",
@@ -15,11 +15,9 @@ const db = getFirestore(app);
 
 // Load Accounts
 async function loadAccounts() {
-  // إعداد الحسابات لمختلف الأقسام
   const accountSelects = [
     document.getElementById('accountSelect'),
-    document.getElementById('editAccountSelect'),
-    document.getElementById('suspendAccountSelect'),
+    document.getElementById('viewAccountSelect'),
   ];
 
   accountSelects.forEach(select => select.innerHTML = '<option value="">اختر الحساب...</option>');
@@ -63,18 +61,32 @@ document.getElementById('addExamBtn').addEventListener('click', async () => {
   loadAccounts();
 });
 
-// Update Account Information
-document.getElementById('updateAccountBtn').addEventListener('click', async () => {
-  const userId = document.getElementById('editAccountSelect').value;
-  const newUsername = document.getElementById('newUsername').value;
-  const newEmail = document.getElementById('newEmail').value;
-  const newPassword = document.getElementById('newPassword').value;
-
-  if (!userId || (!newUsername && !newEmail && !newPassword)) {
-    alert("❗ يرجى إدخال المعلومات المطلوبة.");
+// View Account Details
+document.getElementById('viewDetailsBtn').addEventListener('click', async () => {
+  const userId = document.getElementById('viewAccountSelect').value;
+  if (!userId) {
+    alert("❗ يرجى اختيار الحساب.");
     return;
   }
 
-  const updates = {};
-  if (newUsername) updates.username = newUsername;
-  if (newEmail) updates.email = new
+  const userRef = doc(db, "users", userId);
+  const userSnap = await getDoc(userRef);
+  const userData = userSnap.data();
+
+  const accountDetailsDiv = document.getElementById('accountDetails');
+  accountDetailsDiv.innerHTML = `
+    <p>👤 <strong>الاسم:</strong> ${userData.username}</p>
+    <p>📧 <strong>البريد:</strong> ${userData.email}</p>
+    <p>📅 <strong>الحالة:</strong> ${userData.status || "نشط"}</p>
+    <p>🔢 <strong>عدد مرات الدخول:</strong> ${userData.loginCount || 0}</p>
+    <h3>📚 درجات الامتحانات:</h3>
+    <ul>
+      ${(userData.examResults || []).map(result => `
+        <li>${result.examName}: ${result.obtainedScore}/${result.totalScore}</li>
+      `).join('')}
+    </ul>
+  `;
+});
+
+// Load Data on Page Load
+loadAccounts();
