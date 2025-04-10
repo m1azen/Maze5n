@@ -1,6 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getAuth, listUsers } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
+// إعدادات Firebase
 const firebaseConfig = {
   apiKey: "API_KEY_HERE",
   authDomain: "PROJECT_ID.firebaseapp.com",
@@ -11,51 +13,89 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getFirestore(app);
 
-document.addEventListener('DOMContentLoaded', displayAccounts);
+// تحميل جميع البيانات وعرضها
+document.addEventListener('DOMContentLoaded', async function () {
+  const accounts = await fetchAllData();
+  displayAccounts(accounts);
+});
 
-async function displayAccounts() {
-  const usersRef = collection(db, "users");
-  const snapshot = await getDocs(usersRef);
+// جلب البيانات من جميع المواقع (Authentication و Firestore)
+async function fetchAllData() {
+  const accounts = [];
+
+  try {
+    // جلب المستخدمين من Authentication
+    const usersFromAuth = await listUsers(auth, 100);
+    for (const userRecord of usersFromAuth) {
+      const user = userRecord.toJSON();
+
+      // جلب بيانات إضافية من Firestore
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      const userFirestoreData = userDoc.exists() ? userDoc.data() : {};
+
+      // دمج البيانات في كائن واحد
+      accounts.push({
+        uid: user.uid,
+        email: user.email || "لا يوجد بريد",
+        username: user.displayName || "اسم غير معرف",
+        firestoreData: userFirestoreData,
+      });
+    }
+  } catch (error) {
+    console.error("❌ حدث خطأ أثناء جلب البيانات:", error);
+  }
+
+  return accounts;
+}
+
+// عرض البيانات في صفحة HTML
+function displayAccounts(accounts) {
   const accountsContainer = document.getElementById('accountsContainer');
+  accountsContainer.innerHTML = ''; // تفريغ الحاوية
 
-  accountsContainer.innerHTML = ''; // تفريغ الحاوية قبل ملئها
+  if (accounts.length === 0) {
+    accountsContainer.innerHTML = '<p>لا توجد بيانات لعرضها.</p>';
+    return;
+  }
 
-  snapshot.forEach((docSnap) => {
-    const account = docSnap.data();
-
-    // إنشاء مربع الحساب
+  accounts.forEach((account) => {
     const accountBox = document.createElement('div');
     accountBox.classList.add('account-box');
 
-    // تفاصيل الحساب
+    // إنشاء قسم بيانات الحساب
     const accountDetails = document.createElement('div');
     accountDetails.classList.add('account-details');
     accountDetails.innerHTML = `
       <p><strong>اسم المستخدم:</strong> ${account.username}</p>
       <p><strong>الإيميل:</strong> ${account.email}</p>
-      <p><strong>الحالة:</strong> ${account.status || 'نشط'}</p>
+      <p><strong>الحالة:</strong> ${account.firestoreData.status || 'نشط'}</p>
     `;
 
-    // أدوات التحكم
+    // إنشاء قسم التحكم
     const accountControls = document.createElement('div');
     accountControls.classList.add('account-controls');
     accountControls.innerHTML = `
-      <button onclick="changePassword('${docSnap.id}')">تعديل كلمة المرور</button>
-      <button onclick="suspendAccount('${docSnap.id}')">${account.status === 'Suspended' ? 'فك الإيقاف' : 'إيقاف الحساب'}</button>
-      <button onclick="addExam('${docSnap.id}')">إضافة درجات الامتحان</button>
+      <button onclick="changePassword('${account.uid}')">تعديل كلمة المرور</button>
+      <button onclick="addExam('${account.uid}')">إضافة درجات الامتحان</button>
+      ${
+        account.firestoreData.status === 'Suspended'
+          ? `<button onclick="unsuspendAccount('${account.uid}')">فك الإيقاف</button>`
+          : `<button onclick="suspendAccount('${account.uid}')">إيقاف الحساب</button>`
+      }
     `;
 
-    // الرسائل
+    // إنشاء قسم الرسائل
     const accountMessages = document.createElement('div');
     accountMessages.classList.add('account-messages');
-    accountMessages.innerHTML = `<strong>الرسائل:</strong> ${account.adminMessage || 'لا توجد رسائل.'}`;
+    accountMessages.innerHTML = `<strong>الرسائل:</strong> ${account.firestoreData.adminMessage || 'لا توجد رسائل.'}`;
 
-    // درجات الامتحانات
+    // إنشاء قسم درجات الامتحانات
     const accountExams = document.createElement('div');
     accountExams.classList.add('account-exams');
-    const exams = (account.examResults || []).map(
+    const exams = (account.firestoreData.examResults || []).map(
       (exam) => `<li>${exam.examName}: ${exam.obtainedScore}/${exam.totalScore}</li>`
     ).join('');
     accountExams.innerHTML = `<strong>درجات الامتحانات:</strong><ul>${exams || 'لا توجد درجات.'}</ul>`;
@@ -78,7 +118,7 @@ async function changePassword(userId) {
     const userRef = doc(db, "users", userId);
     await updateDoc(userRef, { password: newPassword });
     alert('تم تحديث كلمة المرور بنجاح!');
-    displayAccounts();
+    displayAccounts(await fetchAllData());
   }
 }
 
@@ -104,7 +144,7 @@ async function suspendAccount(userId) {
     }
   }
 
-  displayAccounts();
+  displayAccounts(await fetchAllData());
 }
 
 // إضافة درجات الامتحان
@@ -127,5 +167,5 @@ async function addExam(userId) {
 
   await updateDoc(userRef, { examResults });
   alert('تمت إضافة درجات الامتحان بنجاح!');
-  displayAccounts();
+  displayAccounts(await fetchAllData());
 }
