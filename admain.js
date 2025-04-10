@@ -9,34 +9,16 @@ const firebaseConfig = {
 };
 
 const app = firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
 const db = firebase.firestore();
 
-// كلمة المرور للمدير
-const adminPassword = "ma85rg3z5";
-
-// التحقق من كلمة المرور المدخلة
-document.getElementById('login-button').addEventListener('click', () => {
-    const enteredPassword = document.getElementById('admin-password').value;
-    console.log("كلمة المرور المدخلة: ", enteredPassword);  // طباعة كلمة المرور المدخلة
-
-    // تحقق من كلمة المرور
-    if (enteredPassword === adminPassword) {
-        console.log("تمت المطابقة بنجاح!");  // إذا كانت كلمة المرور صحيحة
-        document.getElementById('login-container').style.display = 'none';
-        document.getElementById('admin-dashboard').style.display = 'block';
-    } else {
-        console.log("كلمة المرور خاطئة!");  // إذا كانت كلمة المرور غير صحيحة
-        document.getElementById('error-message').style.display = 'block';
-    }
+// حفظ الرسالة العامة
+document.getElementById('save-general-message').addEventListener('click', async () => {
+    const message = document.getElementById('general-message').value;
+    await db.collection('settings').doc('general-message').set({
+        message: message
+    });
+    alert('تم حفظ الرسالة العامة');
 });
-
-// إظهار/إخفاء كلمة المرور
-function togglePassword() {
-    const passwordField = document.getElementById('admin-password');
-    const currentType = passwordField.type;
-    passwordField.type = currentType === "password" ? "text" : "password";
-}
 
 // تحميل الحسابات من Firebase
 document.getElementById('load-users').addEventListener('click', async () => {
@@ -56,8 +38,7 @@ document.getElementById('load-users').addEventListener('click', async () => {
             <button id="stop-account" onclick="blockAccount('${doc.id}')">${user.isBlocked ? 'إلغاء الإيقاف' : 'إيقاف الحساب'}</button>
             <button id="reset-password" onclick="resetPassword('${doc.id}')">إعادة تعيين كلمة المرور</button>
             <button id="delete-account" onclick="deleteAccount('${doc.id}')">حذف الحساب</button>
-            <div id="grades"></div>
-            <button onclick="addExamGrade('${doc.id}')">إضافة نتيجة امتحان</button>
+            <button onclick="showUserAccount('${doc.id}')">عرض الحساب</button>
         `;
         
         userList.appendChild(userCard);
@@ -75,21 +56,23 @@ async function blockAccount(userId) {
     document.getElementById('load-users').click();  // إعادة تحميل البيانات
 }
 
-// إعادة تعيين كلمة المرور
-async function resetPassword(userId) {
+// عرض حساب المستخدم
+async function showUserAccount(userId) {
     const userRef = db.collection('users').doc(userId);
     const userDoc = await userRef.get();
-    const email = userDoc.data().email;
+    const userData = userDoc.data();
     
-    // إعادة تعيين كلمة المرور باستخدام Firebase Authentication
-    await auth.sendPasswordResetEmail(email);
-    alert('تم إرسال رابط إعادة تعيين كلمة المرور إلى البريد الإلكتروني.');
-}
-
-// حذف الحساب
-async function deleteAccount(userId) {
-    await db.collection('users').doc(userId).delete();
-    document.getElementById('load-users').click();  // إعادة تحميل البيانات
+    // عرض رسالة مخصصة للمستخدم
+    const messageSnapshot = await db.collection('users').doc(userId).collection('messages').doc('user-message').get();
+    const userMessage = messageSnapshot.exists ? messageSnapshot.data().message : "لا توجد رسالة مخصصة لهذا الحساب.";
+    
+    document.getElementById('user-account').style.display = 'block';
+    document.getElementById('user-message').innerText = userMessage;
+    document.getElementById('account-info').innerHTML = `
+        <p>الاسم: ${userData.name}</p>
+        <p>البريد الإلكتروني: ${userData.email}</p>
+        <p>الحالة: ${userData.isBlocked ? 'موقوف' : 'مفعل'}</p>
+    `;
 }
 
 // إضافة درجة امتحان
