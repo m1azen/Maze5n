@@ -11,6 +11,22 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+// التحقق من كلمة المرور
+document.getElementById('login-button').addEventListener('click', () => {
+    const password = document.getElementById('password').value;
+    
+    // كلمة المرور المطلوبة
+    if (password === 'ma85rg3z5') {
+        // إخفاء شاشة تسجيل الدخول
+        document.getElementById('login-screen').style.display = 'none';
+        // عرض لوحة تحكم المدير
+        document.getElementById('admin-dashboard').style.display = 'block';
+    } else {
+        // عرض رسالة خطأ
+        document.getElementById('error-message').style.display = 'block';
+    }
+});
+
 // حفظ الرسالة العامة
 document.getElementById('save-general-message').addEventListener('click', async () => {
     const message = document.getElementById('general-message').value;
@@ -62,33 +78,12 @@ async function showUserAccount(userId) {
     const userDoc = await userRef.get();
     const userData = userDoc.data();
     
-    // عرض رسالة مخصصة للمستخدم
-    const messageSnapshot = await db.collection('users').doc(userId).collection('messages').doc('user-message').get();
-    const userMessage = messageSnapshot.exists ? messageSnapshot.data().message : "لا توجد رسالة مخصصة لهذا الحساب.";
-    
     document.getElementById('user-account').style.display = 'block';
-    document.getElementById('user-message').innerText = userMessage;
     document.getElementById('account-info').innerHTML = `
         <p>الاسم: ${userData.name}</p>
         <p>البريد الإلكتروني: ${userData.email}</p>
         <p>الحالة: ${userData.isBlocked ? 'موقوف' : 'مفعل'}</p>
     `;
-}
-
-// إضافة درجة امتحان
-async function addExamGrade(userId) {
-    const examName = prompt('اسم الامتحان:');
-    const totalGrade = prompt('الدرجة الكلية:');
-    const obtainedGrade = prompt('الدرجة التي حصلت عليها:');
-    
-    const gradeData = {
-        examName,
-        totalGrade: parseInt(totalGrade),
-        obtainedGrade: parseInt(obtainedGrade)
-    };
-    
-    await db.collection('users').doc(userId).collection('grades').add(gradeData);
-    alert('تم إضافة الدرجة بنجاح');
 }
 
 // تحميل البيانات بتنسيق Excel
