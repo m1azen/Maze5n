@@ -1,4 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import { getFirestore, collection, getDocs, updateDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -11,9 +12,21 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Load Accounts
+// Handle Navigation
+document.getElementById('viewDataBtn').addEventListener('click', () => {
+  document.getElementById('view-data-section').classList.remove('hidden');
+  document.getElementById('manage-accounts-section').classList.add('hidden');
+});
+
+document.getElementById('manageAccountsBtn').addEventListener('click', () => {
+  document.getElementById('manage-accounts-section').classList.remove('hidden');
+  document.getElementById('view-data-section').classList.add('hidden');
+});
+
+// Load Accounts for Dropdowns
 async function loadAccounts() {
   const accountSelects = [
     document.getElementById('accountSelect'),
@@ -73,20 +86,4 @@ document.getElementById('viewDetailsBtn').addEventListener('click', async () => 
   const userSnap = await getDoc(userRef);
   const userData = userSnap.data();
 
-  const accountDetailsDiv = document.getElementById('accountDetails');
-  accountDetailsDiv.innerHTML = `
-    <p>👤 <strong>الاسم:</strong> ${userData.username}</p>
-    <p>📧 <strong>البريد:</strong> ${userData.email}</p>
-    <p>📅 <strong>الحالة:</strong> ${userData.status || "نشط"}</p>
-    <p>🔢 <strong>عدد مرات الدخول:</strong> ${userData.loginCount || 0}</p>
-    <h3>📚 درجات الامتحانات:</h3>
-    <ul>
-      ${(userData.examResults || []).map(result => `
-        <li>${result.examName}: ${result.obtainedScore}/${result.totalScore}</li>
-      `).join('')}
-    </ul>
-  `;
-});
-
-// Load Data on Page Load
-loadAccounts();
+  const accountDetailsDiv = document
