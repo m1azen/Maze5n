@@ -4,7 +4,7 @@ const firebaseConfig = {
     authDomain: "your-auth-domain",
     projectId: "your-project-id",
     storageBucket: "your-storage-bucket",
-    messagingSenderId: "your-messaging-sender-id",
+    messagingSenderId: "your-messagingSenderId",
     appId: "your-app-id",
 };
 
@@ -18,17 +18,25 @@ const adminPassword = "ma85rg3z5";
 // التحقق من كلمة المرور المدخلة
 document.getElementById('login-button').addEventListener('click', () => {
     const enteredPassword = document.getElementById('admin-password').value;
+    console.log("كلمة المرور المدخلة: ", enteredPassword);  // طباعة كلمة المرور المدخلة
 
     // تحقق من كلمة المرور
     if (enteredPassword === adminPassword) {
-        // إخفاء صفحة تسجيل الدخول وعرض لوحة التحكم
+        console.log("تمت المطابقة بنجاح!");  // إذا كانت كلمة المرور صحيحة
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('admin-dashboard').style.display = 'block';
     } else {
-        // إظهار رسالة خطأ إذا كانت كلمة المرور غير صحيحة
+        console.log("كلمة المرور خاطئة!");  // إذا كانت كلمة المرور غير صحيحة
         document.getElementById('error-message').style.display = 'block';
     }
 });
+
+// إظهار/إخفاء كلمة المرور
+function togglePassword() {
+    const passwordField = document.getElementById('admin-password');
+    const currentType = passwordField.type;
+    passwordField.type = currentType === "password" ? "text" : "password";
+}
 
 // تحميل الحسابات من Firebase
 document.getElementById('load-users').addEventListener('click', async () => {
