@@ -6,26 +6,31 @@
   <link rel="stylesheet" href="createanaccount.css" />
   <script src="createanaccount.js" defer></script>
   <title>Create an Account</title>
-  <!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js"></script>
+ 
+  <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-<script>
-  // Firebase Configuration
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   const firebaseConfig = {
-    apiKey: "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0",
-    authDomain: "admin-panel-5f716.firebaseapp.com",
-    projectId: "admin-panel-5f716",
-    storageBucket: "admin-panel-5f716.appspot.com",
-    messagingSenderId: "488571843727",
-    appId: "1:488571843727:web:3d3d7d5ad495b1fee5acfa",
-    measurementId: "G-ZJ9835SCHW"
+    apiKey: "AIzaSyCc_LyGshkApqre4NIRKF7UTNjfE08cenw",
+    authDomain: "websits-turoria.firebaseapp.com",
+    projectId: "websits-turoria",
+    storageBucket: "websits-turoria.firebasestorage.app",
+    messagingSenderId: "689962826966",
+    appId: "1:689962826966:web:babc4f1bbcc7eeb8705d77",
+    measurementId: "G-L6XTRJQQBH"
   };
 
   // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
 </script>
+
 
 </head>
 <body>
