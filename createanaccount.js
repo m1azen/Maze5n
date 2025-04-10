@@ -1,23 +1,23 @@
-document.addEventListener("DOMContentLoaded", function () {
-  console.log("📢 السكربت يعمل!");
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+  import { getFirestore, collection, doc, setDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-  // تحقق من وجود Firebase
-  if (typeof firebase === "undefined") {
-    console.error("⚠️ Firebase غير محمل!");
-    return;
-  }
+  const firebaseConfig = {
+    apiKey: "AIzaSyCc_LyGshkApqre4NIRKF7UTNjfE08cenw",
+    authDomain: "websits-turoria.firebaseapp.com",
+    projectId: "websits-turoria",
+    storageBucket: "websits-turoria.firebasestorage.app",
+    messagingSenderId: "689962826966",
+    appId: "1:689962826966:web:babc4f1bbcc7eeb8705d77",
+    measurementId: "G-L6XTRJQQBH"
+  };
 
-  // تهيئة Firebase
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-  const form = document.getElementById('accountForm');
-  const loadingOverlay = document.getElementById('loadingOverlay');
-  const messageOverlay = document.getElementById('messageOverlay');
-  const messageText = document.getElementById('welcomeMessage');
-  const okButton = document.getElementById('ok-button');
-
-  form.addEventListener('submit', async function (event) {
+  document.getElementById('accountForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const username = document.getElementById('username').value.trim();
@@ -25,89 +25,60 @@ document.addEventListener("DOMContentLoaded", function () {
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
 
-    // تحقق من الحقول
     if (!username || !email || !password || !confirmPassword) {
-      return showMessage('❌ يرجى ملء جميع الحقول.', false);
+      return showMessage("❌ يرجى ملء جميع الحقول.", false);
     }
-
-    if (!validateEmail(email)) {
-      return showMessage('❌ بريد إلكتروني غير صالح.', false);
-    }
-
     if (password !== confirmPassword) {
-      return showMessage('❌ كلمات المرور غير متطابقة.', false);
-    }
-
-    if (password.length < 6) {
-      return showMessage('❌ كلمة المرور ضعيفة، يجب أن تكون 6 أحرف على الأقل.', false);
+      return showMessage("❌ كلمات المرور غير متطابقة.", false);
     }
 
     try {
-      showLoading(true);
+      // التأكد من عدم تكرار البريد أو اسم المستخدم
+      const usersRef = collection(db, "users");
 
-      // التأكد من عدم تكرار البريد أو الاسم
-      const usersRef = db.collection("users");
-      const emailExists = await usersRef.where("email", "==", email).get();
-      if (!emailExists.empty) {
-        showLoading(false);
-        return showMessage('❌ البريد الإلكتروني مستخدم من قبل.', false);
+      const emailQuery = query(usersRef, where("email", "==", email));
+      const emailSnapshot = await getDocs(emailQuery);
+      if (!emailSnapshot.empty) {
+        return showMessage("❌ البريد الإلكتروني مستخدم بالفعل.", false);
       }
 
-      const usernameExists = await usersRef.where("username", "==", username).get();
-      if (!usernameExists.empty) {
-        showLoading(false);
-        return showMessage('❌ اسم المستخدم مستخدم من قبل.', false);
+      const usernameQuery = query(usersRef, where("username", "==", username));
+      const usernameSnapshot = await getDocs(usernameQuery);
+      if (!usernameSnapshot.empty) {
+        return showMessage("❌ اسم المستخدم مستخدم بالفعل.", false);
       }
 
-      // إنشاء الحساب
-      const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const userId = userCredential.user.uid;
 
-      await usersRef.doc(userId).set({
-        username: username,
-        email: email,
+      await setDoc(doc(usersRef, userId), {
+        username,
+        email,
         status: "نشط",
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        createdAt: new Date()
       });
 
-      showLoading(false);
       showMessage(`🎉 مرحبًا، ${username}! تم إنشاء حسابك بنجاح.`, true);
-
     } catch (error) {
-      console.error("⚠️ خطأ:", error);
-      showLoading(false);
-      showMessage('❌ حدث خطأ أثناء إنشاء الحساب. حاول مرة أخرى.', false);
+      console.error(error);
+      showMessage("❌ حدث خطأ أثناء إنشاء الحساب.", false);
     }
   });
 
-  // عرض الرسائل
   function showMessage(message, success) {
-    messageText.innerHTML = message;
-    messageOverlay.style.display = 'flex';
-    messageOverlay.classList.add('show');
+    const overlay = document.getElementById('messageOverlay');
+    const messageText = document.getElementById('welcomeMessage');
+    const okButton = document.getElementById('ok-button');
 
+    messageText.innerText = message;
+    overlay.style.display = 'flex';
     if (success) {
       okButton.style.display = 'block';
-      okButton.onclick = function () {
-        window.location.href = 'html.html';
-      };
     } else {
       okButton.style.display = 'none';
       setTimeout(() => {
-        messageOverlay.style.display = 'none';
-        messageOverlay.classList.remove('show');
+        overlay.style.display = 'none';
       }, 3000);
     }
   }
-
-  // إظهار/إخفاء التحميل
-  function showLoading(show) {
-    loadingOverlay.style.display = show ? 'flex' : 'none';
-  }
-
-  // التحقق من البريد
-  function validateEmail(email) {
-    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return re.test(email);
-  }
-});
+</script>
