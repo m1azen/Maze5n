@@ -1,39 +1,49 @@
 /* تنسيق الجسم العام */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     direction: rtl;
-    background-color: #f4f4f4;
+    background-color: #f0f4f8;
     margin: 0;
     padding: 0;
 }
 
 /* تنسيق صفحة تسجيل الدخول */
 #login-container {
-    width: 300px;
-    margin: 100px auto;
+    width: 350px;
+    margin: 150px auto;
     padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     text-align: center;
+    animation: fadeIn 1s ease-in;
 }
 
 #login-container input {
     width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 12px;
+    margin: 15px 0;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+#login-container input:focus {
+    border-color: #0056b3;
+    outline: none;
 }
 
 #login-container button {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     background-color: #007bff;
     color: white;
+    font-size: 16px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 #login-container button:hover {
@@ -41,58 +51,83 @@ body {
 }
 
 #error-message {
-    margin-top: 10px;
+    margin-top: 15px;
     font-size: 14px;
 }
 
 /* تنسيق لوحة التحكم */
 .admin-dashboard {
-    width: 80%;
-    margin: 20px auto;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 85%;
+    margin: 40px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in;
 }
 
 h1 {
     text-align: center;
     color: #333;
+    font-size: 28px;
+    margin-bottom: 20px;
 }
 
 .admin-actions {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 button {
-    padding: 10px 20px;
-    background-color: #007bff;
+    padding: 12px 25px;
+    background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #218838;
 }
 
 #user-list {
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .user-card {
-    background-color: #f9f9f9;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-button#stop-account, button#reset-password, button#delete-account {
+.user-card h3 {
+    color: #007bff;
+    font-size: 22px;
+}
+
+.user-card p {
+    color: #555;
+    font-size: 16px;
+}
+
+button#stop-account,
+button#reset-password,
+button#delete-account {
     margin-left: 10px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
 }
 
 button#stop-account {
@@ -119,9 +154,12 @@ button#delete-account:hover {
     background-color: #1abc9c;
 }
 
-/* تنسيق الرسالة عند إدخال كلمة مرور خاطئة */
-#error-message {
-    color: red;
-    font-size: 14px;
-    margin-top: 10px;
+/* إضافة تأثيرات تحرك العناصر */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
