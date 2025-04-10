@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>لوحة تحكم المشرف</title>
+  <title>لوحة تحكم المشرف - مازن جلال</title>
   <link rel="stylesheet" href="admain.css" />
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js"></script>
@@ -13,14 +13,12 @@
 <body>
   <header>
     <h1>✨ لوحة تحكم المشرف ✨</h1>
-    <nav>
-      <button id="viewDataBtn">📖 عرض البيانات</button>
-      <button id="manageAccountsBtn">👤 إدارة الحسابات</button>
-    </nav>
+    <p>مرحبًا يا <strong>مازن جلال</strong> 👋</p>
   </header>
+
   <main>
     <!-- عرض البيانات -->
-    <section id="view-data-section" class="hidden">
+    <section id="view-data-section">
       <h2>📖 عرض البيانات</h2>
       <div id="view-data">
         <label for="viewAccountSelect">اختر الحساب:</label>
@@ -31,9 +29,12 @@
     </section>
 
     <!-- إدارة الحسابات -->
-    <section id="manage-accounts-section" class="hidden">
+    <section id="manage-accounts-section">
       <h2>👤 إدارة الحسابات</h2>
-      <div id="manage-accounts"></div>
+      <div id="manage-accounts">
+        <!-- يمكن إضافة أدوات التحكم هنا لاحقًا -->
+        <p>إدارة كاملة للحسابات قريبًا 🚧</p>
+      </div>
     </section>
 
     <!-- إضافة درجات الامتحانات -->
@@ -52,8 +53,9 @@
       </div>
     </section>
   </main>
+
   <footer>
-    <p>© 2025 لوحة تحكم المشرف | تصميم احترافي</p>
+    <p>© 2025 لوحة تحكم المشرف | تصميم <strong>مازن جلال</strong></p>
   </footer>
 </body>
 </html>
