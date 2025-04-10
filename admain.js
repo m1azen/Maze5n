@@ -12,19 +12,20 @@ const app = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// التحقق من كلمة مرور الإدارة
+// كلمة المرور للمدير
 const adminPassword = "ma85rg3z5";
 
 // التحقق من كلمة المرور المدخلة
 document.getElementById('login-button').addEventListener('click', () => {
     const enteredPassword = document.getElementById('admin-password').value;
 
+    // تحقق من كلمة المرور
     if (enteredPassword === adminPassword) {
-        // إخفاء صفحة الدخول وإظهار لوحة التحكم
+        // إخفاء صفحة تسجيل الدخول وعرض لوحة التحكم
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('admin-dashboard').style.display = 'block';
     } else {
-        // إظهار رسالة خطأ
+        // إظهار رسالة خطأ إذا كانت كلمة المرور غير صحيحة
         document.getElementById('error-message').style.display = 'block';
     }
 });
@@ -33,7 +34,7 @@ document.getElementById('login-button').addEventListener('click', () => {
 document.getElementById('load-users').addEventListener('click', async () => {
     const usersSnapshot = await db.collection('users').get();
     const userList = document.getElementById('user-list');
-    userList.innerHTML = '';
+    userList.innerHTML = '';  // مسح القائمة السابقة
 
     usersSnapshot.forEach(doc => {
         const user = doc.data();
