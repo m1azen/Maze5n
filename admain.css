@@ -1,55 +1,72 @@
-/* تنسيق الصفحة العامة */
 body {
     font-family: Arial, sans-serif;
+    background-color: #f4f7fb;
+    margin: 0;
+    padding: 0;
+}
+
+#login-screen {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
-    background-color: #f4f4f4;
+    background-color: #fff;
 }
 
-/* شاشة تسجيل الدخول */
-.login-screen {
+.login-container {
     text-align: center;
+    border: 2px solid #007bff;
     padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
     width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 input[type="password"] {
+    width: 100%;
     padding: 10px;
-    width: 80%;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    font-size: 16px;
+    margin-bottom: 10px;
+    border: 2px solid #007bff;
+    border-radius: 4px;
 }
 
 button {
     padding: 10px 20px;
-    background-color: #ff5722;
-    color: white;
     border: none;
-    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
     cursor: pointer;
+    border-radius: 4px;
 }
 
 button:hover {
-    background-color: #e64a19;
+    background-color: #0056b3;
 }
 
-/* لوحة تحكم المدير */
-.admin-dashboard {
-    text-align: center;
-    display: block;
-    padding: 30px;
-    width: 80%;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+#admin-dashboard {
+    background-color: #fff;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.messages, .user-actions {
+    margin-top: 20px;
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 2px solid #007bff;
+    border-radius: 4px;
 }
 
 #user-list {
@@ -57,41 +74,30 @@ button:hover {
 }
 
 .user-card {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
+    background-color: #f1f1f1;
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-#general-message-container {
-    margin-bottom: 30px;
+button {
+    margin-top: 10px;
+    background-color: #28a745; /* نجاح باللون الأخضر */
 }
 
-textarea {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
+button#stop-account {
+    background-color: #dc3545; /* إيقاف باللون الأحمر */
 }
 
-#export-data {
-    margin-top: 30px;
+button#reset-password {
+    background-color: #ffc107; /* إعادة تعيين باللون الأصفر */
 }
 
-/* تصميم الحسابات */
-#user-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+button#delete-account {
+    background-color: #007bff; /* حذف باللون الأزرق */
 }
 
-.user-card {
-    width: 80%;
-    max-width: 600px;
-    margin: 10px 0;
-    text-align: left;
+button:hover {
+    opacity: 0.8;
 }
