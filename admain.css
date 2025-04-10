@@ -1,58 +1,127 @@
+/* تنسيق الجسم العام */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  margin: 0;
-  padding: 20px;
+    font-family: Arial, sans-serif;
+    direction: rtl;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
 }
 
-.container {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+/* تنسيق صفحة تسجيل الدخول */
+#login-container {
+    width: 300px;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+#login-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#login-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#login-container button:hover {
+    background-color: #0056b3;
+}
+
+#error-message {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* تنسيق لوحة التحكم */
+.admin-dashboard {
+    width: 80%;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  text-align: center;
-  color: #333;
+    text-align: center;
+    color: #333;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-table, th, td {
-  border: 1px solid #ddd;
-}
-
-th, td {
-  padding: 12px;
-  text-align: center;
-}
-
-th {
-  background-color: #4CAF50;
-  color: white;
+.admin-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
 button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  margin: 2px;
-  border-radius: 4px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 button:hover {
-  background-color: #0056b3;
+    background-color: #0056b3;
 }
 
-input[type="password"] {
-  width: 150px;
-  padding: 8px;
-  margin-right: 4px;
+#user-list {
+    margin-top: 20px;
+}
+
+.user-card {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+button#stop-account, button#reset-password, button#delete-account {
+    margin-left: 10px;
+}
+
+button#stop-account {
+    background-color: #f39c12;
+}
+
+button#stop-account:hover {
+    background-color: #e67e22;
+}
+
+button#reset-password {
+    background-color: #e74c3c;
+}
+
+button#reset-password:hover {
+    background-color: #c0392b;
+}
+
+button#delete-account {
+    background-color: #16a085;
+}
+
+button#delete-account:hover {
+    background-color: #1abc9c;
+}
+
+/* تنسيق الرسالة عند إدخال كلمة مرور خاطئة */
+#error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
 }
