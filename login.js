@@ -53,10 +53,9 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
       return;
     }
 
-    // حفظ بيانات المستخدم في localStorage
-    localStorage.setItem('loggedInUser', JSON.stringify(userData));
+    // تأكيد تسجيل الدخول
     showMessage(`مرحبًا ${userData.username}! تم تسجيل الدخول بنجاح.`, true);
-    
+
   } catch (error) {
     console.error("Error logging in: ", error);
     showMessage("حدث خطأ أثناء تسجيل الدخول. حاول مرة أخرى.", false);
