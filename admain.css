@@ -1,31 +1,42 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  font-family: 'Cairo', sans-serif;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
   margin: 0;
   padding: 0;
-}
-
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h1, h2 {
-  text-align: center;
   color: #333;
 }
 
-.login-section, .admin-actions {
-  margin-top: 20px;
+header {
+  text-align: center;
+  background-color: #fff;
+  padding: 20px;
+  border-bottom: 3px solid #007bff;
 }
 
-#adminPassword, #loginBtn {
-  display: block;
-  margin: 10px auto;
+header h1 {
+  font-size: 2.5rem;
+  color: #007bff;
+}
+
+main {
+  max-width: 1000px;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+section {
+  margin-bottom: 30px;
+}
+
+h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
 }
 
 button {
@@ -33,15 +44,32 @@ button {
   color: white;
   border: none;
   padding: 10px 20px;
+  margin: 10px;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 1rem;
 }
 
 button:hover {
   background-color: #0056b3;
 }
 
-#loginMessage {
+#accounts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.account-card {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+footer {
   text-align: center;
-  color: red;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
 }
