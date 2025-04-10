@@ -1,19 +1,3 @@
-// إعداد Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "API_KEY_HERE",
-  authDomain: "PROJECT_ID.firebaseapp.com",
-  projectId: "PROJECT_ID",
-  storageBucket: "PROJECT_ID.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID",
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
 // تسجيل الدخول
 document.getElementById('loginForm').addEventListener('submit', async function(event) {
   event.preventDefault();
@@ -27,9 +11,9 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
   }
 
   try {
-    const usersRef = collection(db, "users");
-    const emailQuery = query(usersRef, where("email", "==", email));
-    const querySnapshot = await getDocs(emailQuery);
+    // البحث عن الحساب في Firestore
+    const usersRef = db.collection("users");
+    const querySnapshot = await usersRef.where("email", "==", email).get();
 
     if (querySnapshot.empty) {
       showMessage('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة. حاول مرة أخرى.', false);
@@ -52,7 +36,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
           showMessage(`❌ حسابك موقوف حتى ${endDate.toLocaleDateString()}.`, false);
           return;
         } else {
-          await updateDoc(doc(db, "users", userData.id), { status: 'نشط' });
+          await db.collection("users").doc(userData.id).update({ status: 'نشط' });
           showMessage('✅ تم رفع الإيقاف عن حسابك. يمكنك تسجيل الدخول الآن.', true);
           return;
         }
@@ -82,7 +66,8 @@ function showMessage(message, success) {
   messageOverlay.style.display = 'flex';
 
   const okButton = document.getElementById('ok-button');
-  okButton.style.display = 'block';
+  okButton.style.display = success ? 'block' : 'none';
+
   okButton.onclick = function() {
     if (success) {
       window.location.href = 'html.html';
