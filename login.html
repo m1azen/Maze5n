@@ -4,29 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="createanaccount.css" />
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js"></script>
   <script src="login.js" defer></script>
   <title>Login</title>
-  <!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js"></script>
 
-<script>
-  // Firebase Configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0",
-    authDomain: "admin-panel-5f716.firebaseapp.com",
-    projectId: "admin-panel-5f716",
-    storageBucket: "admin-panel-5f716.appspot.com",
-    messagingSenderId: "488571843727",
-    appId: "1:488571843727:web:3d3d7d5ad495b1fee5acfa",
-    measurementId: "G-ZJ9835SCHW"
-  };
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0",
+      authDomain: "admin-panel-5f716.firebaseapp.com",
+      projectId: "admin-panel-5f716",
+      storageBucket: "admin-panel-5f716.appspot.com",
+      messagingSenderId: "488571843727",
+      appId: "1:488571843727:web:3d3d7d5ad495b1fee5acfa",
+      measurementId: "G-ZJ9835SCHW"
+    };
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-</script>
-
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
 </head>
 <body>
   <div class="container">
@@ -46,7 +44,7 @@
   <div class="message-overlay" id="messageOverlay" style="display: none;">
     <div class="message-box">
       <p id="welcomeMessage"></p>
-      <button id="ok-button" style="display: none;" onclick="window.location.href='html.html'">OK</button>
+      <button id="ok-button" style="display: none;">OK</button>
     </div>
   </div>
 </body>
