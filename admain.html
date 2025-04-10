@@ -3,44 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mazen (admain)</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js"></script>
-    <link rel="stylesheet" href="admain.css">
-    <script type="module" src="admain.js" defer></script>
+    <title>لوحة التحكم - مازن جلال</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+    <!-- شاشة تسجيل الدخول -->
     <div id="login-screen">
-        <div class="login-container">
-            <h2>هذة الصفحة خاصة ب مازن جلال فقط</h2>
-            <input type="password" id="password" placeholder="أدخل كلمة المرور" />
-            <button id="login-button">دخول</button>
-            <p id="error-message" style="color: red; display: none;">كلمة المرور خاطئة!</p>
-        </div>
+        <h2>تسجيل الدخول</h2>
+        <input type="password" id="password" placeholder="أدخل كلمة المرور">
+        <button id="login-button">تسجيل الدخول</button>
+        <p id="error-message" style="color: red; display: none;">كلمة المرور خاطئة!</p>
     </div>
 
+    <!-- لوحة التحكم -->
     <div id="admin-dashboard" style="display: none;">
-        <div class="header">
-            <h2>لوحة التحكم</h2>
-            <button id="logout-button">تسجيل الخروج</button>
-        </div>
+        <h2>لوحة التحكم</h2>
+        <button id="load-users">تحميل الحسابات</button>
+        <div id="user-list"></div>
 
-        <div class="messages">
-            <textarea id="general-message" placeholder="اكتب الرسالة العامة هنا"></textarea>
-            <button id="save-general-message">حفظ الرسالة</button>
-            <p id="message-status" style="color: blue; display: none;">تم حفظ الرسالة!</p>
-        </div>
-
-        <div class="user-actions">
-            <button id="load-users">تحميل الحسابات</button>
-            <div id="user-list"></div>
-        </div>
-
-        <div id="user-account" style="display: none;">
-            <h3>تفاصيل الحساب</h3>
-            <div id="account-info"></div>
-        </div>
+        <h3>الرسالة العامة</h3>
+        <textarea id="general-message" placeholder="اكتب الرسالة العامة"></textarea>
+        <button id="save-general-message">حفظ الرسالة</button>
+        <p id="message-status" style="display: none;"></p>
     </div>
+
+    <!-- عرض حساب المستخدم -->
+    <div id="user-account" style="display: none;">
+        <h3>تفاصيل الحساب</h3>
+        <div id="account-info"></div>
+        <button onclick="document.getElementById('user-account').style.display = 'none'">إغلاق</button>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
