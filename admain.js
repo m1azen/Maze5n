@@ -21,15 +21,25 @@ async function loadAccounts() {
   const usersRef = collection(db, "users");
   const snapshot = await getDocs(usersRef);
 
-  const selects = [document.getElementById("accountSelect"), document.getElementById("viewAccountSelect")];
-  selects.forEach(select => select.innerHTML = "<option value=''>اختر الحساب...</option>");
+  const selects = [
+    document.getElementById("accountSelect"),
+    document.getElementById("viewAccountSelect")
+  ];
+
+  selects.forEach(select => {
+    if (select) {
+      select.innerHTML = "<option value=''>اختر الحساب...</option>";
+    }
+  });
 
   snapshot.forEach(docSnap => {
     const user = docSnap.data();
     const option = document.createElement("option");
     option.value = docSnap.id;
     option.textContent = user.username || "مستخدم غير معرف";
-    selects.forEach(select => select.appendChild(option));
+    selects.forEach(select => {
+      if (select) select.appendChild(option);
+    });
   });
 }
 
@@ -92,17 +102,6 @@ document.getElementById("addExamBtn").addEventListener("click", async () => {
 
   alert("✅ تم إضافة الدرجة بنجاح!");
   loadAccounts();
-});
-
-// تبديل الصفحات
-document.getElementById("viewDataBtn").addEventListener("click", () => {
-  document.getElementById("view-data-section").classList.remove("hidden");
-  document.getElementById("manage-accounts-section").classList.add("hidden");
-});
-
-document.getElementById("manageAccountsBtn").addEventListener("click", () => {
-  document.getElementById("manage-accounts-section").classList.remove("hidden");
-  document.getElementById("view-data-section").classList.add("hidden");
 });
 
 // تحميل الحسابات عند تحميل الصفحة
