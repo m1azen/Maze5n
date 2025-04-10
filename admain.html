@@ -14,15 +14,37 @@
     <h1>✨ لوحة تحكم المشرف ✨</h1>
   </header>
   <main>
-    <section id="accounts-section">
+    <!-- إدارة الحسابات -->
+    <section id="manage-accounts-section">
       <h2>👤 إدارة الحسابات</h2>
       <div id="accounts"></div>
     </section>
-    <section id="actions-section">
-      <h2>⚙️ التحكم والإحصائيات</h2>
-      <button id="reloadBtn">🔄 تحديث البيانات</button>
-      <button id="addMessageBtn">💬 إضافة رسالة</button>
-      <button id="viewStatsBtn">📊 عرض الإحصائيات</button>
+
+    <!-- إضافة درجات الامتحانات -->
+    <section id="exam-grades-section">
+      <h2>📚 إدارة درجات الامتحانات</h2>
+      <div id="exam-grades">
+        <label for="accountSelect">اختر الحساب:</label>
+        <select id="accountSelect"></select>
+        <label for="examName">اسم الامتحان:</label>
+        <input type="text" id="examName" placeholder="اسم الامتحان" />
+        <label for="totalScore">الدرجة الكلية:</label>
+        <input type="number" id="totalScore" placeholder="الدرجة الكلية" />
+        <label for="obtainedScore">الدرجة التي حصل عليها:</label>
+        <input type="number" id="obtainedScore" placeholder="الدرجة التي حصل عليها" />
+        <button id="addExamBtn">📝 إضافة الدرجة</button>
+      </div>
+    </section>
+
+    <!-- عرض بيانات الحساب -->
+    <section id="view-account-details-section">
+      <h2>📖 عرض بيانات الحساب</h2>
+      <div id="view-account-details">
+        <label for="viewAccountSelect">اختر الحساب:</label>
+        <select id="viewAccountSelect"></select>
+        <button id="viewDetailsBtn">🔍 عرض البيانات</button>
+        <div id="accountDetails"></div>
+      </div>
     </section>
   </main>
   <footer>
