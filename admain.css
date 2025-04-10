@@ -1,4 +1,4 @@
-/* التنسيق العام */
+/* تنسيق الصفحة العامة */
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -7,6 +7,38 @@ body {
     height: 100vh;
     margin: 0;
     background-color: #f4f4f4;
+}
+
+/* شاشة تسجيل الدخول */
+.login-screen {
+    text-align: center;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+input[type="password"] {
+    padding: 10px;
+    width: 80%;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #ff5722;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #e64a19;
 }
 
 /* لوحة تحكم المدير */
@@ -33,22 +65,6 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    font-size: 14px;
-    background-color: #ff5722;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #e64a19;
-}
-
-/* تصميم مكان الرسالة */
 #general-message-container {
     margin-bottom: 30px;
 }
@@ -62,26 +78,20 @@ textarea {
     border: 1px solid #ddd;
 }
 
-/* صفحة الحساب (MyAccount) */
-#user-account {
-    text-align: center;
-    padding: 30px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 60%;
-    margin-top: 20px;
+#export-data {
+    margin-top: 30px;
 }
 
-#user-message {
-    background-color: #ffeb3b;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
+/* تصميم الحسابات */
+#user-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-#account-info {
-    background-color: #f1f1f1;
-    padding: 15px;
-    border-radius: 8px;
+.user-card {
+    width: 80%;
+    max-width: 600px;
+    margin: 10px 0;
+    text-align: left;
 }
