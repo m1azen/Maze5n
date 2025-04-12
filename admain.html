@@ -1,56 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="admain.css" />
-  <script type="module" src="admain.js" defer></script>
-  <title>Admin Panel</title>
+  <link rel="stylesheet" href="admin.css" />
+  <script type="module" src="admin.js" defer></script>
+  <title>لوحة الإدارة</title>
 </head>
 <body>
   <header class="admin-header">
-    <h1>Admin Panel</h1>
-    <p>Welcome, Admin! Here you can manage your platform effectively.</p>
+    <h1>لوحة الإدارة</h1>
+    <p>مرحبًا بك في لوحة الإدارة لإدارة النظام</p>
   </header>
 
   <main class="admin-container">
-    <!-- إحصائيات عامة -->
+    <!-- الإحصائيات -->
     <section class="admin-overview">
-      <h2>Dashboard Overview</h2>
+      <h2>إحصائيات النظام</h2>
       <div class="stats">
         <div class="stat-box">
-          <h3>Total Users</h3>
-          <p id="totalUsers">Loading...</p>
+          <h3>إجمالي المستخدمين</h3>
+          <p id="totalUsers">جاري التحميل...</p>
         </div>
         <div class="stat-box">
-          <h3>Active Users</h3>
-          <p id="activeUsers">Loading...</p>
+          <h3>المستخدمون النشطون</h3>
+          <p id="activeUsers">جاري التحميل...</p>
         </div>
         <div class="stat-box">
-          <h3>Suspended Users</h3>
-          <p id="suspendedUsers">Loading...</p>
+          <h3>المستخدمون الموقوفون</h3>
+          <p id="suspendedUsers">جاري التحميل...</p>
         </div>
       </div>
     </section>
 
-    <!-- جدول إدارة المستخدمين -->
+    <!-- جدول المستخدمين -->
     <section class="admin-table">
-      <h2>Users Management</h2>
+      <h2>إدارة المستخدمين</h2>
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th>رقم الحساب</th>
+            <th>اسم المستخدم</th>
+            <th>البريد الإلكتروني</th>
+            <th>الحالة</th>
+            <th>الإجراءات</th>
           </tr>
         </thead>
         <tbody id="usersTable">
-          <!-- سيتم إضافة البيانات عبر JavaScript -->
+          <!-- سيتم ملؤه بواسطة JavaScript -->
         </tbody>
       </table>
     </section>
   </main>
+
+  <!-- نافذة إدخال سبب الإيقاف -->
+  <div id="suspendOverlay" class="overlay" style="display: none;">
+    <div class="overlay-box">
+      <h3>إيقاف الحساب</h3>
+      <label for="suspendReason">سبب الإيقاف:</label>
+      <textarea id="suspendReason" rows="4" placeholder="اكتب السبب هنا..."></textarea>
+      <button id="confirmSuspend">تأكيد</button>
+      <button id="cancelSuspend">إلغاء</button>
+    </div>
+  </div>
+
+  <!-- نافذة إدخال درجات الامتحان -->
+  <div id="addExamOverlay" class="overlay" style="display: none;">
+    <div class="overlay-box">
+      <h3>إضافة درجات الامتحان</h3>
+      <label for="examName">اسم الامتحان:</label>
+      <input type="text" id="examName" />
+      <label for="totalMarks">الدرجة الكلية:</label>
+      <input type="number" id="totalMarks" />
+      <label for="obtainedMarks">الدرجة المحصل عليها:</label>
+      <input type="number" id="obtainedMarks" />
+      <button id="confirmAddExam">تأكيد</button>
+      <button id="cancelAddExam">إلغاء</button>
+    </div>
+  </div>
 </body>
 </html>
