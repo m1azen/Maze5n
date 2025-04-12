@@ -1,7 +1,6 @@
-/* التصميم العام */
 body {
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #ffffff, #e3f2fd);
+  background: #f9f9f9;
   margin: 0;
   padding: 0;
 }
@@ -11,72 +10,49 @@ body {
   color: white;
   padding: 20px;
   text-align: center;
-  position: relative;
 }
 
-.account-header h1 {
-  margin: 0;
+.user-info {
+  background: white;
+  padding: 20px;
+  margin: 20px auto;
+  width: 90%;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-#logoutButton {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#logoutButton:hover {
-  background-color: #e33d3d;
-}
-
-/* قسم الدائرة */
 .average-score {
   text-align: center;
   margin: 20px 0;
 }
 
 .circle {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   background: #e3f2fd;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 10px auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  margin: 0 auto;
 }
 
 .circle p {
   font-size: 24px;
   font-weight: bold;
-  color: #007bff;
 }
 
-#motivationMessage {
-  font-size: 1.2em;
-  margin-top: 10px;
-}
-
-/* جدول البيانات */
 .exam-table {
-  max-width: 800px;
+  max-width: 90%;
   margin: 20px auto;
+  overflow-x: auto;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-}
-
-thead {
-  background: #007bff;
-  color: white;
 }
 
 th, td {
@@ -85,44 +61,7 @@ th, td {
   border: 1px solid #ddd;
 }
 
-tbody tr:nth-child(even) {
-  background: #f9f9f9;
+thead {
+  background: #007bff;
+  color: white;
 }
-
-/* بلالين */
-.balloons-container {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.balloon {
-  width: 30px;
-  height: 40px;
-  background: radial-gradient(circle, #ffcccc, #ff6666);
-  border-radius: 50%;
-  position: absolute;
-  animation: float 5s infinite;
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-100vh);
-    opacity: 0;
-  }
-}
-
-/* قسم الدعم */
-footer.support {
-  text-align: center;
-  margin: 20px 0;
-  font-size: 1.1em;
-}
-
