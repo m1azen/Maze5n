@@ -1,18 +1,56 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="admain.css" />
-  <script type="module" src="admain.js"></script>
-  <title>لوحة تحكم الادمن</title>
+  <link rel="stylesheet" href="adamin.css" />
+  <script type="module" src="adamin.js" defer></script>
+  <title>Admin Panel</title>
 </head>
 <body>
-  <div class="container">
-    <h1>لوحة تحكم الادمن</h1>
-    <div id="adminContainer">
-      <!-- بيانات المستخدمين تظهر هنا -->
-    </div>
-  </div>
+  <header class="admin-header">
+    <h1>Admin Panel</h1>
+    <p>Welcome, Admin! Here you can manage your platform effectively.</p>
+  </header>
+
+  <main class="admin-container">
+    <!-- إحصائيات عامة -->
+    <section class="admin-overview">
+      <h2>Dashboard Overview</h2>
+      <div class="stats">
+        <div class="stat-box">
+          <h3>Total Users</h3>
+          <p id="totalUsers">Loading...</p>
+        </div>
+        <div class="stat-box">
+          <h3>Active Users</h3>
+          <p id="activeUsers">Loading...</p>
+        </div>
+        <div class="stat-box">
+          <h3>Suspended Users</h3>
+          <p id="suspendedUsers">Loading...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- جدول إدارة المستخدمين -->
+    <section class="admin-table">
+      <h2>Users Management</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersTable">
+          <!-- سيتم إضافة البيانات عبر JavaScript -->
+        </tbody>
+      </table>
+    </section>
+  </main>
 </body>
 </html>
