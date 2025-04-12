@@ -1,47 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+   <!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mazen Galal</title>
     <link rel="icon" type="image/png" sizes="200x200" href="04955d34acd54cd096a4c29e26c2949f-free-removebg-preview.png">
     <link rel="stylesheet" href="html.css">
-    <script type="module" src="html.js" defer></script>
+    <script src="html.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
 </head>
 <body>
     <div class="navbar">
         <div class="nav-buttons">
-          <!-- Dropdown for Account -->
           <div class="account-dropdown">
-            <button id="myAccountButton">حسابي</button>
+          <button onclick="window.location.href='Myacaunt.html'">my account</button>
             <div class="dropdown-content" id="dropdownContent" style="display: none;">
-              <p><strong>اسم المستخدم:</strong> <span id="displayUsername"></span></p>
-              <p><strong>البريد الإلكتروني:</strong> <span id="displayEmail"></span></p>
-              <button onclick="logout()">تسجيل الخروج</button>
+              <p><strong>Username:</strong> <span id="displayUsername"></span></p>
+              <p><strong>Email:</strong> <span id="displayEmail"></span></p>
+              <button onclick="logout()">Logout</button>
             </div>
           </div>
-          <button onclick="window.location.href='login.html'">تسجيل الدخول</button>
-          <button onclick="window.location.href='createanaccount.html'">إنشاء حساب</button>
+          <button onclick="window.location.href='login.html'">Login</button>
+          <button onclick="window.location.href='createanaccount.html'">Create an Account</button>
+          <button>Session</button>
         </div>
+    
         <img src="04955d34acd54cd096a4c29e26c2949f-free-removebg-preview.png" alt="Logo">
-    </div>
+      </div>
                         
+    </div>
+    
     <img src="photo_2025-02-25_15-39-35-removebg-preview.png" alt="صورة متحركة" class="centered-image">
-    <p class="text-below">Mazen Galal</p>
+    <p class="text-below">Mazen Galal </p>
 
     <div class="intro-container">
-        <h1 class="intro-title">مرحبًا، أنا مازن جلال</h1>
+        <h1 class="intro-title">Hello, I'm Mazen Galal</h1>
         <p class="intro-subtitle">
-           Hello, I'm Mazen Galal
-I am 16 years old.
-
-<br>
- I am a student learning multiple programming languages. </p>
+            I am 16 years old.<br>
+            I am a student learning multiple programming languages.
+        </p>
         <a href="html1.html" class="more-button">Learn More About Mazen</a>
     </div>
-
-
-    
     <footer class="footer">
         <div class="social-links">
             <a href="https://wa.me/qr/CZO3X7WAZOEEE1" target="_blank">
