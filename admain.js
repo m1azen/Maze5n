@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// دالة لحفظ التعديلات
+// دالة لتعديل بيانات المستخدم
 async function saveUser(userId) {
   const username = document.getElementById(`username-${userId}`).value.trim();
   const email = document.getElementById(`email-${userId}`).value.trim();
@@ -74,6 +74,7 @@ async function saveUser(userId) {
       alert("حدث خطأ أثناء تعديل البيانات.");
     } else {
       alert("تم حفظ التعديلات بنجاح.");
+      location.reload(); // تحديث الصفحة لعرض البيانات الجديدة
     }
   } catch (error) {
     console.error("Error saving user data:", error.message);
@@ -117,11 +118,31 @@ async function addExamScores(userId) {
   }
 
   try {
-    const { error } = await supabase.from('users').update({
-      exam_scores: supabase.raw(`
-        array_append(exam_scores, jsonb_build_object('exam_name', '${examName}', 'total_marks', ${totalMarks}, 'obtained_marks', ${obtainedMarks}, 'exam_date', '${examDate}'))
-      `)
-    }).eq('id', userId);
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('exam_results')
+      .eq('id', userId);
+
+    if (userError) {
+      console.error("Error fetching user data:", userError.message);
+      alert("حدث خطأ أثناء جلب البيانات.");
+      return;
+    }
+
+    const existingResults = userData[0].exam_results || [];
+    const newResult = {
+      exam_name: examName,
+      total_marks: totalMarks,
+      obtained_marks: obtainedMarks,
+      exam_date: examDate
+    };
+
+    const updatedResults = [...existingResults, newResult];
+
+    const { error } = await supabase
+      .from('users')
+      .update({ exam_results: updatedResults })
+      .eq('id', userId);
 
     if (error) {
       console.error("Error adding exam score:", error.message);
