@@ -7,11 +7,13 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// دالة لتشفير كلمة المرور باستخدام bcrypt
 async function hashPassword(password) {
   const saltRounds = 10;
   return await bcrypt.hash(password, saltRounds);
 }
 
+// إضافة مستمع للحدث عند إرسال النموذج
 document.getElementById("accountForm").addEventListener("submit", async (e) => {
   e.preventDefault(); // منع إعادة تحميل الصفحة
 
@@ -20,22 +22,26 @@ document.getElementById("accountForm").addEventListener("submit", async (e) => {
   const password = document.getElementById("password").value.trim();
   const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
+  // التحقق من توافق كلمتي المرور
   if (password !== confirmPassword) {
     displayMessage("Passwords do not match!", "error");
     return;
   }
 
+  // التحقق من صحة البريد الإلكتروني
   if (!isValidEmail(email)) {
     displayMessage("Invalid email format!", "error");
     return;
   }
 
+  // تشفير كلمة المرور
   const hashedPassword = await hashPassword(password);
 
   const loadingOverlay = document.getElementById("loadingOverlay");
   loadingOverlay.style.display = "flex";
 
   try {
+    // التحقق من وجود بريد إلكتروني مكرر
     const { data: existingUser, error: checkError } = await supabase
       .from('users')
       .select('*')
@@ -46,6 +52,7 @@ document.getElementById("accountForm").addEventListener("submit", async (e) => {
       return;
     }
 
+    // إدخال البيانات في جدول المستخدمين
     const { data, error } = await supabase
       .from('users')
       .insert([
@@ -53,7 +60,8 @@ document.getElementById("accountForm").addEventListener("submit", async (e) => {
           username: username,
           email: email,
           password: hashedPassword, // تخزين كلمة المرور المشفرة
-          created_at: new Date().toISOString(),
+          account_creation_date: new Date().toISOString(),
+          exam_results: JSON.stringify({ math: 0, science: 0 }) // نتائج الامتحانات الافتراضية
         },
       ]);
 
@@ -61,6 +69,7 @@ document.getElementById("accountForm").addEventListener("submit", async (e) => {
       throw new Error("Failed to save data to Supabase. " + error.message);
     }
 
+    // تسجيل المستخدم في Supabase auth
     const { user, session, error: signupError } = await supabase.auth.signUp({
       email: email,
       password: password,
@@ -78,11 +87,13 @@ document.getElementById("accountForm").addEventListener("submit", async (e) => {
   }
 });
 
+// دالة للتحقق من صحة البريد الإلكتروني
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
+// دالة لعرض الرسائل
 function displayMessage(message, type) {
   const messageOverlay = document.getElementById("messageOverlay");
   const messageText = document.getElementById("messageText");
