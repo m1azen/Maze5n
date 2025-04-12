@@ -2,7 +2,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 // إعداد اتصال Supabase
 const SUPABASE_URL = 'https://your-project.supabase.co'; // استبدل بـ URL الخاص بمشروعك
-const SUPABASE_KEY = 'your-anon-key'; // استبدل بـ مفتاح Supabase
+const SUPABASE_KEY = 'your-anon-key'; // استبدل بـ المفتاح العام الخاص بك
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // استماع للنموذج عند الإرسال
@@ -40,21 +40,26 @@ document.getElementById("accountForm").addEventListener("submit", async (e) => {
       ]);
 
     if (error) {
-      throw new Error(error.message);
+      throw new Error(error.message); // إذا حدث خطأ
     }
 
-    // عرض رسالة النجاح
-    displayMessage(`Welcome, ${username}! Your account has been created successfully.`, "success");
+    // عرض رسالة نجاح مرحبًا باسم المستخدم
+    displayMessage(`Welcome, ${username}! Redirecting...`, "success");
+
+    // الانتقال إلى الصفحة `html.html` بعد 2 ثوانٍ
+    setTimeout(() => {
+      window.location.href = "html.html";
+    }, 2000);
   } catch (error) {
     console.error("Error occurred:", error);
     displayMessage(error.message, "error");
   } finally {
-    // إخفاء مؤشر التحميل بعد المعالجة
+    // إخفاء مؤشر التحميل
     loadingOverlay.style.display = "none";
   }
 });
 
-// دالة لعرض الرسالة واختفاءها بعد 2 ثانية
+// دالة لعرض الرسالة في منتصف الصفحة واختفاءها
 function displayMessage(message, type) {
   const messageOverlay = document.getElementById("messageOverlay");
   const messageText = document.getElementById("messageText");
@@ -64,7 +69,7 @@ function displayMessage(message, type) {
   messageOverlay.style.backgroundColor = type === "success" ? "rgba(0, 128, 0, 0.8)" : "rgba(255, 0, 0, 0.8)";
   messageOverlay.style.display = "flex";
 
-  // إخفاء الرسالة بعد 2 ثانية
+  // اختفاء الرسالة تلقائيًا بعد 2 ثانية
   setTimeout(() => {
     messageOverlay.style.display = "none";
   }, 2000);
