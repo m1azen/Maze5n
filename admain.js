@@ -11,7 +11,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const { data: users, error } = await supabase.from('users').select('*');
     if (error) {
       console.error("Error fetching users:", error.message);
-      alert("حدث خطأ أثناء تحميل بيانات المستخدمين.");
+      alert("⚠️ حدث خطأ أثناء تحميل بيانات المستخدمين.");
+      return;
+    }
+
+    if (!users || users.length === 0) {
+      alert("ℹ️ لا توجد بيانات متاحة للمستخدمين.");
+      console.warn("No users found in the database.");
       return;
     }
 
@@ -21,18 +27,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const suspendedUsers = users.filter(user => user.status.includes('Suspended')).length;
 
     // تحديث عناصر الإحصائيات في HTML
-    const totalUsersElement = document.getElementById('totalUsers');
-    const activeUsersElement = document.getElementById('activeUsers');
-    const suspendedUsersElement = document.getElementById('suspendedUsers');
-
-    if (totalUsersElement) totalUsersElement.textContent = totalUsers || '0';
-    if (activeUsersElement) activeUsersElement.textContent = activeUsers || '0';
-    if (suspendedUsersElement) suspendedUsersElement.textContent = suspendedUsers || '0';
+    updateStats('totalUsers', totalUsers || '0');
+    updateStats('activeUsers', activeUsers || '0');
+    updateStats('suspendedUsers', suspendedUsers || '0');
 
     // تحديث جدول المستخدمين
     const usersTable = document.getElementById('usersTable');
     if (!usersTable) {
-      console.warn("Element 'usersTable' not found in DOM.");
+      console.warn("⚠️ Element 'usersTable' not found in DOM.");
       return;
     }
 
@@ -54,23 +56,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   } catch (error) {
     console.error("Error initializing admin panel:", error.message);
-    alert("حدث خطأ أثناء تحميل الصفحة. الرجاء المحاولة مرة أخرى.");
+    alert("❌ حدث خطأ غير متوقع أثناء تحميل الصفحة.");
   }
 });
 
+// دالة لتحديث إحصائيات لوحة التحكم
+function updateStats(elementId, value) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.textContent = value;
+  } else {
+    console.warn(`⚠️ Element with ID '${elementId}' not found.`);
+  }
+}
+
 // دالة تعديل المستخدم
 function editUser(userId) {
-  alert(`تعديل المستخدم ذو المعرف: ${userId}`);
+  alert(`✏️ تعديل المستخدم ذو المعرف: ${userId}`);
 }
 
 // دالة حذف المستخدم
 function deleteUser(userId) {
-  alert(`حذف المستخدم ذو المعرف: ${userId}`);
+  alert(`🗑️ حذف المستخدم ذو المعرف: ${userId}`);
 }
 
 // دالة لإيقاف المستخدم
 async function suspendUser(userId) {
-  const reason = prompt("يرجى إدخال سبب الإيقاف:");
+  const reason = prompt("🛑 يرجى إدخال سبب الإيقاف:");
   if (!reason) return;
 
   try {
@@ -80,15 +92,15 @@ async function suspendUser(userId) {
       .eq('id', userId);
 
     if (error) {
-      alert("فشل في إيقاف المستخدم.");
+      alert("❌ فشل في إيقاف المستخدم.");
       console.error("Error suspending user:", error);
     } else {
-      alert("تم إيقاف المستخدم بنجاح.");
+      alert("✅ تم إيقاف المستخدم بنجاح.");
       location.reload(); // تحديث الصفحة لعرض الحالة الجديدة
     }
   } catch (error) {
     console.error("Unexpected error:", error.message);
-    alert("حدث خطأ غير متوقع أثناء إيقاف المستخدم.");
+    alert("❌ حدث خطأ غير متوقع أثناء إيقاف المستخدم.");
   }
 }
 
@@ -101,23 +113,23 @@ async function viewGrades(userId) {
       .eq('user_id', userId);
 
     if (error) {
-      alert("حدث خطأ أثناء جلب الدرجات.");
+      alert("❌ حدث خطأ أثناء جلب الدرجات.");
       console.error("Error fetching grades:", error);
       return;
     }
 
-    if (grades.length === 0) {
-      alert("لا توجد درجات متاحة لهذا المستخدم.");
+    if (!grades || grades.length === 0) {
+      alert("ℹ️ لا توجد درجات متاحة لهذا المستخدم.");
       return;
     }
 
-    let message = `درجات المستخدم ذو المعرف ${userId}:\n`;
+    let message = `📚 درجات المستخدم ذو المعرف ${userId}:\n`;
     grades.forEach(grade => {
-      message += `المادة: ${grade.subject} | الدرجة: ${grade.score}\n`;
+      message += `📖 المادة: ${grade.subject} | الدرجة: ${grade.score}\n`;
     });
     alert(message);
   } catch (error) {
     console.error("Unexpected error:", error.message);
-    alert("حدث خطأ غير متوقع أثناء عرض الدرجات.");
+    alert("❌ حدث خطأ غير متوقع أثناء عرض الدرجات.");
   }
 }
