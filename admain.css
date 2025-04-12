@@ -1,62 +1,58 @@
 body {
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #f4f4f9, #e3e3f7);
+  background: #f9f9f9;
   margin: 0;
   padding: 0;
 }
 
-.admin-header {
+.account-header {
   background-color: #007bff;
   color: white;
   padding: 20px;
   text-align: center;
 }
 
-.admin-container {
-  max-width: 1200px;
-  margin: 20px auto;
+.user-info {
   background: white;
   padding: 20px;
-  border-radius: 12px;
+  margin: 20px auto;
+  width: 90%;
+  border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* تصميم الإحصائيات */
-.insights {
-  margin-bottom: 30px;
-}
-
-.insights-container {
-  display: flex;
-  gap: 20px;
-  justify-content: space-around;
-}
-
-.insight-box {
-  flex: 1;
-  background: linear-gradient(135deg, #007bff, #00d4ff);
-  color: white;
-  border-radius: 12px;
-  padding: 20px;
   text-align: center;
+}
+
+.average-score {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #e3f2fd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.insight-box h3 {
-  margin: 0 0 10px;
-}
-
-.insight-box p {
-  font-size: 2em;
-  margin: 0;
+.circle p {
+  font-size: 24px;
   font-weight: bold;
 }
 
-/* تصميم الجدول */
+.exam-table {
+  max-width: 90%;
+  margin: 20px auto;
+  overflow-x: auto;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
 }
 
 th, td {
@@ -68,22 +64,4 @@ th, td {
 thead {
   background: #007bff;
   color: white;
-}
-
-tbody tr:nth-child(even) {
-  background: #f9f9f9;
-}
-
-button {
-  padding: 8px 12px;
-  margin: 5px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #0056b3;
 }
