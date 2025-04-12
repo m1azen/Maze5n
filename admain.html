@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="admain.css" />
-  <script type="module" src="admain.js" defer></script>
+  <link rel="stylesheet" href="admin.css" />
+  <script type="module" src="admin.js" defer></script>
   <title>لوحة الإدارة</title>
 </head>
 <body>
@@ -14,21 +14,25 @@
   </header>
 
   <main class="admin-container">
-    <!-- الإحصائيات -->
-    <section class="admin-overview">
+    <!-- قسم الإحصائيات -->
+    <section class="insights">
       <h2>إحصائيات النظام</h2>
-      <div class="stats">
-        <div class="stat-box">
+      <div class="insights-container">
+        <div class="insight-box" id="insight-total-users">
           <h3>إجمالي المستخدمين</h3>
-          <p id="totalUsers">جاري التحميل...</p>
+          <p id="totalUsers">0</p>
         </div>
-        <div class="stat-box">
+        <div class="insight-box" id="insight-active-users">
           <h3>المستخدمون النشطون</h3>
-          <p id="activeUsers">جاري التحميل...</p>
+          <p id="activeUsers">0</p>
         </div>
-        <div class="stat-box">
+        <div class="insight-box" id="insight-suspended-users">
           <h3>المستخدمون الموقوفون</h3>
-          <p id="suspendedUsers">جاري التحميل...</p>
+          <p id="suspendedUsers">0</p>
+        </div>
+        <div class="insight-box" id="insight-average-score">
+          <h3>متوسط الدرجات</h3>
+          <p id="averageScore">0%</p>
         </div>
       </div>
     </section>
@@ -52,31 +56,5 @@
       </table>
     </section>
   </main>
-
-  <!-- نافذة إدخال سبب الإيقاف -->
-  <div id="suspendOverlay" class="overlay" style="display: none;">
-    <div class="overlay-box">
-      <h3>إيقاف الحساب</h3>
-      <label for="suspendReason">سبب الإيقاف:</label>
-      <textarea id="suspendReason" rows="4" placeholder="اكتب السبب هنا..."></textarea>
-      <button id="confirmSuspend">تأكيد</button>
-      <button id="cancelSuspend">إلغاء</button>
-    </div>
-  </div>
-
-  <!-- نافذة إدخال درجات الامتحان -->
-  <div id="addExamOverlay" class="overlay" style="display: none;">
-    <div class="overlay-box">
-      <h3>إضافة درجات الامتحان</h3>
-      <label for="examName">اسم الامتحان:</label>
-      <input type="text" id="examName" />
-      <label for="totalMarks">الدرجة الكلية:</label>
-      <input type="number" id="totalMarks" />
-      <label for="obtainedMarks">الدرجة المحصل عليها:</label>
-      <input type="number" id="obtainedMarks" />
-      <button id="confirmAddExam">تأكيد</button>
-      <button id="cancelAddExam">إلغاء</button>
-    </div>
-  </div>
 </body>
 </html>
