@@ -1,63 +1,99 @@
+/* إعداد الصفحة الأساسية */
 body {
   font-family: Arial, sans-serif;
-  background-color: #eef2f3;
+  background: #f9f9f9;
   margin: 0;
-  padding: 20px;
+  padding: 0;
 }
 
-.container {
-  background-color: #fff;
+.admin-header {
+  background-color: #007bff;
+  color: white;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
   text-align: center;
-  color: #333;
-  margin-bottom: 20px;
 }
 
-.admin-box {
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
+.admin-header h1 {
+  font-size: 2em;
+}
+
+.admin-header p {
+  font-size: 1.2em;
+}
+
+/* الحاوية الرئيسية */
+.admin-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-overview {
+  margin-bottom: 30px;
+}
+
+.stats {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.stat-box {
+  flex: 1;
+  background: #f1f4f9;
   border-radius: 8px;
   padding: 20px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.admin-details, .admin-controls {
-  display: inline-block;
-  vertical-align: top;
-  width: 48%;
+.stat-box h3 {
+  color: #007bff;
 }
 
-.admin-details {
-  font-size: 16px;
+/* تصميم الجدول */
+.admin-table {
+  overflow-x: auto;
 }
 
-.admin-controls button {
-  display: block;
-  margin: 5px 0;
+table {
   width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
 }
 
-.admin-messages, .admin-exams {
-  margin-top: 15px;
-  font-size: 14px;
-  color: #555;
+thead {
+  background: #007bff;
+  color: white;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+tbody tr:hover {
+  background: #eef6ff;
 }
 
 button {
-  background-color: #007bff;
+  padding: 8px 12px;
+  background: #007bff;
   color: white;
   border: none;
-  padding: 8px 12px;
+  border-radius: 5px;
   cursor: pointer;
-  border-radius: 4px;
+  font-size: 0.9em;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background: #0056b3;
 }
