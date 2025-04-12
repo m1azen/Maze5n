@@ -7,37 +7,53 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    const { data: user, error } = await supabase
+    // التحقق من تسجيل الدخول
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+    if (sessionError || !session) {
+      alert("Please log in to access your account.");
+      window.location.href = 'login.html'; // توجيه المستخدم إلى صفحة تسجيل الدخول
+      return;
+    }
+
+    const userEmail = session.user.email; // جلب البريد الإلكتروني للمستخدم المسجل دخول
+
+    // جلب بيانات المستخدم من Supabase
+    const { data: userData, error } = await supabase
       .from('users')
       .select('*')
-      .eq('email', 'current-user@example.com'); // عدل البريد الإلكتروني إلى الحساب الحالي
+      .eq('email', userEmail);
 
-    if (error) throw error;
+    if (error || userData.length === 0) {
+      console.error("Error fetching user data:", error?.message);
+      alert("Failed to load your account data. Please try again.");
+      return;
+    }
+
+    const user = userData[0];
 
     // تحديث اسم المستخدم
     const usernameEl = document.getElementById('username');
-    usernameEl.textContent = user[0]?.username || 'User';
+    usernameEl.textContent = user.username || 'User';
 
-    // حساب المتوسط
-    const scores = user[0]?.exam_scores || [];
-    const total = scores.reduce((sum, score) => sum + score.obtained_marks, 0);
-    const average = scores.length ? Math.round((total / (scores.length * 100)) * 100) : 0;
+    // حساب متوسط الدرجات
+    const scores = user.exam_scores || [];
+    const totalObtained = scores.reduce((sum, score) => sum + score.obtained_marks, 0);
+    const totalPossible = scores.reduce((sum, score) => sum + score.total_marks, 0);
+    const average = totalPossible > 0 ? Math.round((totalObtained / totalPossible) * 100) : 0;
     document.getElementById('averageScore').textContent = `${average}%`;
 
-    // رسالة التحفيز
+    // عرض رسالة تحفيزية
     const motivationEl = document.getElementById('motivationMessage');
     if (average < 50) {
-      motivationEl.textContent = `شد شوية يا ${user[0]?.username} ❤️`;
+      motivationEl.textContent = `شد شوية يا ${user.username} ❤️`;
     } else if (average < 70) {
-      motivationEl.textContent = `ناقص سيكة وتبقى جامد يا بطل، ${user[0]?.username}!`;
+      motivationEl.textContent = `ناقص سيكة وتبقى جامد يا بطل، ${user.username}!`;
     } else if (average < 90) {
-      motivationEl.textContent = `أنت بطل يا ${user[0]?.username}!`;
+      motivationEl.textContent = `أنت بطل يا ${user.username}!`;
     } else {
       motivationEl.textContent = `عاش أوي! 🎉`;
-      document.getElementById('balloonsContainer').style.display = 'block';
-      setTimeout(() => {
-        document.getElementById('balloonsContainer').style.display = 'none';
-      }, 5000);
+      displayBalloons();
     }
 
     // عرض جدول الدرجات
@@ -48,19 +64,35 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${score.exam_name}</td>
         <td>${score.total_marks}</td>
         <td>${score.obtained_marks}</td>
-        <td>${score.exam_date}</td>
+        <td>${score.exam_date || 'N/A'}</td>
       `;
       scoresTable.appendChild(row);
     });
 
-    // زر تسجيل الخروج
-    document.getElementById('logoutButton').addEventListener('click', () => {
+    // تسجيل الخروج
+    document.getElementById('logoutButton').addEventListener('click', async () => {
+      const { error: logoutError } = await supabase.auth.signOut();
+      if (logoutError) {
+        console.error("Logout error:", logoutError.message);
+        return;
+      }
       alert("👋 Bye!");
-      window.location.href = 'login.html'; // تعديل لرابط صفحة تسجيل الدخول
+      window.location.href = 'login.html';
     });
+
   } catch (error) {
     console.error("Error loading account data:", error.message);
-    alert("Please log in to access your account.");
-    window.location.href = 'login.html'; // التوجيه إذا لم يتم تسجيل الدخول
+    alert("An error occurred. Please try again.");
+    window.location.href = 'login.html'; // التوجيه في حالة وجود خطأ
   }
 });
+
+// دالة لإظهار البلالين
+function displayBalloons() {
+  const balloonsContainer = document.getElementById('balloonsContainer');
+  balloonsContainer.style.display = 'block';
+
+  setTimeout(() => {
+    balloonsContainer.style.display = 'none';
+  }, 5000);
+}
