@@ -11,6 +11,7 @@
   <header class="admin-header">
     <h1>لوحة تحكم الأدمن</h1>
     <p>مرحبًا بك يا مازن! يمكنك من هنا إدارة المنصة.</p>
+    <button id="logoutButton">تسجيل الخروج</button>
   </header>
 
   <main class="admin-container">
@@ -20,15 +21,15 @@
       <div class="stats">
         <div class="stat-box">
           <h3>عدد المستخدمين</h3>
-          <p id="totalUsers">...</p>
+          <p id="totalUsers">0</p>
         </div>
         <div class="stat-box">
           <h3>الحسابات النشطة</h3>
-          <p id="activeUsers">...</p>
+          <p id="activeUsers">0</p>
         </div>
         <div class="stat-box">
           <h3>الموقوفين</h3>
-          <p id="suspendedUsers">...</p>
+          <p id="suspendedUsers">0</p>
         </div>
       </div>
     </section>
@@ -43,12 +44,11 @@
             <th>الاسم</th>
             <th>البريد</th>
             <th>الحالة</th>
-            <th>سبب الإيقاف</th>
             <th>الإجراءات</th>
           </tr>
         </thead>
-        <tbody id="usersTableBody">
-          <!-- البيانات من admin.js -->
+        <tbody id="usersTable">
+          <!-- يتم ملء البيانات بواسطة admin.js -->
         </tbody>
       </table>
     </section>
