@@ -1,11 +1,11 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 // إعداد اتصال Supabase
-const SUPABASE_URL = 'https://your-project.supabase.co'; // استبدل بـ URL الخاص بمشروعك
-const SUPABASE_KEY = 'your-anon-key'; // استبدل بـ المفتاح العام الخاص بك
+const SUPABASE_URL = 'https://obimikymmvrwljbpmnxb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iaW1pa3ltbXZyd2xqYnBtbnhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ0NTk3MDgsImV4cCI6MjA2MDAzNTcwOH0.iwAiOK8xzu3b2zau-CfubioYdU9Dzmj5UjsbOldZbsw';
+
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// استماع للنموذج عند الإرسال
 document.getElementById("accountForm").addEventListener("submit", async (e) => {
   e.preventDefault(); // منع إعادة تحميل الصفحة
 
@@ -21,7 +21,7 @@ document.getElementById("accountForm").addEventListener("submit", async (e) => {
     return;
   }
 
-  // عرض مؤشر التحميل أثناء العملية
+  // عرض مؤشر التحميل
   const loadingOverlay = document.getElementById("loadingOverlay");
   loadingOverlay.style.display = "flex";
 
@@ -33,8 +33,7 @@ document.getElementById("accountForm").addEventListener("submit", async (e) => {
         {
           username: username,
           email: email,
-          password: password, // يمكن تحسين الأمان لاحقًا بالتشفير
-          status: 'Active', // الحالة الافتراضية
+          password: password, // قم بتشفير كلمة المرور إذا لزم الأمر
           created_at: new Date().toISOString() // وقت الإنشاء
         }
       ]);
@@ -46,9 +45,9 @@ document.getElementById("accountForm").addEventListener("submit", async (e) => {
     // عرض رسالة نجاح مرحبًا باسم المستخدم
     displayMessage(`Welcome, ${username}! Redirecting...`, "success");
 
-    // الانتقال إلى الصفحة `html.html` بعد 2 ثوانٍ
+    // الانتقال إلى الصفحة `homepage.html` بعد 2 ثانية
     setTimeout(() => {
-      window.location.href = "html.html";
+      window.location.href = "homepage.html";
     }, 2000);
   } catch (error) {
     console.error("Error occurred:", error);
