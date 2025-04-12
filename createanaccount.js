@@ -47,7 +47,7 @@ document.getElementById("accountForm").addEventListener("submit", async (e) => {
 
     // الانتقال إلى الصفحة `homepage.html` بعد 2 ثانية
     setTimeout(() => {
-      window.location.href = "homepage.html";
+      window.location.href = "html.html";
     }, 2000);
   } catch (error) {
     console.error("Error occurred:", error);
