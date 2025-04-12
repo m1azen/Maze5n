@@ -11,12 +11,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
     if (sessionError || !session) {
-      alert("Please log in to access your account.");
-      window.location.href = 'login.html'; // توجيه المستخدم إلى صفحة تسجيل الدخول
+      alert("يرجى تسجيل الدخول للوصول إلى حسابك.");
+      window.location.href = 'login.html';
       return;
     }
 
-    const userEmail = session.user.email; // جلب البريد الإلكتروني للمستخدم المسجل دخول
+    const userEmail = session.user.email;
 
     // جلب بيانات المستخدم من Supabase
     const { data: userData, error } = await supabase
@@ -26,24 +26,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (error || userData.length === 0) {
       console.error("Error fetching user data:", error?.message);
-      alert("Failed to load your account data. Please try again.");
+      alert("فشل في تحميل بيانات حسابك. حاول مرة أخرى.");
       return;
     }
 
     const user = userData[0];
 
-    // تحديث اسم المستخدم
-    const usernameEl = document.getElementById('username');
-    usernameEl.textContent = user.username || 'User';
+    // تحديث مربع بيانات المستخدم
+    const userInfoEl = document.getElementById('userInfo');
+    userInfoEl.innerHTML = `
+      <h2>بيانات المستخدم</h2>
+      <p><strong>الاسم:</strong> ${user.username || 'غير معروف'}</p>
+      <p><strong>البريد الإلكتروني:</strong> ${user.email || 'غير معروف'}</p>
+      <p><strong>الحالة:</strong> ${user.status || 'غير معروف'}</p>
+    `;
 
-    // حساب متوسط الدرجات
+    // حساب وعرض متوسط الدرجات
     const scores = user.exam_scores || [];
     const totalObtained = scores.reduce((sum, score) => sum + score.obtained_marks, 0);
     const totalPossible = scores.reduce((sum, score) => sum + score.total_marks, 0);
     const average = totalPossible > 0 ? Math.round((totalObtained / totalPossible) * 100) : 0;
-    document.getElementById('averageScore').textContent = `${average}%`;
 
-    // عرض رسالة تحفيزية
+    document.getElementById('averageScore').textContent = `${average}%`;
+    document.getElementById('averageScoreTitle').textContent = "متوسط الدرجات";
+
+    // رسالة التحفيز
     const motivationEl = document.getElementById('motivationMessage');
     if (average < 50) {
       motivationEl.textContent = `شد شوية يا ${user.username} ❤️`;
@@ -64,26 +71,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${score.exam_name}</td>
         <td>${score.total_marks}</td>
         <td>${score.obtained_marks}</td>
-        <td>${score.exam_date || 'N/A'}</td>
+        <td>${score.exam_date || 'غير متوفر'}</td>
       `;
       scoresTable.appendChild(row);
     });
 
-    // تسجيل الخروج
+    // زر تسجيل الخروج
     document.getElementById('logoutButton').addEventListener('click', async () => {
       const { error: logoutError } = await supabase.auth.signOut();
       if (logoutError) {
         console.error("Logout error:", logoutError.message);
         return;
       }
-      alert("👋 Bye!");
+      alert("👋 تم تسجيل الخروج بنجاح!");
       window.location.href = 'login.html';
     });
 
   } catch (error) {
     console.error("Error loading account data:", error.message);
-    alert("An error occurred. Please try again.");
-    window.location.href = 'login.html'; // التوجيه في حالة وجود خطأ
+    alert("حدث خطأ. حاول مرة أخرى.");
+    window.location.href = 'login.html';
   }
 });
 
