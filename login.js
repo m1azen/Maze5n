@@ -1,7 +1,7 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 // إعداد اتصال Supabase
-const SUPABASE_URL = 'https://obimikymmvrwljbpmnxb.supabase.co';
+const SUPABASE_URL = 'https://obimikymmvrwljbpmnxb.supabase.co'; // استبدل بـ رابط مشروعك
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iaW1pa3ltbXZyd2xqYnBtbnhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ0NTk3MDgsImV4cCI6MjA2MDAzNTcwOH0.iwAiOK8xzu3b2zau-CfubioYdU9Dzmj5UjsbOldZbsw';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -24,7 +24,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     const { data: users, error } = await supabase
       .from('users') // اسم الجدول
       .select('*')
-      .eq('email', email); // التحقق من البريد الإلكتروني
+      .eq('email', email);
 
     if (error) {
       console.error("Supabase Error: ", error.message);
@@ -58,7 +58,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     console.log("Login Successful: ", userData);
 
     setTimeout(() => {
-      window.location.href = 'html.html'; // التوجه إلى الصفحة الرئيسية
+      window.location.href = 'html.html'; // الانتقال إلى الصفحة الرئيسية
     }, 2000);
   } catch (error) {
     console.error("⚠️ خطأ أثناء تسجيل الدخول: ", error.message);
@@ -70,7 +70,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
 function displayMessage(message, success) {
   const messageOverlay = document.getElementById('messageOverlay');
   const messageText = document.getElementById('messageText');
-  
+
   messageText.textContent = message;
   messageOverlay.style.backgroundColor = success ? 'rgba(0, 128, 0, 0.8)' : 'rgba(255, 0, 0, 0.8)';
   messageOverlay.style.display = 'flex';
@@ -80,7 +80,7 @@ function displayMessage(message, success) {
 
   okButton.onclick = () => {
     if (success) {
-      window.location.href = 'html.html'; // التوجه للصفحة الرئيسية عند النجاح
+      window.location.href = 'html.html'; // الانتقال للصفحة الرئيسية عند النجاح
     } else {
       messageOverlay.style.display = 'none'; // إخفاء الرسالة عند الخطأ
     }
