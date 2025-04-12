@@ -1,47 +1,57 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>لوحة الإدارة - مازن جلال</title>
-  <link rel="stylesheet" href="admain.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="admin.css" />
+  <script type="module" src="admin.js" defer></script>
+  <title>لوحة تحكم الأدمن</title>
 </head>
 <body>
-  <header>
-    <h1>لوحة الإدارة</h1>
-    <p>مرحبًا بك يا مازن جلال في لوحة الإدارة</p>
+  <header class="admin-header">
+    <h1>لوحة تحكم الأدمن</h1>
+    <p>مرحبًا بك يا مازن! يمكنك من هنا إدارة المنصة.</p>
   </header>
 
-  <main>
-    <section class="stats">
-      <h2>إحصائيات النظام</h2>
-      <div class="stat-boxes">
-        <div class="box" id="totalUsers">إجمالي المستخدمين<br><strong>0</strong></div>
-        <div class="box" id="activeUsers">المستخدمون النشطون<br><strong>0</strong></div>
-        <div class="box" id="blockedUsers">المستخدمون الموقوفون<br><strong>0</strong></div>
-        <div class="box" id="avgGrade">متوسط الدرجات<br><strong>0%</strong></div>
+  <main class="admin-container">
+    <!-- إحصائيات عامة -->
+    <section class="admin-overview">
+      <h2>نظرة عامة</h2>
+      <div class="stats">
+        <div class="stat-box">
+          <h3>عدد المستخدمين</h3>
+          <p id="totalUsers">...</p>
+        </div>
+        <div class="stat-box">
+          <h3>الحسابات النشطة</h3>
+          <p id="activeUsers">...</p>
+        </div>
+        <div class="stat-box">
+          <h3>الموقوفين</h3>
+          <p id="suspendedUsers">...</p>
+        </div>
       </div>
     </section>
 
-    <section>
+    <!-- جدول إدارة المستخدمين -->
+    <section class="admin-table">
       <h2>إدارة المستخدمين</h2>
       <table>
         <thead>
           <tr>
-            <th>رقم الحساب</th>
-            <th>اسم المستخدم</th>
-            <th>البريد الإلكتروني</th>
+            <th>ID</th>
+            <th>الاسم</th>
+            <th>البريد</th>
             <th>الحالة</th>
-            <th>السبب</th>
+            <th>سبب الإيقاف</th>
             <th>الإجراءات</th>
           </tr>
         </thead>
         <tbody id="usersTableBody">
-          <!-- بيانات المستخدمين تظهر هنا -->
+          <!-- البيانات من admin.js -->
         </tbody>
       </table>
     </section>
   </main>
-
-  <script type="module" src="admain.js"></script>
 </body>
 </html>
