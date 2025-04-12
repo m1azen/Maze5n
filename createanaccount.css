@@ -54,21 +54,6 @@ button:hover {
   background-color: #0056b3;
 }
 
-p {
-  margin-top: 16px;
-  text-align: center;
-}
-
-a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-/* رسالة الترحيب كإشعار */
 .message-overlay {
   display: none;
   position: fixed;
@@ -79,6 +64,7 @@ a:hover {
   background-color: rgba(0, 0, 0, 0.6);
   justify-content: center;
   align-items: center;
+  color: white;
 }
 
 .message-box {
@@ -87,52 +73,8 @@ a:hover {
   border-radius: 12px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.1);
   text-align: center;
-  animation: fadeIn 0.5s ease;
 }
 
-/* تأثير ظهور الرسالة */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-#ok-button {
-  margin-top: 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-#ok-button:hover {
-  background-color: #0056b3;
-}
-
-/* تنسيق رابط تسجيل الدخول */
-.login-prompt {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.login-prompt a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-.login-prompt a:hover {
-  text-decoration: underline;
-}
-
-/* استجابة للشاشات الصغيرة */
 @media (max-width: 480px) {
   .container, .message-box {
     width: 90%;
