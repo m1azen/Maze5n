@@ -1,4 +1,5 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import bcrypt from 'https://cdn.jsdelivr.net/npm/bcryptjs/+esm';
 
 // إعداد اتصال Supabase
 const SUPABASE_URL = 'https://obimikymmvrwljbpmnxb.supabase.co';
@@ -6,72 +7,90 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+async function hashPassword(password) {
+  const saltRounds = 10;
+  return await bcrypt.hash(password, saltRounds);
+}
+
 document.getElementById("accountForm").addEventListener("submit", async (e) => {
   e.preventDefault(); // منع إعادة تحميل الصفحة
 
-  // جلب القيم من النموذج
   const username = document.getElementById("username").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
   const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
-  // التحقق من صحة كلمات المرور
   if (password !== confirmPassword) {
     displayMessage("Passwords do not match!", "error");
-    console.error("Validation Error: Passwords do not match.");
     return;
   }
 
-  // عرض مؤشر التحميل أثناء العملية
+  if (!isValidEmail(email)) {
+    displayMessage("Invalid email format!", "error");
+    return;
+  }
+
+  const hashedPassword = await hashPassword(password);
+
   const loadingOverlay = document.getElementById("loadingOverlay");
   loadingOverlay.style.display = "flex";
 
   try {
-    // إضافة بيانات المستخدم إلى الجدول في Supabase
+    const { data: existingUser, error: checkError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email);
+
+    if (existingUser && existingUser.length > 0) {
+      displayMessage("Email already exists!", "error");
+      return;
+    }
+
     const { data, error } = await supabase
-      .from('users') // اسم الجدول
+      .from('users')
       .insert([
         {
           username: username,
           email: email,
-          password: password, // قم بتشفير كلمة المرور لاحقاً لضمان الأمان
-          created_at: new Date().toISOString() // وقت الإنشاء
-        }
+          password: hashedPassword, // تخزين كلمة المرور المشفرة
+          created_at: new Date().toISOString(),
+        },
       ]);
 
     if (error) {
-      console.error("Supabase Error: ", error.message);
       throw new Error("Failed to save data to Supabase. " + error.message);
     }
 
-    // رسالة نجاح باسم المستخدم
-    displayMessage(`Welcome, ${username}! Redirecting...`, "success");
-    console.log("User successfully added to Supabase:", data);
+    const { user, session, error: signupError } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
 
-    // التوجيه إلى الصفحة `html.html` بعد 2 ثانية
-    setTimeout(() => {
-      window.location.href = "html.html";
-    }, 2000);
+    if (signupError) {
+      throw new Error("Error during sign-up. " + signupError.message);
+    }
+
+    displayMessage(`Welcome, ${username}! Your account has been created successfully.`, "success");
   } catch (error) {
-    console.error("Error occurred:", error.message);
     displayMessage(error.message, "error");
   } finally {
-    // إخفاء مؤشر التحميل
     loadingOverlay.style.display = "none";
   }
 });
 
-// دالة لعرض الرسالة في منتصف الصفحة واختفائها تلقائيًا
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
 function displayMessage(message, type) {
   const messageOverlay = document.getElementById("messageOverlay");
   const messageText = document.getElementById("messageText");
 
-  // تخصيص الرسالة حسب النوع
   messageText.textContent = message;
   messageOverlay.style.backgroundColor = type === "success" ? "rgba(0, 128, 0, 0.8)" : "rgba(255, 0, 0, 0.8)";
   messageOverlay.style.display = "flex";
 
-  // اختفاء الرسالة تلقائيًا بعد 2 ثانية
   setTimeout(() => {
     messageOverlay.style.display = "none";
   }, 2000);
