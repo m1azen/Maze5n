@@ -6,8 +6,6 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let selectedUserId = null;
-
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     // جلب بيانات المستخدمين
@@ -18,9 +16,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    const usersTable = document.getElementById('usersTable');
+    // تحديث الإحصائيات
+    document.getElementById('totalUsers').textContent = users.length;
+    document.getElementById('activeUsers').textContent = users.filter(user => user.status === 'نشط').length;
+    document.getElementById('suspendedUsers').textContent = users.filter(user => user.status.includes('موقوف')).length;
 
-    // عرض بيانات المستخدمين في الجدول
+    // حساب متوسط درجات النظام
+    const totalScores = users.reduce((sum, user) => sum + (user.exam_scores || []).reduce((subSum, score) => subSum + score.obtained_marks, 0), 0);
+    const totalMarks = users.reduce((sum, user) => sum + (user.exam_scores || []).reduce((subSum, score) => subSum + score.total_marks, 0), 0);
+    const averageScore = totalMarks > 0 ? Math.round((totalScores / totalMarks) * 100) : 0;
+    document.getElementById('averageScore').textContent = `${averageScore}%`;
+
+    // ملء الجدول بالمستخدمين
+    const usersTable = document.getElementById('usersTable');
     users.forEach(user => {
       const row = document.createElement('tr');
       row.innerHTML = `
@@ -29,8 +37,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${user.email}</td>
         <td>${user.status}</td>
         <td>
-          <button onclick="showSuspendOverlay(${user.id})">إيقاف</button>
-          <button onclick="showAddExamOverlay(${user.id})">إضافة درجات</button>
+          <button onclick="suspendUser(${user.id})">إيقاف</button>
+          <button onclick="addExamScores(${user.id})">إضافة درجات</button>
         </td>
       `;
       usersTable.appendChild(row);
@@ -40,33 +48,34 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// إظهار نافذة الإيقاف
-function showSuspendOverlay(userId) {
-  selectedUserId = userId;
-  document.getElementById('suspendOverlay').style.display = 'flex';
-
-  document.getElementById('confirmSuspend').onclick = async () => {
-    const reason = document.getElementById('suspendReason').value.trim();
-    if (!reason) return alert("يرجى إدخال سبب الإيقاف.");
-    await supabase.from('users').update({ status: `موقوف: ${reason}` }).eq('id', selectedUserId);
+// دوال تنفيذ الإجراءات
+async function suspendUser(userId) {
+  const reason = prompt("يرجى إدخال سبب الإيقاف:");
+  if (!reason) return;
+  const { error } = await supabase.from('users').update({ status: `موقوف: ${reason}` }).eq('id', userId);
+  if (error) {
+    console.error("Error suspending user:", error.message);
+  } else {
     alert("تم إيقاف الحساب بنجاح.");
     location.reload();
-  };
-
-  document.getElementById('cancelSuspend').onclick = () => {
-    document.getElementById('suspendOverlay').style.display = 'none';
-  };
+  }
 }
 
-// إظهار نافذة إضافة الدرجات
-function showAddExamOverlay(userId) {
-  selectedUserId = userId;
-  document.getElementById('addExamOverlay').style.display = 'flex';
+async function addExamScores(userId) {
+  const examName = prompt("اسم الامتحان:");
+  const totalMarks = parseInt(prompt("الدرجة الكلية:"), 10);
+  const obtainedMarks = parseInt(prompt("الدرجة المحصل عليها:"), 10);
 
-  document.getElementById('confirmAddExam').onclick = async () => {
-    const examName = document.getElementById('examName').value.trim();
-    const totalMarks = parseInt(document.getElementById('totalMarks').value, 10);
-    const obtainedMarks = parseInt(document.getElementById('obtainedMarks').value, 10);
+  if (!examName || isNaN(totalMarks) || isNaN(obtainedMarks)) {
+    alert("يرجى ملء جميع الحقول بشكل صحيح.");
+    return;
+  }
 
-    if (!examName || isNaN(totalMarks) || isNaN(obtainedMarks)) {
-      return alert("يرجى ملء جميع الحقول
+  const { error } = await supabase
+    .from('users')
+    .update({
+      exam_scores: supabase.raw(`
+        array_append(exam_scores, jsonb_build_object('exam_name', '${examName}', 'total_marks', ${totalMarks}, 'obtained_marks', ${obtainedMarks}))
+      `)
+    })
+    .
