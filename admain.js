@@ -6,6 +6,8 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+let selectedUserId = null;
+
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     // جلب بيانات المستخدمين
@@ -16,17 +18,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // تحديث الإحصائيات
-    const totalUsers = users.length;
-    const activeUsers = users.filter(user => user.status === 'Active').length;
-    const suspendedUsers = users.filter(user => user.status.includes('Suspended')).length;
-
-    document.getElementById('totalUsers').textContent = totalUsers;
-    document.getElementById('activeUsers').textContent = activeUsers;
-    document.getElementById('suspendedUsers').textContent = suspendedUsers;
-
-    // تحديث جدول المستخدمين
     const usersTable = document.getElementById('usersTable');
+
+    // عرض بيانات المستخدمين في الجدول
     users.forEach(user => {
       const row = document.createElement('tr');
       row.innerHTML = `
@@ -35,8 +29,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${user.email}</td>
         <td>${user.status}</td>
         <td>
-          <button onclick="editUser(${user.id})">Edit</button>
-          <button onclick="deleteUser(${user.id})">Delete</button>
+          <button onclick="showSuspendOverlay(${user.id})">إيقاف</button>
+          <button onclick="showAddExamOverlay(${user.id})">إضافة درجات</button>
         </td>
       `;
       usersTable.appendChild(row);
@@ -46,11 +40,33 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// دوال للتعديل والحذف
-function editUser(userId) {
-  alert(`Edit user with ID: ${userId}`);
+// إظهار نافذة الإيقاف
+function showSuspendOverlay(userId) {
+  selectedUserId = userId;
+  document.getElementById('suspendOverlay').style.display = 'flex';
+
+  document.getElementById('confirmSuspend').onclick = async () => {
+    const reason = document.getElementById('suspendReason').value.trim();
+    if (!reason) return alert("يرجى إدخال سبب الإيقاف.");
+    await supabase.from('users').update({ status: `موقوف: ${reason}` }).eq('id', selectedUserId);
+    alert("تم إيقاف الحساب بنجاح.");
+    location.reload();
+  };
+
+  document.getElementById('cancelSuspend').onclick = () => {
+    document.getElementById('suspendOverlay').style.display = 'none';
+  };
 }
 
-function deleteUser(userId) {
-  alert(`Delete user with ID: ${userId}`);
-}
+// إظهار نافذة إضافة الدرجات
+function showAddExamOverlay(userId) {
+  selectedUserId = userId;
+  document.getElementById('addExamOverlay').style.display = 'flex';
+
+  document.getElementById('confirmAddExam').onclick = async () => {
+    const examName = document.getElementById('examName').value.trim();
+    const totalMarks = parseInt(document.getElementById('totalMarks').value, 10);
+    const obtainedMarks = parseInt(document.getElementById('obtainedMarks').value, 10);
+
+    if (!examName || isNaN(totalMarks) || isNaN(obtainedMarks)) {
+      return alert("يرجى ملء جميع الحقول
