@@ -1,44 +1,28 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="admain.css" />
-  <script type="module" src="admain.js" defer></script>
-  <title>لوحة الإدارة</title>
+  <meta charset="UTF-8">
+  <title>لوحة الإدارة - مازن جلال</title>
+  <link rel="stylesheet" href="admain.css">
 </head>
 <body>
-  <header class="admin-header">
+  <header>
     <h1>لوحة الإدارة</h1>
-    <p>مرحبًا بك في لوحة الإدارة لإدارة النظام</p>
+    <p>مرحبًا بك يا مازن جلال في لوحة الإدارة</p>
   </header>
 
-  <main class="admin-container">
-    <!-- قسم الإحصائيات -->
-    <section class="insights">
+  <main>
+    <section class="stats">
       <h2>إحصائيات النظام</h2>
-      <div class="insights-container">
-        <div class="insight-box" id="insight-total-users">
-          <h3>إجمالي المستخدمين</h3>
-          <p id="totalUsers">0</p>
-        </div>
-        <div class="insight-box" id="insight-active-users">
-          <h3>المستخدمون النشطون</h3>
-          <p id="activeUsers">0</p>
-        </div>
-        <div class="insight-box" id="insight-suspended-users">
-          <h3>المستخدمون الموقوفون</h3>
-          <p id="suspendedUsers">0</p>
-        </div>
-        <div class="insight-box" id="insight-average-score">
-          <h3>متوسط الدرجات</h3>
-          <p id="averageScore">0%</p>
-        </div>
+      <div class="stat-boxes">
+        <div class="box" id="totalUsers">إجمالي المستخدمين<br><strong>0</strong></div>
+        <div class="box" id="activeUsers">المستخدمون النشطون<br><strong>0</strong></div>
+        <div class="box" id="blockedUsers">المستخدمون الموقوفون<br><strong>0</strong></div>
+        <div class="box" id="avgGrade">متوسط الدرجات<br><strong>0%</strong></div>
       </div>
     </section>
 
-    <!-- جدول المستخدمين -->
-    <section class="admin-table">
+    <section>
       <h2>إدارة المستخدمين</h2>
       <table>
         <thead>
@@ -47,16 +31,17 @@
             <th>اسم المستخدم</th>
             <th>البريد الإلكتروني</th>
             <th>الحالة</th>
+            <th>السبب</th>
             <th>الإجراءات</th>
           </tr>
         </thead>
-        <tbody id="usersTable">
-          <span id="totalUsers"></span>
-
-          <!-- سيتم ملؤه بواسطة JavaScript -->
+        <tbody id="usersTableBody">
+          <!-- بيانات المستخدمين تظهر هنا -->
         </tbody>
       </table>
     </section>
   </main>
+
+  <script type="module" src="admain.js"></script>
 </body>
 </html>
