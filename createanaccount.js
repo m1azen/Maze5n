@@ -18,10 +18,11 @@ document.getElementById("accountForm").addEventListener("submit", async (e) => {
   // التحقق من صحة كلمات المرور
   if (password !== confirmPassword) {
     displayMessage("Passwords do not match!", "error");
+    console.error("Validation Error: Passwords do not match.");
     return;
   }
 
-  // عرض مؤشر التحميل
+  // عرض مؤشر التحميل أثناء العملية
   const loadingOverlay = document.getElementById("loadingOverlay");
   loadingOverlay.style.display = "flex";
 
@@ -33,24 +34,26 @@ document.getElementById("accountForm").addEventListener("submit", async (e) => {
         {
           username: username,
           email: email,
-          password: password, // قم بتشفير كلمة المرور إذا لزم الأمر
+          password: password, // قم بتشفير كلمة المرور لاحقاً لضمان الأمان
           created_at: new Date().toISOString() // وقت الإنشاء
         }
       ]);
 
     if (error) {
-      throw new Error(error.message); // إذا حدث خطأ
+      console.error("Supabase Error: ", error.message);
+      throw new Error("Failed to save data to Supabase. " + error.message);
     }
 
-    // عرض رسالة نجاح مرحبًا باسم المستخدم
+    // رسالة نجاح باسم المستخدم
     displayMessage(`Welcome, ${username}! Redirecting...`, "success");
+    console.log("User successfully added to Supabase:", data);
 
-    // الانتقال إلى الصفحة `homepage.html` بعد 2 ثانية
+    // التوجيه إلى الصفحة `html.html` بعد 2 ثانية
     setTimeout(() => {
       window.location.href = "html.html";
     }, 2000);
   } catch (error) {
-    console.error("Error occurred:", error);
+    console.error("Error occurred:", error.message);
     displayMessage(error.message, "error");
   } finally {
     // إخفاء مؤشر التحميل
@@ -58,7 +61,7 @@ document.getElementById("accountForm").addEventListener("submit", async (e) => {
   }
 });
 
-// دالة لعرض الرسالة في منتصف الصفحة واختفاءها
+// دالة لعرض الرسالة في منتصف الصفحة واختفائها تلقائيًا
 function displayMessage(message, type) {
   const messageOverlay = document.getElementById("messageOverlay");
   const messageText = document.getElementById("messageText");
