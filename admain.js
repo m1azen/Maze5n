@@ -3,13 +3,12 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 // إعداد اتصال Supabase
 const SUPABASE_URL = 'https://obimikymmvrwljbpmnxb.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iaW1pa3ltbXZyd2xqYnBtbnhiIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDQ1OTcwOCwiZXhwIjoyMDYwMDM1NzA4fQ.Ve2g7Q8ESJBZfJKGp6l_OVtMwEaLMHGoIUL0ckb9Yxk';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     // جلب بيانات المستخدمين
     const { data: users, error } = await supabase.from('users').select('*');
-
     if (error) {
       console.error("Error fetching users:", error.message);
       return;
@@ -20,12 +19,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const activeUsers = users.filter(user => user.status === 'Active').length;
     const suspendedUsers = users.filter(user => user.status.includes('Suspended')).length;
 
-    document.getElementById('totalUsers').textContent = totalUsers;
-    document.getElementById('activeUsers').textContent = activeUsers;
-    document.getElementById('suspendedUsers').textContent = suspendedUsers;
+    document.getElementById('totalUsers')?.textContent = totalUsers || '0';
+    document.getElementById('activeUsers')?.textContent = activeUsers || '0';
+    document.getElementById('suspendedUsers')?.textContent = suspendedUsers || '0';
 
     // تحديث جدول المستخدمين
     const usersTable = document.getElementById('usersTable');
+    if (!usersTable) {
+      console.warn("Element 'usersTable' not found.");
+      return;
+    }
     users.forEach(user => {
       const row = document.createElement('tr');
       row.innerHTML = `
@@ -36,6 +39,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>
           <button onclick="editUser(${user.id})">Edit</button>
           <button onclick="deleteUser(${user.id})">Delete</button>
+          <button onclick="suspendUser(${user.id})">Suspend</button>
+          <button onclick="viewGrades(${user.id})">Grades</button>
         </td>
       `;
       usersTable.appendChild(row);
@@ -45,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// دوال للتعديل والحذف
+// دوال للتعديل والحذف والإيقاف
 function editUser(userId) {
   alert(`Edit user with ID: ${userId}`);
 }
@@ -53,18 +58,7 @@ function editUser(userId) {
 function deleteUser(userId) {
   alert(`Delete user with ID: ${userId}`);
 }
-row.innerHTML = `
-  <td>${user.id}</td>
-  <td>${user.username}</td>
-  <td>${user.email}</td>
-  <td>${user.status}</td>
-  <td>
-    <button onclick="editUser(${user.id})">Edit</button>
-    <button onclick="deleteUser(${user.id})">Delete</button>
-    <button onclick="suspendUser(${user.id})">Suspend</button>
-    <button onclick="viewGrades(${user.id})">Grades</button>
-  </td>
-`;
+
 async function suspendUser(userId) {
   const reason = prompt("Enter suspension reason:");
   if (!reason) return;
