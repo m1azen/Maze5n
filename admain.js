@@ -1,158 +1,80 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+// admain.js - Supabase Version
 
-// إعداد اتصال Supabase
-const SUPABASE_URL = 'https://obimikymmvrwljbpmnxb.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iaW1pa3ltbXZyd2xqYnBtbnhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ0NTk3MDgsImV4cCI6MjA2MDAzNTcwOH0.iwAiOK8xzu3b2zau-CfubioYdU9Dzmj5UjsbOldZbsw';
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+// إعداد Supabase
+const supabaseUrl = "https://obimikymmvrwljbpmnxb.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iaW1pa3ltbXZyd2xqYnBtbnhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ0NTk3MDgsImV4cCI6MjA2MDAzNTcwOH0.iwAiOK8xzu3b2zau-CfubioYdU9Dzmj5UjsbOldZbsw";
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    // جلب بيانات المستخدمين
-    const { data: users, error } = await supabase.from('users').select('*');
+// تحميل الحسابات
+async function loadAccounts() {
+  const { data: users, error } = await supabase.from("users").select("id, username, email, isActive, blockReason, allowLessons, messageToUser, examResults");
 
-    if (error) {
-      console.error("Error fetching users:", error.message);
-      alert("حدث خطأ أثناء جلب بيانات المستخدمين. الرجاء المحاولة لاحقًا.");
-      return;
-    }
+  if (error) return alert("فشل في تحميل الحسابات: " + error.message);
 
-    if (!users || users.length === 0) {
-      console.warn("No users found in the database.");
-      alert("لا توجد بيانات للمستخدمين لعرضها.");
-      return;
-    }
+  const tableBody = document.getElementById("usersTableBody");
+  tableBody.innerHTML = "";
 
-    // تحديث الإحصائيات
-    document.getElementById('totalUsers').textContent = users.length;
-    document.getElementById('activeUsers').textContent = users.filter(user => user.status === 'نشط').length;
-    document.getElementById('suspendedUsers').textContent = users.filter(user => user.status.includes('موقوف')).length;
-
-    // ملء الجدول بالمستخدمين
-    const usersTable = document.getElementById('usersTable');
-    users.forEach(user => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${user.id}</td>
-        <td><input type="text" value="${user.username}" id="username-${user.id}" /></td>
-        <td><input type="text" value="${user.email}" id="email-${user.id}" /></td>
-        <td><input type="text" value="${user.status}" id="status-${user.id}" /></td>
-        <td>
-          <button onclick="saveUser(${user.id})">حفظ</button>
-          <button onclick="suspendUser(${user.id})">إيقاف</button>
-          <button onclick="addExamScores(${user.id})">إضافة درجات</button>
-        </td>
-      `;
-      usersTable.appendChild(row);
-    });
-  } catch (error) {
-    console.error("Error initializing admin panel:", error.message);
-    alert("حدث خطأ أثناء تحميل الصفحة.");
-  }
-});
-
-// دالة لتعديل بيانات المستخدم
-async function saveUser(userId) {
-  const username = document.getElementById(`username-${userId}`).value.trim();
-  const email = document.getElementById(`email-${userId}`).value.trim();
-  const status = document.getElementById(`status-${userId}`).value.trim();
-
-  if (!username || !email || !status) {
-    alert("يرجى ملء جميع الحقول قبل الحفظ.");
-    return;
-  }
-
-  try {
-    const { error } = await supabase.from('users').update({
-      username: username,
-      email: email,
-      status: status
-    }).eq('id', userId);
-
-    if (error) {
-      console.error("Error updating user:", error.message);
-      alert("حدث خطأ أثناء تعديل البيانات.");
-    } else {
-      alert("تم حفظ التعديلات بنجاح.");
-      location.reload(); // تحديث الصفحة لعرض البيانات الجديدة
-    }
-  } catch (error) {
-    console.error("Error saving user data:", error.message);
-    alert("حدث خطأ أثناء تعديل البيانات.");
-  }
+  users.forEach(user => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${user.id}</td>
+      <td>${user.username || "---"}</td>
+      <td>${user.email}</td>
+      <td>${user.isActive ? "نشط" : "موقوف"}</td>
+      <td>${user.blockReason || "---"}</td>
+      <td>
+        <button onclick="editUser('${user.id}')">✏️</button>
+        <button onclick="blockUser('${user.id}')">🚫</button>
+        <button onclick="deleteUser('${user.id}')">🗑️</button>
+        <button onclick="addExam('${user.id}')">📊</button>
+      </td>
+    `;
+    tableBody.appendChild(row);
+  });
 }
 
-// دالة لإيقاف الحساب
-async function suspendUser(userId) {
-  const reason = prompt("يرجى إدخال سبب الإيقاف:");
+// إيقاف المستخدم
+async function blockUser(userId) {
+  const reason = prompt("❗ اكتب سبب الإيقاف:");
   if (!reason) return;
-
-  try {
-    const { error } = await supabase.from('users').update({
-      status: `موقوف: ${reason}`
-    }).eq('id', userId);
-
-    if (error) {
-      console.error("Error suspending user:", error.message);
-      alert("حدث خطأ أثناء إيقاف الحساب.");
-    } else {
-      alert("تم إيقاف الحساب بنجاح.");
-      location.reload();
-    }
-  } catch (error) {
-    console.error("Error suspending user:", error.message);
-    alert("حدث خطأ أثناء إيقاف الحساب.");
-  }
+  await supabase.from("users").update({ isActive: false, blockReason: reason }).eq("id", userId);
+  loadAccounts();
 }
 
-// دالة لإضافة درجات الامتحان
-async function addExamScores(userId) {
+// حذف المستخدم
+async function deleteUser(userId) {
+  if (!confirm("❗ هل أنت متأكد من حذف المستخدم؟")) return;
+  await supabase.from("users").delete().eq("id", userId);
+  loadAccounts();
+}
+
+// تعديل المستخدم
+async function editUser(userId) {
+  const username = prompt("اسم المستخدم الجديد:");
+  const email = prompt("البريد الإلكتروني الجديد:");
+  const allowLessons = confirm("هل يُسمح له بدخول صفحة الدروس؟");
+  const message = prompt("رسالة تظهر له عند محاولة الدخول:");
+
+  await supabase.from("users").update({ username, email, allowLessons, messageToUser: message }).eq("id", userId);
+  loadAccounts();
+}
+
+// إضافة درجة
+async function addExam(userId) {
   const examName = prompt("اسم الامتحان:");
-  const totalMarks = parseInt(prompt("الدرجة الكلية:"), 10);
-  const obtainedMarks = parseInt(prompt("الدرجة المحصل عليها:"), 10);
-  const examDate = prompt("تاريخ الامتحان (YYYY-MM-DD):");
+  const totalScore = Number(prompt("الدرجة الكلية:"));
+  const obtainedScore = Number(prompt("الدرجة التي حصل عليها:"));
 
-  if (!examName || isNaN(totalMarks) || isNaN(obtainedMarks) || !examDate) {
-    alert("يرجى ملء جميع الحقول بشكل صحيح.");
-    return;
-  }
+  const { data: userData, error } = await supabase.from("users").select("examResults").eq("id", userId).single();
+  const currentResults = userData.examResults || [];
 
-  try {
-    const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('exam_results')
-      .eq('id', userId);
+  currentResults.push({ examName, totalScore, obtainedScore });
 
-    if (userError) {
-      console.error("Error fetching user data:", userError.message);
-      alert("حدث خطأ أثناء جلب البيانات.");
-      return;
-    }
-
-    const existingResults = userData[0].exam_results || [];
-    const newResult = {
-      exam_name: examName,
-      total_marks: totalMarks,
-      obtained_marks: obtainedMarks,
-      exam_date: examDate
-    };
-
-    const updatedResults = [...existingResults, newResult];
-
-    const { error } = await supabase
-      .from('users')
-      .update({ exam_results: updatedResults })
-      .eq('id', userId);
-
-    if (error) {
-      console.error("Error adding exam score:", error.message);
-      alert("حدث خطأ أثناء إضافة درجات الامتحان.");
-    } else {
-      alert("تمت إضافة درجات الامتحان بنجاح.");
-      location.reload();
-    }
-  } catch (error) {
-    console.error("Error adding exam score:", error.message);
-    alert("حدث خطأ أثناء إضافة درجات الامتحان.");
-  }
+  await supabase.from("users").update({ examResults: currentResults }).eq("id", userId);
+  loadAccounts();
 }
+
+// تشغيل
+window.addEventListener("DOMContentLoaded", loadAccounts);
