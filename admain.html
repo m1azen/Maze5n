@@ -1,56 +1,76 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="admain.css" />
-  <script type="module" src="admain.js" defer></script>
-  <title>لوحة تحكم الأدمن</title>
+  <link rel="stylesheet" href="admin.css" />
+  <script type="module" src="admin.js" defer></script>
+  <title>Admin Dashboard</title>
 </head>
 <body>
   <header class="admin-header">
     <h1>لوحة تحكم الأدمن</h1>
-    <p>مرحبًا بك يا مازن! يمكنك من هنا إدارة المنصة.</p>
-    <button id="logoutButton">تسجيل الخروج</button>
+    <p>تحكم شامل في المستخدمين والبيانات</p>
   </header>
 
   <main class="admin-container">
-    <!-- إحصائيات عامة -->
-    <section class="admin-overview">
-      <h2>نظرة عامة</h2>
-      <div class="stats">
-        <div class="stat-box">
-          <h3>عدد المستخدمين</h3>
-          <p id="totalUsers">0</p>
+    <section class="stats-section">
+      <h2>إحصائيات</h2>
+      <div class="circle-container">
+        <div class="circle-box">
+          <canvas id="totalUsersChart"></canvas>
+          <p>إجمالي المستخدمين</p>
         </div>
-        <div class="stat-box">
-          <h3>الحسابات النشطة</h3>
-          <p id="activeUsers">0</p>
+        <div class="circle-box">
+          <canvas id="activeUsersChart"></canvas>
+          <p>المستخدمون النشطون</p>
         </div>
-        <div class="stat-box">
-          <h3>الموقوفين</h3>
-          <p id="suspendedUsers">0</p>
+        <div class="circle-box">
+          <canvas id="averageGradesChart"></canvas>
+          <p>متوسط الدرجات</p>
         </div>
       </div>
     </section>
 
-    <!-- جدول إدارة المستخدمين -->
-    <section class="admin-table">
+    <section class="users-section">
       <h2>إدارة المستخدمين</h2>
       <table>
         <thead>
           <tr>
-            <th>ID</th>
+            <th>المعرف</th>
             <th>الاسم</th>
             <th>البريد</th>
             <th>الحالة</th>
-            <th>الإجراءات</th>
+            <th>إجراءات</th>
           </tr>
         </thead>
-        <tbody id="usersTable">
-          <!-- يتم ملء البيانات بواسطة admin.js -->
-        </tbody>
+        <tbody id="usersTable"></tbody>
       </table>
+    </section>
+
+    <section class="grades-section">
+      <h2>إضافة درجة</h2>
+      <form id="gradeForm">
+        <input type="text" id="examName" placeholder="اسم الامتحان" required />
+        <input type="number" id="totalMark" placeholder="الدرجة الكلية" required />
+        <input type="number" id="markObtained" placeholder="الدرجة التي حصل عليها" required />
+        <input type="email" id="userEmail" placeholder="بريد المستخدم" required />
+        <button type="submit">إضافة</button>
+      </form>
+    </section>
+
+    <section class="message-section">
+      <h2>إرسال رسالة للمستخدم</h2>
+      <form id="messageForm">
+        <input type="email" id="msgUserEmail" placeholder="بريد المستخدم" required />
+        <textarea id="messageContent" placeholder="اكتب الرسالة هنا..." required></textarea>
+        <button type="submit">إرسال</button>
+      </form>
+    </section>
+
+    <section class="top-user-section">
+      <h2>أفضل حساب</h2>
+      <p id="topUser">جاري التحميل...</p>
     </section>
   </main>
 </body>
