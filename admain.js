@@ -1,178 +1,104 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getFirestore, collection, getDocs, updateDoc, deleteDoc, doc, addDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-// إعداد اتصال Supabase
-const SUPABASE_URL = 'https://obimikymmvrwljbpmnxb.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iaW1pa3ltbXZyd2xqYnBtbnhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ0NTk3MDgsImV4cCI6MjA2MDAzNTcwOH0.iwAiOK8xzu3b2zau-CfubioYdU9Dzmj5UjsbOldZbsw';
+// إعداد Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCc_LyGshkApqre4NIRKF7UTNjfE08cenw",
+  authDomain: "websits-turoria.firebaseapp.com",
+  projectId: "websits-turoria",
+  storageBucket: "websits-turoria.appspot.com",
+  messagingSenderId: "689962826966",
+  appId: "1:689962826966:web:babc4f1bbcc7eeb8705d77",
+  measurementId: "G-L6XTRJQQBH"
+};
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
+// تحميل البيانات
 document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    // جلب بيانات المستخدمين من قاعدة البيانات
-    const { data: users, error } = await supabase.from('users').select('*');
-    if (error) {
-      console.error("Error fetching users:", error.message);
-      alert("⚠️ حدث خطأ أثناء تحميل بيانات المستخدمين.");
-      return;
-    }
+  const usersSnap = await getDocs(collection(db, "users"));
+  const users = usersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-    if (!users || users.length === 0) {
-      alert("ℹ️ لا توجد بيانات متاحة للمستخدمين.");
-      console.warn("No users found in the database.");
-      return;
-    }
+  // الإحصائيات
+  document.getElementById("totalUsers").textContent = users.length;
+  document.getElementById("activeUsers").textContent = users.filter(u => u.status === "active").length;
+  document.getElementById("suspendedUsers").textContent = users.filter(u => u.status === "suspended").length;
 
-    // تحديث جدول المستخدمين
-    const usersTable = document.getElementById('usersTable');
-    if (!usersTable) {
-      console.warn("⚠️ عنصر 'usersTable' غير موجود.");
-      return;
-    }
+  // المتوسط
+  const grades = users.map(u => u.grade || 0);
+  const avg = grades.reduce((a, b) => a + b, 0) / grades.length || 0;
+  document.getElementById("avgGrade").textContent = avg.toFixed(1);
 
-    users.forEach(user => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${user.id || 'N/A'}</td>
-        <td>${user.username || 'غير معروف'}</td>
-        <td>${user.email || 'غير معروف'}</td>
-        <td>${user.exam_results || 'لا توجد نتائج'}</td>
-        <td>${user.account_creation_date || 'غير متوفر'}</td>
-        <td>
-          <button onclick="viewGrades('${user.id}')">عرض الدرجات</button>
-          <button onclick="addExamResult('${user.id}')">إضافة امتحان</button>
-          <button onclick="sendMessage('${user.id}')">إرسال رسالة</button>
-          <button onclick="deleteUser('${user.id}')">حذف</button>
-        </td>
-      `;
-      usersTable.appendChild(row);
-    });
-  } catch (error) {
-    console.error("Error initializing admin panel:", error.message);
-    alert("❌ حدث خطأ أثناء تحميل الصفحة.");
-  }
+  // أفضل حساب
+  const best = users.sort((a, b) => (b.grade || 0) - (a.grade || 0))[0];
+  document.getElementById("bestUser").textContent = `أفضل مستخدم: ${best?.username || "لا يوجد"}`;
+
+  const table = document.getElementById("usersTable");
+  users.forEach(user => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${user.username}</td>
+      <td>${user.email}</td>
+      <td>${user.status}</td>
+      <td>${user.grade || "-"}</td>
+      <td>
+        <button onclick="editUser('${user.id}')">تعديل</button>
+        <button onclick="deleteUser('${user.id}')">حذف</button>
+        <button onclick="suspendUser('${user.id}')">إيقاف</button>
+        <button onclick="addGrade('${user.id}')">درجة</button>
+        <button onclick="sendMsg('${user.id}')">رسالة</button>
+      </td>
+    `;
+    table.appendChild(tr);
+  });
 });
 
-// دالة عرض درجات المستخدم
-async function viewGrades(userId) {
-  try {
-    const { data: grades, error } = await supabase
-      .from('exams')
-      .select('*')
-      .eq('user_id', userId);
+window.editUser = (id) => {
+  const newEmail = prompt("أدخل الإيميل الجديد:");
+  if (newEmail) {
+    updateDoc(doc(db, "users", id), { email: newEmail });
+    alert("تم التحديث");
+    location.reload();
+  }
+};
 
-    if (error) {
-      alert("❌ حدث خطأ أثناء جلب الدرجات.");
-      console.error("Error fetching grades:", error);
-      return;
-    }
+window.deleteUser = async (id) => {
+  if (confirm("هل أنت متأكد؟")) {
+    await deleteDoc(doc(db, "users", id));
+    alert("تم الحذف");
+    location.reload();
+  }
+};
 
-    if (!grades || grades.length === 0) {
-      alert("ℹ️ لا توجد درجات متاحة لهذا المستخدم.");
-      return;
-    }
+window.suspendUser = async (id) => {
+  const reason = prompt("سبب الإيقاف:");
+  if (reason) {
+    await updateDoc(doc(db, "users", id), { status: "suspended", reason });
+    alert("تم الإيقاف");
+    location.reload();
+  }
+};
 
-    let message = `📚 درجات المستخدم ذو المعرف ${userId}:\n`;
-    grades.forEach(grade => {
-      message += `📖 المادة: ${grade.subject} | الدرجة: ${grade.score}\n`;
+window.addGrade = async (id) => {
+  const exam = prompt("اسم الامتحان:");
+  const total = prompt("الدرجة الكلية:");
+  const got = prompt("الدرجة التي حصل عليها:");
+  if (exam && total && got) {
+    await updateDoc(doc(db, "users", id), {
+      lastExam: exam,
+      grade: Number(got),
+      totalGrade: Number(total)
     });
-    alert(message);
-  } catch (error) {
-    console.error("Unexpected error:", error.message);
-    alert("❌ حدث خطأ غير متوقع أثناء عرض الدرجات.");
+    alert("تم إضافة الدرجة");
+    location.reload();
   }
-}
+};
 
-// دالة إضافة نتيجة امتحان
-async function addExamResult(userId) {
-  const subject = prompt("📖 أدخل اسم المادة:");
-  const score = prompt("🏆 أدخل درجة الامتحان:");
-
-  if (!subject || !score) {
-    alert("❌ يجب إدخال المادة والدرجة.");
-    return;
+window.sendMsg = async (id) => {
+  const msg = prompt("اكتب الرسالة للمستخدم:");
+  if (msg) {
+    await updateDoc(doc(db, "users", id), { message: msg });
+    alert("تم إرسال الرسالة");
   }
-
-  try {
-    const { data, error } = await supabase
-      .from('exams')
-      .insert([
-        {
-          user_id: userId,
-          subject: subject,
-          score: parseInt(score),
-          exam_date: new Date().toISOString(),
-        },
-      ]);
-
-    if (error) {
-      alert("❌ حدث خطأ أثناء إضافة نتيجة الامتحان.");
-      console.error("Error adding exam result:", error);
-      return;
-    }
-
-    alert("✅ تم إضافة نتيجة الامتحان بنجاح.");
-    location.reload(); // تحديث الصفحة لعرض النتيجة الجديدة
-  } catch (error) {
-    console.error("Unexpected error:", error.message);
-    alert("❌ حدث خطأ غير متوقع.");
-  }
-}
-
-// دالة إرسال رسالة
-async function sendMessage(userId) {
-  const messageContent = prompt("✉️ أدخل محتوى الرسالة:");
-
-  if (!messageContent) {
-    alert("❌ يجب إدخال محتوى الرسالة.");
-    return;
-  }
-
-  try {
-    const { data, error } = await supabase
-      .from('messages')
-      .insert([
-        {
-          user_id: userId,
-          content: messageContent,
-          sent_at: new Date().toISOString(),
-        },
-      ]);
-
-    if (error) {
-      alert("❌ حدث خطأ أثناء إرسال الرسالة.");
-      console.error("Error sending message:", error);
-      return;
-    }
-
-    alert("✅ تم إرسال الرسالة بنجاح.");
-  } catch (error) {
-    console.error("Unexpected error:", error.message);
-    alert("❌ حدث خطأ غير متوقع.");
-  }
-}
-
-// دالة حذف المستخدم
-async function deleteUser(userId) {
-  const confirmation = confirm("🗑️ هل أنت متأكد أنك تريد حذف هذا المستخدم؟");
-
-  if (!confirmation) return;
-
-  try {
-    const { error } = await supabase
-      .from('users')
-      .delete()
-      .eq('id', userId);
-
-    if (error) {
-      alert("❌ حدث خطأ أثناء حذف المستخدم.");
-      console.error("Error deleting user:", error);
-      return;
-    }
-
-    alert("✅ تم حذف المستخدم بنجاح.");
-    location.reload(); // تحديث الصفحة لعرض القائمة الجديدة
-  } catch (error) {
-    console.error("Unexpected error:", error.message);
-    alert("❌ حدث خطأ غير متوقع.");
-  }
-}
+};
