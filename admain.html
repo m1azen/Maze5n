@@ -1,76 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="admain.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="admain.css">
   <script type="module" src="admain.js" defer></script>
-  <title>Admin Dashboard</title>
+  <title>لوحة تحكم الأدمن</title>
 </head>
 <body>
   <header class="admin-header">
     <h1>لوحة تحكم الأدمن</h1>
-    <p>تحكم شامل في المستخدمين والبيانات</p>
+    <p>مرحبًا، قم بإدارة المنصة بكل سهولة.</p>
   </header>
 
   <main class="admin-container">
-    <section class="stats-section">
-      <h2>إحصائيات</h2>
-      <div class="circle-container">
-        <div class="circle-box">
-          <canvas id="totalUsersChart"></canvas>
-          <p>إجمالي المستخدمين</p>
+    <!-- إحصائيات -->
+    <section class="admin-stats">
+      <h2>الإحصائيات</h2>
+      <div class="stats">
+        <div class="stat-box">
+          <h3>عدد المستخدمين</h3>
+          <p id="totalUsers">...</p>
         </div>
-        <div class="circle-box">
-          <canvas id="activeUsersChart"></canvas>
-          <p>المستخدمون النشطون</p>
+        <div class="stat-box">
+          <h3>متوسط الدرجات</h3>
+          <p id="averageScore">...</p>
         </div>
-        <div class="circle-box">
-          <canvas id="averageGradesChart"></canvas>
-          <p>متوسط الدرجات</p>
+        <div class="stat-box">
+          <h3>عدد الامتحانات</h3>
+          <p id="totalExams">...</p>
         </div>
       </div>
     </section>
 
-    <section class="users-section">
+    <!-- إدارة موضوعات الامتحان -->
+    <section class="exam-management">
+      <h2>إدارة موضوعات الامتحان</h2>
+      <div>
+        <input id="examTopicInput" type="text" placeholder="اكتب موضوع الامتحان..." />
+        <button id="addExamTopicBtn">إضافة الموضوع</button>
+        <ul id="examTopicsList">
+          <!-- قائمة الموضوعات -->
+        </ul>
+      </div>
+    </section>
+
+    <!-- إرسال الرسائل -->
+    <section class="message-management">
+      <h2>إرسال رسالة</h2>
+      <textarea id="adminMessageInput" placeholder="اكتب الرسالة هنا..." rows="4"></textarea>
+      <button id="sendMessageBtn">إرسال الرسالة</button>
+    </section>
+
+    <!-- إدارة المستخدمين -->
+    <section class="user-management">
       <h2>إدارة المستخدمين</h2>
       <table>
         <thead>
           <tr>
-            <th>المعرف</th>
+            <th>ID</th>
             <th>الاسم</th>
-            <th>البريد</th>
             <th>الحالة</th>
-            <th>إجراءات</th>
+            <th>الإجراءات</th>
           </tr>
         </thead>
-        <tbody id="usersTable"></tbody>
+        <tbody id="usersTable">
+          <!-- يتم ملء البيانات بواسطة admin.js -->
+        </tbody>
       </table>
-    </section>
-
-    <section class="grades-section">
-      <h2>إضافة درجة</h2>
-      <form id="gradeForm">
-        <input type="text" id="examName" placeholder="اسم الامتحان" required />
-        <input type="number" id="totalMark" placeholder="الدرجة الكلية" required />
-        <input type="number" id="markObtained" placeholder="الدرجة التي حصل عليها" required />
-        <input type="email" id="userEmail" placeholder="بريد المستخدم" required />
-        <button type="submit">إضافة</button>
-      </form>
-    </section>
-
-    <section class="message-section">
-      <h2>إرسال رسالة للمستخدم</h2>
-      <form id="messageForm">
-        <input type="email" id="msgUserEmail" placeholder="بريد المستخدم" required />
-        <textarea id="messageContent" placeholder="اكتب الرسالة هنا..." required></textarea>
-        <button type="submit">إرسال</button>
-      </form>
-    </section>
-
-    <section class="top-user-section">
-      <h2>أفضل حساب</h2>
-      <p id="topUser">جاري التحميل...</p>
     </section>
   </main>
 </body>
