@@ -1,105 +1,104 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getFirestore, collection, getDocs, updateDoc, deleteDoc, doc, addDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-// إعداد اتصال Supabase
-const SUPABASE_URL = 'https://obimikymmvrwljbpmnxb.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iaW1pa3ltbXZyd2xqYnBtbnhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ0NTk3MDgsImV4cCI6MjA2MDAzNTcwOH0.iwAiOK8xzu3b2zau-CfubioYdU9Dzmj5UjsbOldZbsw';
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+// إعداد Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCc_LyGshkApqre4NIRKF7UTNjfE08cenw",
+  authDomain: "websits-turoria.firebaseapp.com",
+  projectId: "websits-turoria",
+  storageBucket: "websits-turoria.appspot.com",
+  messagingSenderId: "689962826966",
+  appId: "1:689962826966:web:babc4f1bbcc7eeb8705d77",
+  measurementId: "G-L6XTRJQQBH"
+};
 
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// تحميل البيانات
 document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    // التحقق من تسجيل الدخول
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+  const usersSnap = await getDocs(collection(db, "users"));
+  const users = usersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-    if (sessionError || !session) {
-      alert("يرجى تسجيل الدخول للوصول إلى حسابك.");
-      window.location.href = 'login.html';
-      return;
-    }
+  // الإحصائيات
+  document.getElementById("totalUsers").textContent = users.length;
+  document.getElementById("activeUsers").textContent = users.filter(u => u.status === "active").length;
+  document.getElementById("suspendedUsers").textContent = users.filter(u => u.status === "suspended").length;
 
-    const userEmail = session.user.email;
+  // المتوسط
+  const grades = users.map(u => u.grade || 0);
+  const avg = grades.reduce((a, b) => a + b, 0) / grades.length || 0;
+  document.getElementById("avgGrade").textContent = avg.toFixed(1);
 
-    // جلب بيانات المستخدم من Supabase
-    const { data: userData, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', userEmail);
+  // أفضل حساب
+  const best = users.sort((a, b) => (b.grade || 0) - (a.grade || 0))[0];
+  document.getElementById("bestUser").textContent = `أفضل مستخدم: ${best?.username || "لا يوجد"}`;
 
-    if (error || userData.length === 0) {
-      console.error("Error fetching user data:", error?.message);
-      alert("فشل في تحميل بيانات حسابك. حاول مرة أخرى.");
-      return;
-    }
-
-    const user = userData[0];
-
-    // تحديث مربع بيانات المستخدم
-    const userInfoEl = document.getElementById('userInfo');
-    userInfoEl.innerHTML = `
-      <h2>بيانات المستخدم</h2>
-      <p><strong>الاسم:</strong> ${user.username || 'غير معروف'}</p>
-      <p><strong>البريد الإلكتروني:</strong> ${user.email || 'غير معروف'}</p>
-      <p><strong>الحالة:</strong> ${user.status || 'غير معروف'}</p>
+  const table = document.getElementById("usersTable");
+  users.forEach(user => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${user.username}</td>
+      <td>${user.email}</td>
+      <td>${user.status}</td>
+      <td>${user.grade || "-"}</td>
+      <td>
+        <button onclick="editUser('${user.id}')">تعديل</button>
+        <button onclick="deleteUser('${user.id}')">حذف</button>
+        <button onclick="suspendUser('${user.id}')">إيقاف</button>
+        <button onclick="addGrade('${user.id}')">درجة</button>
+        <button onclick="sendMsg('${user.id}')">رسالة</button>
+      </td>
     `;
-
-    // حساب وعرض متوسط الدرجات
-    const scores = user.exam_scores || [];
-    const totalObtained = scores.reduce((sum, score) => sum + score.obtained_marks, 0);
-    const totalPossible = scores.reduce((sum, score) => sum + score.total_marks, 0);
-    const average = totalPossible > 0 ? Math.round((totalObtained / totalPossible) * 100) : 0;
-
-    document.getElementById('averageScore').textContent = `${average}%`;
-    document.getElementById('averageScoreTitle').textContent = "متوسط الدرجات";
-
-    // رسالة التحفيز
-    const motivationEl = document.getElementById('motivationMessage');
-    if (average < 50) {
-      motivationEl.textContent = `شد شوية يا ${user.username} ❤️`;
-    } else if (average < 70) {
-      motivationEl.textContent = `ناقص سيكة وتبقى جامد يا بطل، ${user.username}!`;
-    } else if (average < 90) {
-      motivationEl.textContent = `أنت بطل يا ${user.username}!`;
-    } else {
-      motivationEl.textContent = `عاش أوي! 🎉`;
-      displayBalloons();
-    }
-
-    // عرض جدول الدرجات
-    const scoresTable = document.getElementById('examScoresTable');
-    scores.forEach(score => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${score.exam_name}</td>
-        <td>${score.total_marks}</td>
-        <td>${score.obtained_marks}</td>
-        <td>${score.exam_date || 'غير متوفر'}</td>
-      `;
-      scoresTable.appendChild(row);
-    });
-
-    // زر تسجيل الخروج
-    document.getElementById('logoutButton').addEventListener('click', async () => {
-      const { error: logoutError } = await supabase.auth.signOut();
-      if (logoutError) {
-        console.error("Logout error:", logoutError.message);
-        return;
-      }
-      alert("👋 تم تسجيل الخروج بنجاح!");
-      window.location.href = 'login.html';
-    });
-
-  } catch (error) {
-    console.error("Error loading account data:", error.message);
-    alert("حدث خطأ. حاول مرة أخرى.");
-    window.location.href = 'login.html';
-  }
+    table.appendChild(tr);
+  });
 });
 
-// دالة لإظهار البلالين
-function displayBalloons() {
-  const balloonsContainer = document.getElementById('balloonsContainer');
-  balloonsContainer.style.display = 'block';
+window.editUser = (id) => {
+  const newEmail = prompt("أدخل الإيميل الجديد:");
+  if (newEmail) {
+    updateDoc(doc(db, "users", id), { email: newEmail });
+    alert("تم التحديث");
+    location.reload();
+  }
+};
 
-  setTimeout(() => {
-    balloonsContainer.style.display = 'none';
-  }, 5000);
-}
+window.deleteUser = async (id) => {
+  if (confirm("هل أنت متأكد؟")) {
+    await deleteDoc(doc(db, "users", id));
+    alert("تم الحذف");
+    location.reload();
+  }
+};
+
+window.suspendUser = async (id) => {
+  const reason = prompt("سبب الإيقاف:");
+  if (reason) {
+    await updateDoc(doc(db, "users", id), { status: "suspended", reason });
+    alert("تم الإيقاف");
+    location.reload();
+  }
+};
+
+window.addGrade = async (id) => {
+  const exam = prompt("اسم الامتحان:");
+  const total = prompt("الدرجة الكلية:");
+  const got = prompt("الدرجة التي حصل عليها:");
+  if (exam && total && got) {
+    await updateDoc(doc(db, "users", id), {
+      lastExam: exam,
+      grade: Number(got),
+      totalGrade: Number(total)
+    });
+    alert("تم إضافة الدرجة");
+    location.reload();
+  }
+};
+
+window.sendMsg = async (id) => {
+  const msg = prompt("اكتب الرسالة للمستخدم:");
+  if (msg) {
+    await updateDoc(doc(db, "users", id), { message: msg });
+    alert("تم إرسال الرسالة");
+  }
+};
