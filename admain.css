@@ -1,64 +1,61 @@
-/* إعداد الصفحة الأساسية */
+/* إعدادات عامة */
 body {
-  font-family: Arial, sans-serif;
-  background: #f9f9f9;
   margin: 0;
-  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f7fa;
+  color: #333;
 }
 
-.admin-header {
-  background-color: #007bff;
+header {
+  background-color: #3f51b5;
   color: white;
   padding: 20px;
   text-align: center;
+  border-bottom: 5px solid #303f9f;
 }
 
-.admin-header h1 {
-  font-size: 2em;
+header h1 {
+  margin: 0;
 }
 
-.admin-header p {
-  font-size: 1.2em;
-}
-
-/* الحاوية الرئيسية */
 .admin-container {
   max-width: 1200px;
-  margin: 20px auto;
-  background: white;
+  margin: 30px auto;
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.admin-overview {
-  margin-bottom: 30px;
-}
-
+/* الإحصائيات */
 .stats {
   display: flex;
   gap: 20px;
-  justify-content: space-between;
+  justify-content: space-around;
+  margin-bottom: 30px;
 }
 
 .stat-box {
+  background: #e3f2fd;
+  border-radius: 12px;
   flex: 1;
-  background: #f1f4f9;
-  border-radius: 8px;
   padding: 20px;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .stat-box h3 {
-  color: #007bff;
+  margin-bottom: 10px;
+  color: #3f51b5;
+  font-size: 18px;
 }
 
-/* تصميم الجدول */
-.admin-table {
-  overflow-x: auto;
+.stat-box p {
+  font-size: 24px;
+  font-weight: bold;
 }
 
+/* الجدول */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -66,7 +63,7 @@ table {
 }
 
 thead {
-  background: #007bff;
+  background-color: #3f51b5;
   color: white;
 }
 
@@ -77,23 +74,45 @@ th, td {
 }
 
 tbody tr:nth-child(even) {
-  background: #f9f9f9;
+  background-color: #f0f0f0;
 }
 
 tbody tr:hover {
-  background: #eef6ff;
+  background-color: #e1f5fe;
 }
 
+/* الأزرار */
 button {
   padding: 8px 12px;
-  background: #007bff;
-  color: white;
+  margin: 2px;
   border: none;
   border-radius: 5px;
+  background-color: #3f51b5;
+  color: white;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 14px;
 }
 
 button:hover {
-  background: #0056b3;
+  background-color: #303f9f;
+}
+
+/* دائرة الإحصائيات */
+.circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  line-height: 100px;
+  background-color: #90caf9;
+  margin: 0 auto;
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+}
+
+#bestUser {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 18px;
+  color: green;
 }
