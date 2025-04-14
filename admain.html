@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="admain.css">
-  <script type="module" src="admain.js" defer></script>
+  <link rel="stylesheet" href="admin.css">
+  <script type="module" src="admin.js" defer></script>
   <title>Admin Panel</title>
 </head>
 <body>
   <header>
     <h1>Admin Panel</h1>
-    <p>Manage users, exams, and statistics dynamically</p>
+    <p>Complete control over the platform</p>
   </header>
 
   <main>
@@ -29,19 +29,29 @@
           </tr>
         </thead>
         <tbody id="usersTable">
-          <!-- User data will be dynamically populated -->
+          <!-- Data will be dynamically populated -->
         </tbody>
       </table>
     </section>
 
     <!-- Exam Management -->
     <section id="examManagement">
-      <h2>Exam Management</h2>
-      <input id="examTopicInput" type="text" placeholder="Add exam topic..." />
-      <button id="addExamTopicBtn">Add Exam Topic</button>
-      <ul id="examTopicsList">
-        <!-- Exam topics will be dynamically populated -->
-      </ul>
+      <h2>Exam Grades</h2>
+      <form id="gradesForm">
+        <input id="examUserId" type="number" placeholder="User ID" required />
+        <input id="examGrade" type="number" placeholder="Exam Grade" required />
+        <button type="submit">Add Grade</button>
+      </form>
+    </section>
+
+    <!-- Messaging System -->
+    <section id="messagingSystem">
+      <h2>Messaging</h2>
+      <form id="messageForm">
+        <input id="messageUserId" type="number" placeholder="User ID" required />
+        <textarea id="messageContent" rows="4" placeholder="Write a message..." required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
     </section>
 
     <!-- Statistics -->
