@@ -1,10 +1,6 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-import bcrypt from 'https://cdn.jsdelivr.net/npm/bcryptjs/+esm';
-
-const SUPABASE_URL = 'https://obimikymmvrwljbpmnxb.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iaW1pa3ltbXZyd2xqYnBtbnhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ0NTk3MDgsImV4cCI6MjA2MDAzNTcwOH0.iwAiOK8xzu3b2zau-CfubioYdU9Dzmj5UjsbOldZbsw';
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const SHEET_ID = '1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo'; // ID الخاص بـ Google Sheets
+const API_KEY = 'AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0'; // API Key الخاص بك
+const RANGE = 'Sheet1!A:E'; // نطاق البيانات داخل Google Sheets
 
 document.getElementById('loginForm').addEventListener('submit', async function (event) {
   event.preventDefault(); // منع إعادة تحميل الصفحة
@@ -13,40 +9,65 @@ document.getElementById('loginForm').addEventListener('submit', async function (
   const password = document.getElementById('password').value.trim();
 
   if (!email || !password) {
-    displayMessage('❌ يرجى إدخال البريد الإلكتروني وكلمة المرور.', false);
+    displayMessage('❌ Please enter your email and password.', false);
     return;
   }
 
   try {
-    const { data: session, error: loginError } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
+    // جلب البيانات من Google Sheets
+    const users = await fetchDataFromGoogleSheets();
 
-    if (loginError) {
-      displayMessage('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة.', false);
+    // التحقق من وجود البريد الإلكتروني
+    const user = users.find((user) => user[1] === email); // افتراض أن العمود الثاني يحتوي على البريد الإلكتروني
+    if (!user) {
+      displayMessage('❌ Email or password is incorrect.', false);
       return;
     }
 
-    const { data: users, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', email);
-
-    if (users[0].status.includes('موقوف')) {
-      displayMessage('❌ حسابك موقوف. يرجى مراجعة الإدارة.', false);
+    // التحقق من كلمة المرور باستخدام bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user[2]); // افتراض أن العمود الثالث يحتوي على كلمة المرور المشفرة
+    if (!isPasswordValid) {
+      displayMessage('❌ Email or password is incorrect.', false);
       return;
     }
 
-    displayMessage(`🎉 مرحبًا ${users[0].username}! تم تسجيل الدخول بنجاح.`, true);
+    // التحقق من حالة المستخدم
+    if (user[3] === 'Suspended') { // افتراض أن العمود الرابع يحتوي على حالة المستخدم
+      displayMessage('❌ Your account is suspended. Please contact support.', false);
+      return;
+    }
+
+    // تسجيل الدخول بنجاح
+    displayMessage(`🎉 Welcome ${user[0]}! Login successful.`, true); // افتراض أن العمود الأول يحتوي على اسم المستخدم
     setTimeout(() => {
-      window.location.href = 'html.html'; // توجيه عند النجاح
+      window.location.href = 'html.html'; // توجيه إلى صفحة أخرى بعد تسجيل الدخول
     }, 2000);
   } catch (error) {
-    displayMessage('❌ حدث خطأ أثناء تسجيل الدخول. حاول مرة أخرى.', false);
+    console.error('Error during login:', error);
+    displayMessage('❌ An error occurred during login. Please try again.', false);
   }
 });
 
+// دالة لجلب البيانات من Google Sheets
+async function fetchDataFromGoogleSheets() {
+  try {
+    const response = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`
+    );
+    const data = await response.json();
+
+    if (!data.values) {
+      throw new Error('No data found in the sheet.');
+    }
+
+    return data.values; // إعادة البيانات كصفوف
+  } catch (error) {
+    console.error('Error fetching data from Google Sheets:', error.message);
+    throw new Error('Failed to fetch data from Google Sheets.');
+  }
+}
+
+// دالة لعرض الرسائل
 function displayMessage(message, isSuccess) {
   const messageOverlay = document.getElementById('messageOverlay');
   const messageText = document.getElementById('messageText');
@@ -54,4 +75,8 @@ function displayMessage(message, isSuccess) {
   messageText.textContent = message;
   messageOverlay.style.backgroundColor = isSuccess ? 'rgba(0, 128, 0, 0.8)' : 'rgba(255, 0, 0, 0.8)';
   messageOverlay.style.display = 'flex';
+
+  setTimeout(() => {
+    messageOverlay.style.display = 'none';
+  }, 3000);
 }
