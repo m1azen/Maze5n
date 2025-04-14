@@ -1,100 +1,113 @@
-// admin.js
+const SHEET_ID = '1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo';
+const API_KEY = 'AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0';
+const RANGE_USERS = 'Sheet1!A:E';
+const RANGE_MESSAGES = 'Sheet2!A:B';
+const RANGE_GRADES = 'Sheet3!A:C';
 
-const SHEET_ID = '1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo'; // Google Sheets ID
-const API_KEY = 'AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0'; // Google Sheets API Key
-const RANGE_USERS = 'Sheet1!A2:E'; // Users data range
-const RANGE_EXAMS = 'Sheet2!A1:B'; // Exams data range
-
-// Fetch data from Google Sheets
+// جلب البيانات من Google Sheets
 async function fetchData(range) {
   try {
     const response = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`
     );
-    if (!response.ok) throw new Error("Failed to fetch data.");
+    if (!response.ok) throw new Error('Error fetching data.');
     const data = await response.json();
     return data.values || [];
   } catch (error) {
-    console.error("Error fetching data:", error.message);
-    return null;
+    console.error(error.message);
+    throw new Error('Failed to fetch data from Google Sheets.');
   }
 }
 
-// Display users in HTML table
+// عرض بيانات المستخدمين
 async function displayUsers() {
   const usersTable = document.getElementById("usersTable");
-  const users = await fetchData(RANGE_USERS);
+  try {
+    const users = await fetchData(RANGE_USERS);
 
-  if (users === null) {
-    usersTable.innerHTML = `
-      <tr>
-        <td colspan="6">⚠️ Error fetching users. Please try again later.</td>
-      </tr>
-    `;
-    return;
+    usersTable.innerHTML = "";
+    users.forEach((user, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${user[0]}</td>
+        <td>${user[1]}</td>
+        <td>${user[2]}</td>
+        <td>${user[3]}</td>
+        <td>
+          <button onclick="sendMessage(${index})">Send Message</button>
+          <button onclick="deleteUser(${index})">Delete</button>
+          <button onclick="updateGrades(${index})">Add Grades</button>
+        </td>
+      `;
+      usersTable.appendChild(row);
+    });
+  } catch (error) {
+    usersTable.innerHTML = `<tr><td colspan="6">⚠️ Error fetching users. Please try again later.</td></tr>`;
   }
-
-  if (users.length === 0) {
-    usersTable.innerHTML = `
-      <tr>
-        <td colspan="6">🔍 No accounts added yet.</td>
-      </tr>
-    `;
-    return;
-  }
-
-  usersTable.innerHTML = "";
-  users.forEach((user, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${user[0]}</td>
-      <td>${user[1]}</td>
-      <td>${user[2]}</td>
-      <td>${user[3]}</td>
-      <td>
-        <button onclick="deleteUser(${index})">Delete</button>
-        <button onclick="suspendUser(${index})">Suspend</button>
-      </td>
-    `;
-    usersTable.appendChild(row);
-  });
 }
 
-// Add exam topic
-document.getElementById("addExamTopicBtn").addEventListener("click", async () => {
-  const topic = document.getElementById("examTopicInput").value.trim();
-  if (topic) {
-    const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE_EXAMS}:append?valueInputOption=RAW&key=${API_KEY}`,
+// إضافة درجات الامتحان
+document.getElementById("gradesForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const userId = document.getElementById("examUserId").value;
+  const grade = document.getElementById("examGrade").value;
+
+  try {
+    await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE_GRADES}:append?valueInputOption=RAW&key=${API_KEY}`,
       {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ values: [[topic]] }),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ values: [[userId, grade]] }),
       }
     );
-    document.getElementById("examTopicInput").value = "";
-    alert("Exam topic added successfully!");
+    alert("Grade added successfully!");
+  } catch (error) {
+    alert("Failed to add grade.");
   }
 });
 
-// Update statistics
+// إرسال رسالة خاصة
+document.getElementById("messageForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const userId = document.getElementById("messageUserId").value;
+  const message = document.getElementById("messageContent").value;
+
+  try {
+    await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE_MESSAGES}:append?valueInputOption=RAW&key=${API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ values: [[userId, message]] }),
+      }
+    );
+    alert("Message sent successfully!");
+  } catch (error) {
+    alert("Failed to send message.");
+  }
+});
+
+// تحديث الإحصائيات
 document.getElementById("updateStatsBtn").addEventListener("click", async () => {
   const totalUsers = document.getElementById("totalUsersStat").value;
   const averageGrades = document.getElementById("averageGradesStat").value;
 
-  const response = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Statistics!A1:B1:append?valueInputOption=RAW&key=${API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ values: [[totalUsers, averageGrades]] }),
-    }
-  );
-  alert("Statistics updated successfully!");
+  try {
+    await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Statistics!A:B:append?valueInputOption=RAW&key=${API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ values: [[totalUsers, averageGrades]] }),
+      }
+    );
+    alert("Statistics updated successfully!");
+  } catch (error) {
+    alert("Failed to update statistics.");
+  }
 });
 
-// Load data on page load
-document.addEventListener("DOMContentLoaded", () => {
-  displayUsers();
-});
+// تحميل البيانات عند فتح الصفحة
+document.addEventListener("DOMContentLoaded", displayUsers);
