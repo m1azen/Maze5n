@@ -1,73 +1,61 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="admain.css">
   <script type="module" src="admain.js" defer></script>
-  <title>لوحة تحكم الأدمن</title>
+  <title>Admin Panel</title>
 </head>
 <body>
-  <header class="admin-header">
-    <h1>لوحة تحكم الأدمن</h1>
-    <p>مرحبًا، قم بإدارة المنصة بكل سهولة.</p>
+  <header>
+    <h1>Admin Panel</h1>
+    <p>Manage users, exams, and statistics dynamically</p>
   </header>
 
-  <main class="admin-container">
-    <!-- إحصائيات -->
-    <section class="admin-stats">
-      <h2>الإحصائيات</h2>
-      <div class="stats">
-        <div class="stat-box">
-          <h3>عدد المستخدمين</h3>
-          <p id="totalUsers">...</p>
-        </div>
-        <div class="stat-box">
-          <h3>متوسط الدرجات</h3>
-          <p id="averageScore">...</p>
-        </div>
-        <div class="stat-box">
-          <h3>عدد الامتحانات</h3>
-          <p id="totalExams">...</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- إدارة موضوعات الامتحان -->
-    <section class="exam-management">
-      <h2>إدارة موضوعات الامتحان</h2>
-      <div>
-        <input id="examTopicInput" type="text" placeholder="اكتب موضوع الامتحان..." />
-        <button id="addExamTopicBtn">إضافة الموضوع</button>
-        <ul id="examTopicsList">
-          <!-- قائمة الموضوعات -->
-        </ul>
-      </div>
-    </section>
-
-    <!-- إرسال الرسائل -->
-    <section class="message-management">
-      <h2>إرسال رسالة</h2>
-      <textarea id="adminMessageInput" placeholder="اكتب الرسالة هنا..." rows="4"></textarea>
-      <button id="sendMessageBtn">إرسال الرسالة</button>
-    </section>
-
-    <!-- إدارة المستخدمين -->
-    <section class="user-management">
-      <h2>إدارة المستخدمين</h2>
-      <table>
+  <main>
+    <!-- User Management -->
+    <section id="userManagement">
+      <h2>User Management</h2>
+      <table border="1">
         <thead>
           <tr>
             <th>ID</th>
-            <th>الاسم</th>
-            <th>الحالة</th>
-            <th>الإجراءات</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Grades</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody id="usersTable">
-          <!-- يتم ملء البيانات بواسطة admin.js -->
+          <!-- User data will be dynamically populated -->
         </tbody>
       </table>
+    </section>
+
+    <!-- Exam Management -->
+    <section id="examManagement">
+      <h2>Exam Management</h2>
+      <input id="examTopicInput" type="text" placeholder="Add exam topic..." />
+      <button id="addExamTopicBtn">Add Exam Topic</button>
+      <ul id="examTopicsList">
+        <!-- Exam topics will be dynamically populated -->
+      </ul>
+    </section>
+
+    <!-- Statistics -->
+    <section id="statisticsControl">
+      <h2>Statistics Control</h2>
+      <div>
+        <label for="totalUsersStat">Total Users:</label>
+        <input id="totalUsersStat" type="number" />
+      </div>
+      <div>
+        <label for="averageGradesStat">Average Grades:</label>
+        <input id="averageGradesStat" type="number" step="0.01" />
+      </div>
+      <button id="updateStatsBtn">Update Statistics</button>
     </section>
   </main>
 </body>
