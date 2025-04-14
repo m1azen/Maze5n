@@ -1,60 +1,31 @@
-/* admin.css */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const examForm = document.getElementById("examForm");
 
-header {
-  background-color: #0033cc;
-  color: white;
-  text-align: center;
-  padding: 1rem;
-}
+  // تأكد من أن العناصر موجودة قبل استخدامها
+  if (examForm) {
+    examForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-main {
-  padding: 2rem;
-}
+      const userId = document.getElementById("userId").value.trim();
+      const examName = document.getElementById("examName").value.trim();
+      const totalMarks = parseFloat(document.getElementById("totalMarks").value);
+      const obtainedMarks = parseFloat(document.getElementById("obtainedMarks").value);
 
-section {
-  margin-bottom: 2rem;
-}
+      const status = obtainedMarks >= totalMarks * 0.5 ? "ناجح" : "راسب";
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
+      // إضافة النتيجة إلى Google Sheets
+      await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/YOUR_SHEET_ID/values/Sheet3!A:E:append?valueInputOption=RAW&key=YOUR_API_KEY`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ values: [[userId, examName, totalMarks, obtainedMarks, status]] }),
+        }
+      );
 
-th, td {
-  border: 1px solid #ddd;
-  padding: 0.5rem;
-  text-align: center;
-}
-
-button {
-  padding: 0.5rem;
-  background-color: #0033cc;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #002699;
-}
-
-input {
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-#statisticsContainer {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 1rem;
-}
+      alert("تمت إضافة النتيجة بنجاح!");
+    });
+  } else {
+    console.error("عنصر 'examForm' غير موجود!");
+  }
+});
