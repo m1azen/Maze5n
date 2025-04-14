@@ -1,49 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="createanaccount.css" />
-  <title>Create an Account</title>
-  
-  <!-- JavaScript الخاص بالنموذج -->
-  <script type="module" src="createanaccount.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إنشاء حساب</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script> <!-- مكتبة bcryptjs -->
+  <script src="signup.js" defer></script>
 </head>
-<body>
-  <div class="container">
-    <h1>Create an Account</h1>
-    <form id="accountForm">
-      <!-- اسم المستخدم -->
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" placeholder="Enter your username" required />
-
-      <!-- البريد الإلكتروني -->
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" placeholder="Enter your email" required />
-
-      <!-- كلمة المرور -->
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" placeholder="Enter your password" required />
-
-      <!-- تأكيد كلمة المرور -->
-      <label for="confirmPassword">Confirm Password:</label>
-      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter your password" required />
-
-      <!-- زر الإنشاء -->
-      <button type="submit">Create Account</button>
-    </form>
-
-    <!-- شاشة تحميل -->
-    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
-      <div class="loading-spinner"></div>
-    </div>
-
-    <!-- رسالة نجاح أو خطأ -->
-    <div id="messageOverlay" class="message-overlay" style="display: none;">
-      <div class="message-box">
-        <p id="messageText"></p>
-      </div>
-    </div>
+<body dir="rtl">
+  <h1>إنشاء حساب جديد</h1>
+  <form id="accountForm">
+    <input id="username" type="text" placeholder="اسم المستخدم" required />
+    <input id="email" type="email" placeholder="البريد الإلكتروني" required />
+    <input id="password" type="password" placeholder="كلمة المرور" required />
+    <input id="confirmPassword" type="password" placeholder="تأكيد كلمة المرور" required />
+    <button type="submit">إنشاء الحساب</button>
+  </form>
+  <div id="loadingOverlay" style="display: none;">جاري التحميل...</div>
+  <div id="messageOverlay" style="display: none;">
+    <p id="messageText"></p>
   </div>
 </body>
 </html>
