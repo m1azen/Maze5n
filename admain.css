@@ -6,56 +6,19 @@ body {
   box-sizing: border-box;
 }
 
-.admin-header {
+header {
   background-color: #6200ea;
   color: white;
   text-align: center;
   padding: 1rem;
 }
 
-.admin-container {
+main {
   padding: 2rem;
-  max-width: 1200px;
-  margin: auto;
 }
 
-.stats,
-.exam-management,
-.message-management,
-.user-management {
+section {
   margin-bottom: 2rem;
-}
-
-.stat-box {
-  flex: 1;
-  padding: 1rem;
-  border: 1px solid #ddd;
-  text-align: center;
-  border-radius: 5px;
-  background-color: #f5f5f5;
-}
-
-input,
-textarea {
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-button {
-  background-color: #6200ea;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #3700b3;
 }
 
 table {
@@ -63,14 +26,29 @@ table {
   border-collapse: collapse;
 }
 
-th,
-td {
-  padding: 0.5rem;
+th, td {
   border: 1px solid #ddd;
+  padding: 0.5rem;
   text-align: center;
 }
 
-th {
+button {
+  padding: 0.5rem;
   background-color: #6200ea;
   color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #3700b3;
+}
+
+input, textarea {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
