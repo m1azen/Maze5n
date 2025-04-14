@@ -1,83 +1,82 @@
+/* الصفحة الرئيسية */
 body {
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #007bff, #00d4ff);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   margin: 0;
-}
-
-.container {
-  background-color: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 400px;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #f0f0f0; /* لون الخلفية */
+  direction: rtl; /* توجيه الصفحة من اليمين إلى اليسار */
 }
 
 h1 {
-  color: #007bff;
-  margin-bottom: 20px;
   text-align: center;
+  color: #0033cc;
+  margin: 20px 0;
 }
 
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
+/* النموذج */
+form {
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 input {
   width: 100%;
   padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   box-sizing: border-box;
 }
 
 button {
-  background-color: #007bff;
+  width: 100%;
+  padding: 10px;
+  background-color: #0033cc;
   color: white;
   border: none;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  width: 100%;
+  border-radius: 4px;
   font-size: 16px;
-  transition: background-color 0.3s;
+  cursor: pointer;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #002699;
 }
 
-.message-overlay {
-  display: none;
+/* الرسائل */
+#loadingOverlay, #messageOverlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6);
-  justify-content: center;
+  width: 100%;
+  height: 100%;
+  display: none;
   align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+#loadingOverlay {
+  background-color: rgba(0, 0, 0, 0.5);
   color: white;
+  font-size: 18px;
 }
 
-.message-box {
-  background-color: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  text-align: center;
+#messageOverlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 18px;
 }
 
-@media (max-width: 480px) {
-  .container, .message-box {
-    width: 90%;
-    padding: 30px;
-  }
+#messageText {
+  padding: 10px;
+  background-color: #0033cc;
+  border-radius: 8px;
+  color: white;
+  font-size: 18px;
 }
