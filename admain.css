@@ -24,6 +24,7 @@ section {
 table {
   width: 100%;
   border-collapse: collapse;
+  direction: rtl;
 }
 
 th, td {
@@ -51,4 +52,10 @@ input, textarea {
   padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
+}
+
+#statisticsContainer {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
 }
