@@ -1,71 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="admain.css">
+  <link rel="stylesheet" href="admشin.css">
   <script type="module" src="admain.js" defer></script>
-  <title>Admin Panel</title>
+  <title>  لوحة تحكم الأدمن مازن </title>
 </head>
-<body>
+<body dir="rtl">
   <header>
-    <h1>Admin Panel</h1>
-    <p>Complete control over the platform</p>
+    <h1>لوحة تحكم الأدمن</h1>
+    <p>إدارة المستخدمين، الامتحانات، وإحصائيات المنصة</p>
   </header>
 
   <main>
-    <!-- User Management -->
+    <!-- إدارة المستخدمين -->
     <section id="userManagement">
-      <h2>User Management</h2>
+      <h2>إدارة المستخدمين</h2>
       <table border="1">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Grades</th>
-            <th>Actions</th>
+            <th>المعرف</th>
+            <th>اسم المستخدم</th>
+            <th>البريد الإلكتروني</th>
+            <th>الحالة</th>
+            <th>السبب</th>
+            <th>الإجراءات</th>
           </tr>
         </thead>
         <tbody id="usersTable">
-          <!-- Data will be dynamically populated -->
+          <!-- سيتم ملء البيانات ديناميكيًا -->
         </tbody>
       </table>
     </section>
 
-    <!-- Exam Management -->
-    <section id="examManagement">
-      <h2>Exam Grades</h2>
-      <form id="gradesForm">
-        <input id="examUserId" type="number" placeholder="User ID" required />
-        <input id="examGrade" type="number" placeholder="Exam Grade" required />
-        <button type="submit">Add Grade</button>
+    <!-- إدارة نتائج الامتحانات -->
+    <section id="examResults">
+      <h2>إضافة درجات امتحان</h2>
+      <form id="examForm">
+        <input id="userId" type="number" placeholder="رقم المستخدم" required />
+        <input id="examName" type="text" placeholder="اسم الامتحان" required />
+        <input id="totalMarks" type="number" placeholder="الدرجة الكلية" required />
+        <input id="obtainedMarks" type="number" placeholder="الدرجة الحاصل عليها" required />
+        <button type="submit">إضافة الدرجة</button>
       </form>
     </section>
 
-    <!-- Messaging System -->
+    <!-- نظام إرسال الرسائل -->
     <section id="messagingSystem">
-      <h2>Messaging</h2>
+      <h2>إرسال الرسائل</h2>
       <form id="messageForm">
-        <input id="messageUserId" type="number" placeholder="User ID" required />
-        <textarea id="messageContent" rows="4" placeholder="Write a message..." required></textarea>
-        <button type="submit">Send Message</button>
+        <input id="messageUserId" type="number" placeholder="رقم المستخدم" required />
+        <textarea id="messageContent" rows="4" placeholder="اكتب الرسالة هنا..." required></textarea>
+        <button type="submit">إرسال الرسالة</button>
       </form>
     </section>
 
-    <!-- Statistics -->
-    <section id="statisticsControl">
-      <h2>Statistics Control</h2>
-      <div>
-        <label for="totalUsersStat">Total Users:</label>
-        <input id="totalUsersStat" type="number" />
+    <!-- إحصائيات المنصة -->
+    <section id="statistics">
+      <h2>إحصائيات المنصة</h2>
+      <div id="statisticsContainer">
+        <div id="totalUsersChart"></div>
+        <div id="suspendedUsersChart"></div>
+        <div id="averageGradesChart"></div>
+        <div id="highestGradesChart"></div>
       </div>
-      <div>
-        <label for="averageGradesStat">Average Grades:</label>
-        <input id="averageGradesStat" type="number" step="0.01" />
-      </div>
-      <button id="updateStatsBtn">Update Statistics</button>
     </section>
   </main>
 </body>
