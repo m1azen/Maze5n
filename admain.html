@@ -3,17 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="admain.css">
-  <script type="module" src="admain.js" defer></script>
+  <link rel="stylesheet" href="admin.css">
+  <script type="module" src="admin.js" defer></script>
   <title>لوحة تحكم الأدمن</title>
 </head>
 <body dir="rtl">
   <header>
     <h1>لوحة تحكم الأدمن</h1>
-    <p>إدارة المستخدمين، الامتحانات، وإحصائيات المنصة</p>
+    <p>إدارة كاملة للمستخدمين والامتحانات مع الإحصائيات</p>
   </header>
 
   <main>
+    <!-- إحصائيات المنصة -->
+    <section id="statistics">
+      <h2>إحصائيات المنصة</h2>
+      <div id="statisticsContainer">
+        <div id="totalUsersChart"></div>
+        <div id="suspendedUsersChart"></div>
+        <div id="averageGradesChart"></div>
+        <div id="highestGradesChart"></div>
+      </div>
+    </section>
+
     <!-- إدارة المستخدمين -->
     <section id="userManagement">
       <h2>إدارة المستخدمين</h2>
@@ -35,8 +46,8 @@
     </section>
 
     <!-- إدارة نتائج الامتحانات -->
-    <section id="examResults">
-      <h2>إضافة درجات امتحان</h2>
+    <section id="examManagement">
+      <h2>إضافة وعرض نتائج الامتحانات</h2>
       <form id="examForm">
         <input id="userId" type="number" placeholder="رقم المستخدم" required />
         <input id="examName" type="text" placeholder="اسم الامتحان" required />
@@ -44,27 +55,28 @@
         <input id="obtainedMarks" type="number" placeholder="الدرجة الحاصل عليها" required />
         <button type="submit">إضافة الدرجة</button>
       </form>
+
+      <h3>عرض نتائج الامتحانات</h3>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>رقم المستخدم</th>
+            <th>اسم الامتحان</th>
+            <th>الدرجة الكلية</th>
+            <th>الدرجة الحاصل عليها</th>
+            <th>الحالة</th>
+          </tr>
+        </thead>
+        <tbody id="examTable">
+          <!-- يتم ملء البيانات ديناميكيًا -->
+        </tbody>
+      </table>
     </section>
 
-    <!-- نظام إرسال الرسائل -->
-    <section id="messagingSystem">
-      <h2>إرسال الرسائل</h2>
-      <form id="messageForm">
-        <input id="messageUserId" type="number" placeholder="رقم المستخدم" required />
-        <textarea id="messageContent" rows="4" placeholder="اكتب الرسالة هنا..." required></textarea>
-        <button type="submit">إرسال الرسالة</button>
-      </form>
-    </section>
-
-    <!-- إحصائيات المنصة -->
-    <section id="statistics">
-      <h2>إحصائيات المنصة</h2>
-      <div id="statisticsContainer">
-        <div id="totalUsersChart"></div>
-        <div id="suspendedUsersChart"></div>
-        <div id="averageGradesChart"></div>
-        <div id="highestGradesChart"></div>
-      </div>
+    <!-- عرض أفضل مستخدم -->
+    <section id="bestUser">
+      <h2>أفضل مستخدم حسب متوسط الدرجات</h2>
+      <p id="bestUserDisplay">جاري الحساب...</p>
     </section>
   </main>
 </body>
