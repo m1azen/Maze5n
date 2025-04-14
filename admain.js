@@ -11,7 +11,7 @@ async function fetchData(range) {
   return data.values || [];
 }
 
-// دالة لعرض المستخدمين
+// عرض المستخدمين
 async function displayUsers() {
   const usersTable = document.getElementById("usersTable");
   const users = await fetchData('Sheet1!A:H');
@@ -35,45 +35,71 @@ async function displayUsers() {
   });
 }
 
-// إضافة نتيجة امتحان
+// إضافة نتائج امتحانات
 document.getElementById("examForm").addEventListener("submit", async (event) => {
   event.preventDefault();
-  const userId = document.getElementById("userId").value;
-  const examName = document.getElementById("examName").value;
-  const totalMarks = document.getElementById("totalMarks").value;
-  const obtainedMarks = document.getElementById("obtainedMarks").value;
+  const userId = document.getElementById("userId").value.trim();
+  const examName = document.getElementById("examName").value.trim();
+  const totalMarks = parseFloat(document.getElementById("totalMarks").value);
+  const obtainedMarks = parseFloat(document.getElementById("obtainedMarks").value);
+
+  const status = obtainedMarks >= totalMarks * 0.5 ? "ناجح" : "راسب";
 
   await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet3!A:D:append?valueInputOption=RAW&key=${API_KEY}`,
+    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet3!A:E:append?valueInputOption=RAW&key=${API_KEY}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        values: [[userId, examName, totalMarks, obtainedMarks]],
+        values: [[userId, examName, totalMarks, obtainedMarks, status]],
       }),
     }
   );
-  alert("تمت إضافة نتيجة الامتحان بنجاح!");
+  alert("تمت إضافة النتيجة بنجاح!");
+  displayExams();
 });
 
-// إرسال رسالة
-document.getElementById("messageForm").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const userId = document.getElementById("messageUserId").value;
-  const message = document.getElementById("messageContent").value;
+// عرض نتائج الامتحانات
+async function displayExams() {
+  const examTable = document.getElementById("examTable");
+  const exams = await fetchData('Sheet3!A:E');
+  examTable.innerHTML = "";
+  exams.forEach((exam) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${exam[0]}</td>
+      <td>${exam[1]}</td>
+      <td>${exam[2]}</td>
+      <td>${exam[3]}</td>
+      <td>${exam[4]}</td>
+    `;
+    examTable.appendChild(row);
+  });
+}
 
-  await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet2!A:B:append?valueInputOption=RAW&key=${API_KEY}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        values: [[userId, message]],
-      }),
+// حساب أفضل مستخدم حسب متوسط الدرجات
+async function displayBestUser() {
+  const exams = await fetchData('Sheet3!A:E');
+  const userScores = {};
+
+  exams.forEach((exam) => {
+    const userId = exam[0];
+    const obtainedMarks = parseFloat(exam[3]);
+    if (!userScores[userId]) {
+      userScores[userId] = { total: 0, count: 0 };
     }
-  );
-  alert("تم إرسال الرسالة بنجاح!");
-});
+    userScores[userId].total += obtainedMarks;
+    userScores[userId].count += 1;
+  });
 
-// تحميل البيانات عند فتح الصفحة
-document.addEventListener("DOMContentLoaded", displayUsers);
+  let bestUserId = null;
+  let bestAverage = 0;
+  for (const userId in userScores) {
+    const average = userScores[userId].total / userScores[userId].count;
+    if (average > bestAverage) {
+      bestAverage = average;
+      bestUserId = userId;
+    }
+  }
+
+  document.getElementById("bestUserDisplay").textContent = `أفضل مستخدم: المستخدم
