@@ -1,71 +1,77 @@
-const SHEET_ID = '1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo';
-const API_KEY = 'AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0';
+// admain.js
+const SHEET_ID = "1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo";
+const API_KEY = "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0";
+const BASE = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values`;
 
-// Sidebar Toggle
-document.getElementById("toggleSidebar").addEventListener("click", () => {
-  const sidebar = document.getElementById("sidebar");
-  sidebar.classList.toggle("visible");
-});
-
-// Fetch data from Google Sheets
-async function fetchData(range) {
-  const response = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`
-  );
-  const data = await response.json();
-  return data.values || [];
+async function fetchData() {
+  const res = await fetch(`${BASE}/users?key=${API_KEY}`);
+  const json = await res.json();
+  return json.values.slice(1); // Skip header row
 }
 
-// Populate user table
-async function populateUserTable() {
-  const userTable = document.getElementById("userTable");
-  const users = await fetchData("Sheet1!A:E");
-
-  userTable.innerHTML = users.map((user) => `
-    <tr>
-      <td>${user[0]}</td>
-      <td>${user[1]}</td>
-      <td>${user[2]}</td>
-      <td>${user[4]}</td>
-      <td>${user[5]}</td>
-      <td>
-        <button onclick="editUser('${user[0]}')">Edit</button>
-        <button onclick="suspendUser('${user[0]}')">Suspend</button>
-      </td>
-    </tr>
-  `).join('');
+function renderTable(users) {
+  const table = document.getElementById("usersTable");
+  table.innerHTML = "";
+  users.forEach((user, i) => {
+    const [id, username, email, status, msg, score] = user;
+    table.innerHTML += `
+      <tr>
+        <td>${id}</td>
+        <td>${username}</td>
+        <td>${email}</td>
+        <td>${status}</td>
+        <td><input type="text" placeholder="رسالة" onchange="sendMsg(${id}, this.value)"></td>
+        <td>
+          <button onclick="editUser(${id})">تعديل</button>
+          <button onclick="suspendUser(${id})">إيقاف</button>
+          <button onclick="deleteUser(${id})">حذف</button>
+        </td>
+      </tr>
+    `;
+  });
 }
 
-// Add exam data and update chart
-document.getElementById("examForm").addEventListener("submit", async (e) => {
+function calcStats(users) {
+  document.getElementById("totalUsers").textContent = users.length;
+  const active = users.filter(user => user[3] === "نشط").length;
+  document.getElementById("activeUsers").textContent = active;
+  const scores = users.map(u => parseFloat(u[5]) || 0);
+  const avg = scores.reduce((a, b) => a + b, 0) / users.length;
+  document.getElementById("avgGrades").textContent = avg.toFixed(1);
+  const maxIndex = scores.indexOf(Math.max(...scores));
+  document.getElementById("bestUser").textContent = users[maxIndex]?.[1] || "--";
+}
+
+function sendMsg(userId, msg) {
+  alert(`سيتم إرسال: ${msg} للمستخدم ${userId}`);
+  // هنا تقدر تبعت الرسالة وتعدل الجدول من Google Sheets API
+}
+
+function editUser(id) {
+  alert(`تعديل المستخدم ${id}`);
+}
+
+function suspendUser(id) {
+  const reason = prompt("سبب الإيقاف:");
+  alert(`سيتم إيقاف المستخدم ${id} بسبب: ${reason}`);
+}
+
+function deleteUser(id) {
+  if (confirm("هل أنت متأكد أنك تريد حذف هذا المستخدم؟")) {
+    alert(`تم حذف المستخدم ${id}`);
+  }
+}
+
+document.getElementById("examForm").addEventListener("submit", e => {
   e.preventDefault();
-  const userId = document.getElementById("userId").value;
-  const examName = document.getElementById("examName").value;
-  const totalMarks = document.getElementById("totalMarks").value;
-  const obtainedMarks = document.getElementById("obtainedMarks").value;
-
-  await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A:J:append?valueInputOption=RAW&key=${API_KEY}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        values: [[userId, "", "", "", "Active", "", examName, totalMarks, obtainedMarks, ""]],
-      }),
-    }
-  );
-
-  alert("Exam added successfully!");
-  updateChart(); // Update the grades chart
+  const id = document.getElementById("examUserId").value;
+  const name = document.getElementById("examName").value;
+  const total = document.getElementById("totalMark").value;
+  const mark = document.getElementById("userMark").value;
+  alert(`تم إضافة امتحان ${name} للمستخدم ${id}: ${mark}/${total}`);
 });
 
-// Initialize grades chart
-async function updateChart() {
-  const exams = await fetchData("Sheet1!G:I");
-  const labels = exams.map((exam) => exam[0]); // Exam Names
-  const scores = exams.map((exam) => exam[2]); // Obtained Marks
-
-  const ctx = document.getElementById("gradesChart").getContext("2d");
-  new Chart(ctx, {
-    type: 'bar',
-    data
+fetchData().then(users => {
+  renderTable(users);
+  calcStats(users);
+});
