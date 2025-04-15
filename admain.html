@@ -1,60 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة تحكم الأدمن</title>
   <link rel="stylesheet" href="admain.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script defer src="admain.js"></script>
+  <script src="admain.js" defer></script>
+  <title>لوحة تحكم الأدمن</title>
 </head>
-<body>
-  <header class="admin-header">
-    <h1>لوحة تحكم الأدمن</h1>
-    <p>مرحبًا يا مازن! تحكم كامل في المنصة من هنا.</p>
+<body dir="rtl">
+  <header>
+    <h1>مرحبًا بك، أدمن</h1>
+    <p>إدارة منصتك بكفاءة وفعالية</p>
   </header>
 
-  <main class="admin-container">
-    <section class="admin-overview">
+  <main>
+    <!-- إحصائيات المنصة -->
+    <section id="statistics">
       <h2>إحصائيات المنصة</h2>
-      <div class="stats">
-        <div class="stat-box">
-          <h3>عدد المستخدمين</h3>
-          <p id="totalUsers">...</p>
+      <div id="statisticsContainer">
+        <div class="stat">
+          <div class="circle" id="totalUsersChart"></div>
+          <p>إجمالي المستخدمين</p>
         </div>
-        <div class="stat-box">
-          <h3>النشطون</h3>
-          <p id="activeUsers">...</p>
+        <div class="stat">
+          <div class="circle" id="activeUsersChart"></div>
+          <p>المستخدمون النشطون</p>
         </div>
-        <div class="stat-box">
-          <h3>الموقوفون</h3>
-          <p id="suspendedUsers">...</p>
+        <div class="stat">
+          <div class="circle" id="topUserChart"></div>
+          <p>أفضل مستخدم</p>
         </div>
-        <div class="stat-box">
-          <h3>متوسط الدرجات</h3>
-          <p id="averageScore">...</p>
+        <div class="stat">
+          <div class="circle" id="averageScoresChart"></div>
+          <p>متوسط الدرجات</p>
         </div>
       </div>
-      <canvas id="statusChart" height="100"></canvas>
     </section>
 
-    <section class="admin-table">
+    <!-- إدارة المستخدمين -->
+    <section id="userManagement">
       <h2>إدارة المستخدمين</h2>
-      <table>
+      <table border="1">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>الاسم</th>
-            <th>الإيميل</th>
+            <th>اسم المستخدم</th>
+            <th>البريد الإلكتروني</th>
             <th>الحالة</th>
-            <th>الدرجة</th>
-            <th>التحكم</th>
+            <th>الإجراءات</th>
           </tr>
         </thead>
         <tbody id="usersTable">
-          <!-- بيانات المستخدمين تظهر هنا -->
+          <!-- يتم ملء البيانات ديناميكيًا -->
         </tbody>
       </table>
+    </section>
+
+    <!-- إرسال الإعلانات -->
+    <section id="announcements">
+      <h2>إرسال إعلان</h2>
+      <textarea id="announcementContent" placeholder="اكتب إعلانك هنا..."></textarea>
+      <button id="sendAnnouncement">إرسال</button>
+    </section>
+
+    <!-- إدارة نتائج الامتحانات -->
+    <section id="examScores">
+      <h2>عرض درجات الامتحانات</h2>
+      <select id="userSelector">
+        <option value="">اختر مستخدم</option>
+      </select>
+      <button id="sendScores">إرسال الدرجات</button>
+      <canvas id="examChart"></canvas>
     </section>
   </main>
 </body>
