@@ -1,107 +1,98 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة تحكم المستقبل</title>
   <link rel="stylesheet" href="admain.css">
   <script src="admain.js" defer></script>
+  <title>Admin Dashboard</title>
 </head>
 <body>
-  <header id="main-header">
-    <h1>لوحة التحكم 2025</h1>
-    <p>مرحبًا بك في المستقبل</p>
+  <header>
+    <h1>Admin Dashboard</h1>
+    <p>Manage users, exams, and performance.</p>
   </header>
 
-  <aside id="sidebar">
-    <nav>
-      <ul>
-        <li><a href="#dashboard">الإحصائيات</a></li>
-        <li><a href="#users">إدارة المستخدمين</a></li>
-        <li><a href="#exams">إدارة الامتحانات</a></li>
-        <li><a href="#myAccount">حسابي</a></li>
-      </ul>
-    </nav>
-  </aside>
+  <!-- Sidebar -->
+  <nav id="sidebar">
+    <button id="toggleSidebar">☰</button>
+    <ul id="sidebarMenu" style="display: none;">
+      <li><a href="#statistics">Statistics</a></li>
+      <li><a href="#userManagement">User Management</a></li>
+      <li><a href="#examManagement">Exam Management</a></li>
+    </ul>
+  </nav>
 
-  <main id="main-content">
-    <!-- الإحصائيات -->
-    <section id="dashboard">
-      <h2>الإحصائيات</h2>
-      <div class="stats-container">
-        <div class="stat animated-circle">
-          <span id="total-users">-</span>
-          <p>إجمالي المستخدمين</p>
+  <!-- Main content -->
+  <main>
+    <!-- Statistics Section -->
+    <section id="statistics">
+      <h2>Statistics</h2>
+      <div id="statsContainer">
+        <div class="stat">
+          <h3>Total Users</h3>
+          <p id="totalUsers">-</p>
         </div>
-        <div class="stat animated-circle">
-          <span id="active-users">-</span>
-          <p>المستخدمون النشطون</p>
+        <div class="stat">
+          <h3>Suspended Users</h3>
+          <p id="suspendedUsers">-</p>
         </div>
-        <div class="stat animated-circle">
-          <span id="average-scores">-</span>
-          <p>متوسط الدرجات</p>
+        <div class="stat">
+          <h3>Average Grades</h3>
+          <p id="averageGrades">-</p>
         </div>
-        <div class="stat animated-circle">
-          <span id="top-user">-</span>
-          <p>أفضل مستخدم</p>
+        <div class="stat">
+          <h3>Top Performer</h3>
+          <p id="topUser">-</p>
         </div>
       </div>
     </section>
 
-    <!-- إدارة المستخدمين -->
-    <section id="users">
-      <h2>إدارة المستخدمين</h2>
+    <!-- User Management Section -->
+    <section id="userManagement">
+      <h2>User Management</h2>
       <table>
         <thead>
           <tr>
-            <th>اسم المستخدم</th>
-            <th>البريد الإلكتروني</th>
-            <th>الحالة</th>
-            <th>الإجراءات</th>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Reason</th>
+            <th>Actions</th>
           </tr>
         </thead>
-        <tbody id="users-table">
-          <!-- البيانات تظهر هنا -->
+        <tbody id="userTable">
+          <!-- User data will be dynamically loaded here -->
         </tbody>
       </table>
     </section>
 
-    <!-- إدارة الامتحانات -->
-    <section id="exams">
-      <h2>إضافة وعرض الامتحانات</h2>
-      <form id="exam-form">
-        <input type="text" id="exam-name" placeholder="اسم الامتحان" required>
-        <input type="number" id="total-marks" placeholder="الدرجة الكلية" required>
-        <input type="number" id="obtained-marks" placeholder="الدرجة الحاصل عليها" required>
-        <button type="submit">إضافة النتيجة</button>
+    <!-- Exam Management Section -->
+    <section id="examManagement">
+      <h2>Exam Management</h2>
+      <form id="examForm">
+        <input type="number" id="userId" placeholder="User ID" required />
+        <input type="text" id="examName" placeholder="Exam Name" required />
+        <input type="number" id="totalMarks" placeholder="Total Marks" required />
+        <input type="number" id="obtainedMarks" placeholder="Obtained Marks" required />
+        <button type="submit">Add Exam</button>
       </form>
       <table>
         <thead>
           <tr>
-            <th>اسم الامتحان</th>
-            <th>الدرجة الكلية</th>
-            <th>الدرجة الحاصل عليها</th>
-            <th>الحالة</th>
+            <th>User ID</th>
+            <th>Exam Name</th>
+            <th>Total Marks</th>
+            <th>Obtained Marks</th>
+            <th>Status</th>
           </tr>
         </thead>
-        <tbody id="exam-table">
-          <!-- النتائج تظهر هنا -->
+        <tbody id="examTable">
+          <!-- Exam data will be dynamically loaded here -->
         </tbody>
       </table>
     </section>
-
-    <!-- صفحة حسابي -->
-    <section id="myAccount">
-      <h2>حسابي</h2>
-      <p>يمكنك رؤية التفاصيل الشخصية هنا</p>
-      <div id="account-details">
-        <!-- بيانات الحساب الشخصي تظهر هنا -->
-      </div>
-    </section>
   </main>
-
-  <footer>
-    <p>&copy; لوحة التحكم 2025 - جميع الحقوق محفوظة</p>
-  </footer>
 </body>
 </html>
