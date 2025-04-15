@@ -1,81 +1,58 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="admain.css">
-  <script src="admain.js" defer></script>
   <title>لوحة تحكم الأدمن</title>
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="admin.js"></script>
 </head>
-<body dir="rtl">
-  <header>
+<body>
+  <header class="admin-header">
     <h1>لوحة تحكم الأدمن</h1>
-    <p>تحكم كامل بالمستخدمين والامتحانات مع إحصائيات مميزة</p>
+    <p>مرحبًا يا مازن! تحكم كامل في المنصة من هنا.</p>
   </header>
 
-  <main>
-    <!-- إحصائيات المنصة -->
-    <section id="statistics">
+  <main class="admin-container">
+    <section class="admin-overview">
       <h2>إحصائيات المنصة</h2>
-      <div id="statisticsContainer">
-        <div class="stat">
-          <div class="circle" id="totalUsersChart"></div>
-          <p>إجمالي المستخدمين</p>
+      <div class="stats">
+        <div class="stat-box">
+          <h3>عدد المستخدمين</h3>
+          <p id="totalUsers">...</p>
         </div>
-        <div class="stat">
-          <div class="circle" id="suspendedUsersChart"></div>
-          <p>المستخدمون الموقوفون</p>
+        <div class="stat-box">
+          <h3>النشطون</h3>
+          <p id="activeUsers">...</p>
         </div>
-        <div class="stat">
-          <div class="circle" id="averageGradesChart"></div>
-          <p>متوسط الدرجات</p>
+        <div class="stat-box">
+          <h3>الموقوفون</h3>
+          <p id="suspendedUsers">...</p>
+        </div>
+        <div class="stat-box">
+          <h3>متوسط الدرجات</h3>
+          <p id="averageScore">...</p>
         </div>
       </div>
+      <canvas id="statusChart" height="100"></canvas>
     </section>
 
-    <!-- إدارة المستخدمين -->
-    <section id="userManagement">
+    <section class="admin-table">
       <h2>إدارة المستخدمين</h2>
-      <table border="1">
+      <table>
         <thead>
           <tr>
-            <th>المعرف</th>
-            <th>اسم المستخدم</th>
-            <th>البريد الإلكتروني</th>
+            <th>ID</th>
+            <th>الاسم</th>
+            <th>الإيميل</th>
             <th>الحالة</th>
-            <th>الإجراءات</th>
+            <th>الدرجة</th>
+            <th>التحكم</th>
           </tr>
         </thead>
         <tbody id="usersTable">
-          <!-- يتم ملء البيانات ديناميكيًا -->
-        </tbody>
-      </table>
-    </section>
-
-    <!-- إدارة نتائج الامتحانات -->
-    <section id="examManagement">
-      <h2>إضافة وعرض نتائج الامتحانات</h2>
-      <form id="examForm">
-        <input id="userId" type="number" placeholder="رقم المستخدم" required />
-        <input id="examName" type="text" placeholder="اسم الامتحان" required />
-        <input id="totalMarks" type="number" placeholder="الدرجة الكلية" required />
-        <input id="obtainedMarks" type="number" placeholder="الدرجة الحاصل عليها" required />
-        <button type="submit">إضافة الدرجة</button>
-      </form>
-
-      <h3>عرض نتائج الامتحانات</h3>
-      <table border="1">
-        <thead>
-          <tr>
-            <th>رقم المستخدم</th>
-            <th>اسم الامتحان</th>
-            <th>الدرجة الكلية</th>
-            <th>الدرجة الحاصل عليها</th>
-            <th>الحالة</th>
-          </tr>
-        </thead>
-        <tbody id="examTable">
-          <!-- يتم ملء البيانات ديناميكيًا -->
+          <!-- بيانات المستخدمين تظهر هنا -->
         </tbody>
       </table>
     </section>
