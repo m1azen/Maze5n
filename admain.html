@@ -1,92 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم الأدمن</title>
   <link rel="stylesheet" href="admain.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- مكتبة الرسم البياني -->
-  <script src="admain.js" defer></script>
-  <title>Admin Dashboard</title>
 </head>
 <body>
-  <header>
-    <h1>Admin Dashboard</h1>
-    <p>Welcome to the ultimate control panel.</p>
-    <button id="logoutButton">Logout</button>
+  <header class="admin-header">
+    <h1>لوحة تحكم الأدمن</h1>
+    <p>تحكم كامل في المستخدمين والبيانات</p>
   </header>
 
-  <!-- Sidebar -->
-  <nav id="sidebar">
-    <button id="toggleSidebar">☰</button>
-    <ul id="sidebarMenu" style="display: none;">
-      <li><a href="#statistics">Statistics</a></li>
-      <li><a href="#userManagement">User Management</a></li>
-      <li><a href="#examManagement">Exam Management</a></li>
-    </ul>
-  </nav>
+  <main class="admin-container">
+    <section class="stats">
+      <div class="stat-box"><h3>عدد المستخدمين</h3><p id="totalUsers">0</p></div>
+      <div class="stat-box"><h3>المستخدمين النشطين</h3><p id="activeUsers">0</p></div>
+      <div class="stat-box"><h3>متوسط الدرجات</h3><p id="averageScore">0%</p></div>
+      <div class="stat-box best-user"><h3>أفضل مستخدم</h3><p id="bestUser">---</p></div>
+    </section>
 
-  <!-- Main Content -->
-  <main>
-    <!-- Statistics Section -->
-    <section id="statistics">
-      <h2>Dashboard Statistics</h2>
-      <div id="statsContainer">
-        <canvas id="gradesChart"></canvas>
-        <div class="stat">
-          <h3>Total Users</h3>
-          <p id="totalUsers">-</p>
-        </div>
-        <div class="stat">
-          <h3>Suspended Users</h3>
-          <p id="suspendedUsers">-</p>
-        </div>
+    <section class="admin-actions">
+      <h2>المستخدمين</h2>
+      <div class="admin-table">
+        <table>
+          <thead>
+            <tr>
+              <th>الاسم</th>
+              <th>البريد</th>
+              <th>الحالة</th>
+              <th>العمليات</th>
+            </tr>
+          </thead>
+          <tbody id="usersTable"></tbody>
+        </table>
       </div>
-    </section>
 
-    <!-- User Management -->
-    <section id="userManagement">
-      <h2>Manage Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Reason</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="userTable">
-          <!-- Users will be dynamically loaded -->
-        </tbody>
-      </table>
-    </section>
-
-    <!-- Exam Management -->
-    <section id="examManagement">
-      <h2>Exam Management</h2>
-      <form id="examForm">
-        <input type="number" id="userId" placeholder="User ID" required>
-        <input type="text" id="examName" placeholder="Exam Name" required>
-        <input type="number" id="totalMarks" placeholder="Total Marks" required>
-        <input type="number" id="obtainedMarks" placeholder="Obtained Marks" required>
-        <button type="submit">Add Exam</button>
+      <h2>إرسال رسالة خاصة</h2>
+      <form id="messageForm">
+        <select id="userSelect"></select>
+        <textarea id="messageContent" placeholder="اكتب الرسالة هنا..."></textarea>
+        <button type="submit">إرسال</button>
       </form>
-      <table>
-        <thead>
-          <tr>
-            <th>Exam Name</th>
-            <th>Total Marks</th>
-            <th>Obtained Marks</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="examTable">
-          <!-- Exam data will be dynamically loaded -->
-        </tbody>
-      </table>
+
+      <h2>إرسال رسالة عامة</h2>
+      <form id="broadcastForm">
+        <textarea id="broadcastMessage" placeholder="الرسالة العامة..."></textarea>
+        <button type="submit">نشر</button>
+      </form>
+
+      <h2>إضافة درجات امتحان</h2>
+      <form id="examForm">
+        <select id="gradeUser"></select>
+        <input type="text" id="examName" placeholder="اسم الامتحان">
+        <input type="number" id="totalMark" placeholder="الدرجة الكلية">
+        <input type="number" id="gotMark" placeholder="الدرجة التي حصل عليها">
+        <button type="submit">إضافة</button>
+      </form>
     </section>
   </main>
+
+  <script src="admain.js"></script>
 </body>
 </html>
