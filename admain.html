@@ -4,13 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="admain.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- مكتبة الرسم البياني -->
   <script src="admain.js" defer></script>
   <title>Admin Dashboard</title>
 </head>
 <body>
   <header>
     <h1>Admin Dashboard</h1>
-    <p>Manage users, exams, and performance.</p>
+    <p>Welcome to the ultimate control panel.</p>
+    <button id="logoutButton">Logout</button>
   </header>
 
   <!-- Sidebar -->
@@ -23,12 +25,13 @@
     </ul>
   </nav>
 
-  <!-- Main content -->
+  <!-- Main Content -->
   <main>
     <!-- Statistics Section -->
     <section id="statistics">
-      <h2>Statistics</h2>
+      <h2>Dashboard Statistics</h2>
       <div id="statsContainer">
+        <canvas id="gradesChart"></canvas>
         <div class="stat">
           <h3>Total Users</h3>
           <p id="totalUsers">-</p>
@@ -37,20 +40,12 @@
           <h3>Suspended Users</h3>
           <p id="suspendedUsers">-</p>
         </div>
-        <div class="stat">
-          <h3>Average Grades</h3>
-          <p id="averageGrades">-</p>
-        </div>
-        <div class="stat">
-          <h3>Top Performer</h3>
-          <p id="topUser">-</p>
-        </div>
       </div>
     </section>
 
-    <!-- User Management Section -->
+    <!-- User Management -->
     <section id="userManagement">
-      <h2>User Management</h2>
+      <h2>Manage Users</h2>
       <table>
         <thead>
           <tr>
@@ -63,25 +58,24 @@
           </tr>
         </thead>
         <tbody id="userTable">
-          <!-- User data will be dynamically loaded here -->
+          <!-- Users will be dynamically loaded -->
         </tbody>
       </table>
     </section>
 
-    <!-- Exam Management Section -->
+    <!-- Exam Management -->
     <section id="examManagement">
       <h2>Exam Management</h2>
       <form id="examForm">
-        <input type="number" id="userId" placeholder="User ID" required />
-        <input type="text" id="examName" placeholder="Exam Name" required />
-        <input type="number" id="totalMarks" placeholder="Total Marks" required />
-        <input type="number" id="obtainedMarks" placeholder="Obtained Marks" required />
+        <input type="number" id="userId" placeholder="User ID" required>
+        <input type="text" id="examName" placeholder="Exam Name" required>
+        <input type="number" id="totalMarks" placeholder="Total Marks" required>
+        <input type="number" id="obtainedMarks" placeholder="Obtained Marks" required>
         <button type="submit">Add Exam</button>
       </form>
       <table>
         <thead>
           <tr>
-            <th>User ID</th>
             <th>Exam Name</th>
             <th>Total Marks</th>
             <th>Obtained Marks</th>
@@ -89,7 +83,7 @@
           </tr>
         </thead>
         <tbody id="examTable">
-          <!-- Exam data will be dynamically loaded here -->
+          <!-- Exam data will be dynamically loaded -->
         </tbody>
       </table>
     </section>
