@@ -3,44 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم المستقبل</title>
   <link rel="stylesheet" href="admain.css">
   <script src="admain.js" defer></script>
-  <title>لوحة تحكم الأدمن</title>
 </head>
-<body dir="rtl">
-  <header>
-    <h1>مرحبًا بك، أدمن</h1>
-    <p>إدارة منصتك بكفاءة وفعالية</p>
+<body>
+  <header id="main-header">
+    <h1>لوحة التحكم 2025</h1>
+    <p>مرحبًا بك في المستقبل</p>
   </header>
 
-  <main>
-    <!-- إحصائيات المنصة -->
-    <section id="statistics">
-      <h2>إحصائيات المنصة</h2>
-      <div id="statisticsContainer">
-        <div class="stat">
-          <div class="circle" id="totalUsersChart"></div>
+  <aside id="sidebar">
+    <nav>
+      <ul>
+        <li><a href="#dashboard">الإحصائيات</a></li>
+        <li><a href="#users">إدارة المستخدمين</a></li>
+        <li><a href="#exams">إدارة الامتحانات</a></li>
+        <li><a href="#myAccount">حسابي</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main id="main-content">
+    <!-- الإحصائيات -->
+    <section id="dashboard">
+      <h2>الإحصائيات</h2>
+      <div class="stats-container">
+        <div class="stat animated-circle">
+          <span id="total-users">-</span>
           <p>إجمالي المستخدمين</p>
         </div>
-        <div class="stat">
-          <div class="circle" id="activeUsersChart"></div>
+        <div class="stat animated-circle">
+          <span id="active-users">-</span>
           <p>المستخدمون النشطون</p>
         </div>
-        <div class="stat">
-          <div class="circle" id="topUserChart"></div>
-          <p>أفضل مستخدم</p>
-        </div>
-        <div class="stat">
-          <div class="circle" id="averageScoresChart"></div>
+        <div class="stat animated-circle">
+          <span id="average-scores">-</span>
           <p>متوسط الدرجات</p>
+        </div>
+        <div class="stat animated-circle">
+          <span id="top-user">-</span>
+          <p>أفضل مستخدم</p>
         </div>
       </div>
     </section>
 
     <!-- إدارة المستخدمين -->
-    <section id="userManagement">
+    <section id="users">
       <h2>إدارة المستخدمين</h2>
-      <table border="1">
+      <table>
         <thead>
           <tr>
             <th>اسم المستخدم</th>
@@ -49,28 +60,48 @@
             <th>الإجراءات</th>
           </tr>
         </thead>
-        <tbody id="usersTable">
-          <!-- يتم ملء البيانات ديناميكيًا -->
+        <tbody id="users-table">
+          <!-- البيانات تظهر هنا -->
         </tbody>
       </table>
     </section>
 
-    <!-- إرسال الإعلانات -->
-    <section id="announcements">
-      <h2>إرسال إعلان</h2>
-      <textarea id="announcementContent" placeholder="اكتب إعلانك هنا..."></textarea>
-      <button id="sendAnnouncement">إرسال</button>
+    <!-- إدارة الامتحانات -->
+    <section id="exams">
+      <h2>إضافة وعرض الامتحانات</h2>
+      <form id="exam-form">
+        <input type="text" id="exam-name" placeholder="اسم الامتحان" required>
+        <input type="number" id="total-marks" placeholder="الدرجة الكلية" required>
+        <input type="number" id="obtained-marks" placeholder="الدرجة الحاصل عليها" required>
+        <button type="submit">إضافة النتيجة</button>
+      </form>
+      <table>
+        <thead>
+          <tr>
+            <th>اسم الامتحان</th>
+            <th>الدرجة الكلية</th>
+            <th>الدرجة الحاصل عليها</th>
+            <th>الحالة</th>
+          </tr>
+        </thead>
+        <tbody id="exam-table">
+          <!-- النتائج تظهر هنا -->
+        </tbody>
+      </table>
     </section>
 
-    <!-- إدارة نتائج الامتحانات -->
-    <section id="examScores">
-      <h2>عرض درجات الامتحانات</h2>
-      <select id="userSelector">
-        <option value="">اختر مستخدم</option>
-      </select>
-      <button id="sendScores">إرسال الدرجات</button>
-      <canvas id="examChart"></canvas>
+    <!-- صفحة حسابي -->
+    <section id="myAccount">
+      <h2>حسابي</h2>
+      <p>يمكنك رؤية التفاصيل الشخصية هنا</p>
+      <div id="account-details">
+        <!-- بيانات الحساب الشخصي تظهر هنا -->
+      </div>
     </section>
   </main>
+
+  <footer>
+    <p>&copy; لوحة التحكم 2025 - جميع الحقوق محفوظة</p>
+  </footer>
 </body>
 </html>
