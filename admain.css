@@ -1,48 +1,53 @@
-/* admain.css */
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to right, #1f1c2c, #928dab);
+  font-family: 'Cairo', sans-serif;
+  background: linear-gradient(135deg, #1d1b3f, #4b3b73);
   color: #fff;
-  overflow-x: hidden;
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 header {
-  background-color: #1c1c3c;
+  background-color: #000033;
   padding: 1rem;
   text-align: center;
   font-size: 2rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
 }
 
 .stats {
   display: flex;
-  justify-content: space-around;
-  margin: 2rem 1rem;
-  text-align: center;
+  justify-content: center;
   gap: 1rem;
+  margin: 2rem;
   flex-wrap: wrap;
 }
 
 .stat-card {
-  background: #2c2c5c;
-  padding: 1rem 2rem;
+  background: #292a4a;
+  padding: 1.5rem;
   border-radius: 20px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-  flex: 1;
   min-width: 200px;
+  text-align: center;
+  transition: transform 0.4s ease;
+}
+
+.stat-card:hover {
+  transform: scale(1.05);
 }
 
 .stat-card h3 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: #f0f0f0;
+  font-size: 1.2rem;
 }
 
 .stat-card p {
-  font-size: 2.2rem;
-  color: #00ffdd;
-  margin: 0.5rem 0 0 0;
+  font-size: 2rem;
+  color: #00ffd5;
+  margin-top: 10px;
 }
 
 .table-container {
@@ -53,7 +58,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   background: #1f1f3f;
-  border-radius: 15px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -64,65 +69,47 @@ table th, table td {
 }
 
 table th {
-  background-color: #3a3a6f;
-  color: #fff;
+  background-color: #3f3f7f;
 }
 
-input[type="text"] {
-  padding: 0.5rem;
+input, textarea {
+  padding: 0.6rem;
+  width: 100%;
+  border-radius: 10px;
   border: none;
-  border-radius: 8px;
-  width: 90%;
+  margin: 0.5rem 0;
   font-size: 1rem;
 }
 
 button {
-  padding: 0.4rem 0.8rem;
   background-color: #00d2ff;
   border: none;
-  border-radius: 8px;
-  color: black;
-  font-weight: bold;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
   cursor: pointer;
-  margin: 0.2rem;
-  transition: all 0.2s ease;
+  transition: 0.3s ease;
+  font-weight: bold;
 }
 
 button:hover {
-  background-color: #00aacc;
+  background-color: #00aac2;
   transform: scale(1.05);
 }
 
-#examForm {
-  background-color: #2d2d55;
-  padding: 2rem;
+#examForm, #messageForm {
+  background: #2e2e60;
   margin: 2rem auto;
+  padding: 1.5rem;
   width: 90%;
   max-width: 600px;
   border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-}
-
-#examForm h2 {
-  margin-top: 0;
-  text-align: center;
-  color: #fff;
-}
-
-#examForm input {
-  width: 100%;
-  padding: 0.7rem;
-  margin: 0.5rem 0;
-  border-radius: 10px;
-  border: none;
-  font-size: 1rem;
 }
 
 footer {
   text-align: center;
   padding: 1rem;
-  background-color: #1a1a2a;
+  background: #10102a;
   margin-top: 3rem;
   font-size: 0.9rem;
-  color: #bbb;
 }
+
