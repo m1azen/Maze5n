@@ -1,7 +1,5 @@
 const sheetId = '1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo';
-const apiKey = 'AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0';
-const sheetName = 'users';
-const gradesSheet = 'grades';
+const apiKey = 'AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0'
 
 // تحميل المستخدمين عند بداية الصفحة
 document.addEventListener('DOMContentLoaded', () => {
