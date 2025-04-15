@@ -1,61 +1,84 @@
+/* admin.css */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+  background-color: #0a0a0a;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 header {
   text-align: center;
-  background-color: #0033cc;
+  background: linear-gradient(45deg, #0033cc, #00ffcc);
   color: white;
   padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  position: sticky;
+  top: 0;
 }
 
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 200px;
+header h1 {
+  font-size: 2.5rem;
+}
+
+header button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
   background-color: #00ffcc;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+header button:hover {
+  background-color: #0033cc;
+  color: white;
+}
+
+#sidebar {
+  width: 220px;
+  background-color: #1e1e1e;
+  height: 100vh;
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
 }
 
-nav ul {
+#sidebar.visible {
+  transform: translateX(0);
+}
+
+#sidebarMenu {
   list-style: none;
+  padding: 0;
   margin: 0;
-  padding: 20px;
 }
 
-nav ul li {
-  margin: 10px 0;
+#sidebarMenu li {
+  margin: 20px 0;
 }
 
-nav ul li a {
-  text-decoration: none;
-  color: black;
-}
-
-#toggleSidebar {
-  background-color: #0033cc;
+#sidebarMenu li a {
   color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-}
-
-#toggleSidebar:hover {
-  background-color: #002699;
+  text-decoration: none;
 }
 
 main {
-  margin-left: 20px;
+  margin-left: 220px;
   padding: 20px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 10px;
 }
 
 th, td {
@@ -66,5 +89,19 @@ th, td {
 
 th {
   background-color: #0033cc;
-  color: white;
+}
+
+canvas {
+  margin: 20px auto;
+  display: block;
+  width: 100%;
+  max-width: 500px;
+}
+
+.stat {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 }
