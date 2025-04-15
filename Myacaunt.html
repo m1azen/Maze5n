@@ -3,74 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="myaccount.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- مكتبة الرسم البياني -->
+  <script src="myaccount.js" defer></script>
   <title>My Account</title>
-  <link rel="stylesheet" href=Myacaunt.css">
-  <script src="Myacaunt.js" defer></script>
 </head>
 <body>
-  <!-- Check if user is logged in -->
-  <div id="loginCheck">
-    <p>You must be logged in to view your account.</p>
-    <button id="loginRedirect">Go to Login</button>
-  </div>
+  <header>
+    <h1>Welcome to Your Future Account</h1>
+    <button id="logoutButton">Logout</button>
+  </header>
 
-  <!-- Main content for logged-in users -->
-  <div id="accountPage" style="display: none;">
-    <header>
-      <h1>Welcome to Your Account</h1>
-      <button id="logoutButton">Logout</button>
-    </header>
-
-    <main>
-      <!-- User details -->
-      <section id="userDetails">
+  <main>
+    <!-- User Info Section -->
+    <section id="userInfo">
+      <div class="card">
         <h2>Your Details</h2>
         <p><strong>Username:</strong> <span id="username">-</span></p>
         <p><strong>Email:</strong> <span id="email">-</span></p>
         <p><strong>Status:</strong> <span id="status">-</span></p>
-        <p><strong>Reason for Suspension:</strong> <span id="suspensionReason">-</span></p>
-      </section>
+        <p><strong>Suspension Reason:</strong> <span id="reason">-</span></p>
+      </div>
+    </section>
 
-      <!-- Performance circle -->
-      <section id="performance">
-        <h2>Your Performance</h2>
-        <div class="animated-circle">
+    <!-- Performance Section -->
+    <section id="performance">
+      <h2>Your Performance</h2>
+      <div class="circle-container">
+        <div class="circle">
           <span id="averageGrade">-</span>
           <p>Average Grade</p>
         </div>
-        <p id="performanceMessage"></p>
-      </section>
+      </div>
+      <p id="performanceMessage"></p>
+    </section>
 
-      <!-- Exam Results -->
-      <section id="examResults">
-        <h2>Your Exam Results</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Exam Name</th>
-              <th>Total Marks</th>
-              <th>Obtained Marks</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="examTable">
-            <!-- Exam data will appear here -->
-          </tbody>
-        </table>
-      </section>
+    <!-- Exam Results Section -->
+    <section id="examResults">
+      <h2>Exam Results</h2>
+      <canvas id="examChart"></canvas>
+      <table>
+        <thead>
+          <tr>
+            <th>Exam Name</th>
+            <th>Total Marks</th>
+            <th>Obtained Marks</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="examTable">
+          <!-- Exam results will be dynamically loaded -->
+        </tbody>
+      </table>
+    </section>
 
-      <!-- Messages -->
-      <section id="userMessages">
-        <h2>Messages</h2>
-        <div id="messagesContainer">
-          <p id="messages">No messages available.</p>
-        </div>
-      </section>
-    </main>
+    <!-- Messages Section -->
+    <section id="messages">
+      <h2>Messages</h2>
+      <div class="message-box">
+        <p id="messageContent">No messages available.</p>
+      </div>
+    </section>
+  </main>
 
-    <footer>
-      <p>&copy; Future Dashboard | All Rights Reserved</p>
-    </footer>
-  </div>
+  <footer>
+    <p>&copy; Future Dashboard | All Rights Reserved</p>
+  </footer>
 </body>
 </html>
