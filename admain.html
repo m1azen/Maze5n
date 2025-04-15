@@ -1,62 +1,69 @@
-!<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>لوحة تحكم الأدمن</title>
+  <title>لوحة تحكم الأدمن - مازن جلال</title>
   <link rel="stylesheet" href="admain.css" />
 </head>
 <body>
-  <header>لوحة تحكم الأدمن</header>
+  <div class="sidebar">
+    <h2>لوحة التحكم</h2>
+    <ul>
+      <li><a href="#">الرئيسية</a></li>
+      <li><a href="#">المستخدمين</a></li>
+      <li><a href="#">الدرجات</a></li>
+      <li><a href="#">الإحصائيات</a></li>
+    </ul>
+  </div>
 
-  <section class="stats">
-    <div class="stat-card">
-      <h3>إجمالي المستخدمين</h3>
-      <p id="totalUsers">0</p>
-    </div>
-    <div class="stat-card">
-      <h3>المستخدمين النشطين</h3>
-      <p id="activeUsers">0</p>
-    </div>
-    <div class="stat-card">
-      <h3>متوسط الدرجات</h3>
-      <p id="averageGrades">0</p>
-    </div>
-  </section>
+  <main class="main-content">
+    <section class="welcome">
+      <h1 class="animated-text">مرحباً <span id="userName">Aya</span>!</h1>
+      <p class="emoji-bounce">🔥 💡 ✨ 🚀 🌟</p>
+      <p class="quote">أنتِ مصدر الإلهام، انطلقي نحو القمة!</p>
+    </section>
 
-  <section class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>الاسم</th>
-          <th>الحالة</th>
-          <th>الرسائل</th>
-          <th>الدرجات</th>
-          <th>تحكم</th>
-        </tr>
-      </thead>
-      <tbody id="userTableBody"></tbody>
-    </table>
-  </section>
+    <section class="user-table">
+      <h2>المستخدمين</h2>
+      <input type="text" id="searchInput" placeholder="ابحث عن مستخدم..." />
+      <table id="usersTable">
+        <thead>
+          <tr>
+            <th>الاسم</th>
+            <th>البريد</th>
+            <th>الحالة</th>
+            <th>التحكم</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- يتم تعبئته ديناميكياً -->
+        </tbody>
+      </table>
+    </section>
 
-  <section id="examForm">
-    <h2>إضافة درجة امتحان</h2>
-    <input type="text" id="examUserId" placeholder="ID المستخدم" />
-    <input type="text" id="examName" placeholder="اسم الامتحان" />
-    <input type="number" id="examTotal" placeholder="الدرجة الكلية" />
-    <input type="number" id="examScore" placeholder="الدرجة التي حصل عليها" />
-    <button onclick="addExam()">إضافة</button>
-  </section>
+    <section class="add-grades">
+      <h2>إضافة درجات الامتحان</h2>
+      <form id="gradesForm">
+        <input type="text" placeholder="اسم المستخدم" id="gradeUsername" required />
+        <input type="text" placeholder="اسم الامتحان" id="examName" required />
+        <input type="number" placeholder="الدرجة الكلية" id="totalScore" required />
+        <input type="number" placeholder="الدرجة التي حصل عليها" id="userScore" required />
+        <button type="submit">إضافة</button>
+      </form>
+    </section>
 
-  <section id="messageForm">
-    <h2>إرسال رسالة</h2>
-    <input type="text" id="msgUserId" placeholder="ID المستخدم" />
-    <textarea id="userMessage" placeholder="اكتب الرسالة هنا..."></textarea>
-    <button onclick="sendMessage()">إرسال</button>
-  </section>
+    <section class="top-users">
+      <h2>أفضل 3 مستخدمين</h2>
+      <div class="circle-cards" id="topUsersContainer">
+        <!-- يتم تعبئته ديناميكياً -->
+      </div>
+    </section>
+  </main>
 
-  <footer>© 2025 تصميم مازن جلال</footer>
   <script src="admain.js"></script>
 </body>
-    </html>
+</html>
+
+
+
