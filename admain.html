@@ -1,65 +1,62 @@
-<!DOCTYPE html>
-<html lang="ar">
+!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>لوحة تحكم الأدمن</title>
-  <link rel="stylesheet" href="admain.css">
+  <link rel="stylesheet" href="admain.css" />
 </head>
 <body>
-  <header class="admin-header">
-    <h1>لوحة تحكم الأدمن</h1>
-    <p>تحكم كامل في المستخدمين والبيانات</p>
-  </header>
+  <header>لوحة تحكم الأدمن</header>
 
-  <main class="admin-container">
-    <section class="stats">
-      <div class="stat-box"><h3>عدد المستخدمين</h3><p id="totalUsers">0</p></div>
-      <div class="stat-box"><h3>المستخدمين النشطين</h3><p id="activeUsers">0</p></div>
-      <div class="stat-box"><h3>متوسط الدرجات</h3><p id="averageScore">0%</p></div>
-      <div class="stat-box best-user"><h3>أفضل مستخدم</h3><p id="bestUser">---</p></div>
-    </section>
+  <section class="stats">
+    <div class="stat-card">
+      <h3>إجمالي المستخدمين</h3>
+      <p id="totalUsers">0</p>
+    </div>
+    <div class="stat-card">
+      <h3>المستخدمين النشطين</h3>
+      <p id="activeUsers">0</p>
+    </div>
+    <div class="stat-card">
+      <h3>متوسط الدرجات</h3>
+      <p id="averageGrades">0</p>
+    </div>
+  </section>
 
-    <section class="admin-actions">
-      <h2>المستخدمين</h2>
-      <div class="admin-table">
-        <table>
-          <thead>
-            <tr>
-              <th>الاسم</th>
-              <th>البريد</th>
-              <th>الحالة</th>
-              <th>العمليات</th>
-            </tr>
-          </thead>
-          <tbody id="usersTable"></tbody>
-        </table>
-      </div>
+  <section class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>الاسم</th>
+          <th>الحالة</th>
+          <th>الرسائل</th>
+          <th>الدرجات</th>
+          <th>تحكم</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody"></tbody>
+    </table>
+  </section>
 
-      <h2>إرسال رسالة خاصة</h2>
-      <form id="messageForm">
-        <select id="userSelect"></select>
-        <textarea id="messageContent" placeholder="اكتب الرسالة هنا..."></textarea>
-        <button type="submit">إرسال</button>
-      </form>
+  <section id="examForm">
+    <h2>إضافة درجة امتحان</h2>
+    <input type="text" id="examUserId" placeholder="ID المستخدم" />
+    <input type="text" id="examName" placeholder="اسم الامتحان" />
+    <input type="number" id="examTotal" placeholder="الدرجة الكلية" />
+    <input type="number" id="examScore" placeholder="الدرجة التي حصل عليها" />
+    <button onclick="addExam()">إضافة</button>
+  </section>
 
-      <h2>إرسال رسالة عامة</h2>
-      <form id="broadcastForm">
-        <textarea id="broadcastMessage" placeholder="الرسالة العامة..."></textarea>
-        <button type="submit">نشر</button>
-      </form>
+  <section id="messageForm">
+    <h2>إرسال رسالة</h2>
+    <input type="text" id="msgUserId" placeholder="ID المستخدم" />
+    <textarea id="userMessage" placeholder="اكتب الرسالة هنا..."></textarea>
+    <button onclick="sendMessage()">إرسال</button>
+  </section>
 
-      <h2>إضافة درجات امتحان</h2>
-      <form id="examForm">
-        <select id="gradeUser"></select>
-        <input type="text" id="examName" placeholder="اسم الامتحان">
-        <input type="number" id="totalMark" placeholder="الدرجة الكلية">
-        <input type="number" id="gotMark" placeholder="الدرجة التي حصل عليها">
-        <button type="submit">إضافة</button>
-      </form>
-    </section>
-  </main>
-
+  <footer>© 2025 تصميم مازن جلال</footer>
   <script src="admain.js"></script>
 </body>
-</html>
+    </html>
