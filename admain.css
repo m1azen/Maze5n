@@ -1,115 +1,173 @@
+/* خطوط وأساسيات */
 body {
-  margin: 0;
   font-family: 'Cairo', sans-serif;
-  background: linear-gradient(135deg, #1d1b3f, #4b3b73);
-  color: #fff;
-  animation: fadeIn 1s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-header {
-  background-color: #000033;
-  padding: 1rem;
-  text-align: center;
-  font-size: 2rem;
-  box-shadow: 0 0 20px rgba(0,0,0,0.6);
-}
-
-.stats {
+  margin: 0;
+  background: #f4f8fb;
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 2rem;
-  flex-wrap: wrap;
+  color: #333;
 }
 
-.stat-card {
-  background: #292a4a;
-  padding: 1.5rem;
-  border-radius: 20px;
-  min-width: 200px;
+.sidebar {
+  width: 220px;
+  background: linear-gradient(to bottom right, #4e54c8, #8f94fb);
+  color: white;
+  padding: 20px;
+  height: 100vh;
+  position: fixed;
+}
+
+.sidebar h2 {
   text-align: center;
-  transition: transform 0.4s ease;
+  margin-bottom: 30px;
+  font-size: 24px;
 }
 
-.stat-card:hover {
-  transform: scale(1.05);
+.sidebar ul {
+  list-style: none;
+  padding: 0;
 }
 
-.stat-card h3 {
-  font-size: 1.2rem;
+.sidebar ul li {
+  margin: 20px 0;
 }
 
-.stat-card p {
-  font-size: 2rem;
-  color: #00ffd5;
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.sidebar ul li a:hover {
+  text-decoration: underline;
+}
+
+.main-content {
+  margin-right: 240px;
+  padding: 20px;
+  width: 100%;
+}
+
+.welcome {
+  background: #fff;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.animated-text {
+  font-size: 2.5em;
+  font-weight: bold;
+  animation: fadeInUp 1s ease forwards;
+}
+
+.emoji-bounce {
+  font-size: 2em;
+  animation: bounce 1.5s infinite;
+}
+
+.quote {
   margin-top: 10px;
+  font-size: 18px;
+  color: #666;
 }
 
-.table-container {
-  padding: 2rem;
+.user-table, .add-grades, .top-users {
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
 }
 
-table {
+.user-table table {
   width: 100%;
   border-collapse: collapse;
-  background: #1f1f3f;
-  border-radius: 10px;
-  overflow: hidden;
 }
 
-table th, table td {
-  padding: 0.8rem;
+.user-table th, .user-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
   text-align: center;
-  border-bottom: 1px solid #444;
 }
 
-table th {
-  background-color: #3f3f7f;
-}
-
-input, textarea {
-  padding: 0.6rem;
+.user-table input[type="text"] {
   width: 100%;
-  border-radius: 10px;
-  border: none;
-  margin: 0.5rem 0;
-  font-size: 1rem;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 
-button {
-  background-color: #00d2ff;
-  border: none;
+#gradesForm input, #gradesForm button {
+  padding: 10px;
+  margin: 5px;
   border-radius: 10px;
-  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+}
+
+#gradesForm button {
+  background: #4e54c8;
+  color: white;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: 0.3s;
+}
+
+#gradesForm button:hover {
+  background: #3d42b3;
+}
+
+.circle-cards {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.circle-cards .card {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(to bottom, #6a82fb, #fc5c7d);
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: bold;
+  flex-direction: column;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  animation: popUp 0.8s ease;
 }
 
-button:hover {
-  background-color: #00aac2;
-  transform: scale(1.05);
+/* أنيميشن */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
-#examForm, #messageForm {
-  background: #2e2e60;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  width: 90%;
-  max-width: 600px;
-  border-radius: 20px;
+@keyframes fadeInUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-footer {
-  text-align: center;
-  padding: 1rem;
-  background: #10102a;
-  margin-top: 3rem;
-  font-size: 0.9rem;
+@keyframes popUp {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
-
