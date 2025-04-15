@@ -1,11 +1,10 @@
 const SHEET_ID = '1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo';
 const API_KEY = 'AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0';
 
-// Sidebar toggle
+// Sidebar Toggle
 document.getElementById("toggleSidebar").addEventListener("click", () => {
-  const sidebar = document.querySelector("nav");
-  const isVisible = sidebar.style.transform === "translateX(0%)";
-  sidebar.style.transform = isVisible ? "translateX(-100%)" : "translateX(0%)";
+  const sidebar = document.getElementById("sidebar");
+  sidebar.classList.toggle("visible");
 });
 
 // Fetch data from Google Sheets
@@ -21,41 +20,23 @@ async function fetchData(range) {
 async function populateUserTable() {
   const userTable = document.getElementById("userTable");
   const users = await fetchData("Sheet1!A:E");
-  users.forEach((user, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
+
+  userTable.innerHTML = users.map((user) => `
+    <tr>
       <td>${user[0]}</td>
       <td>${user[1]}</td>
       <td>${user[2]}</td>
       <td>${user[4]}</td>
-      <td>${user[5] || "None"}</td>
+      <td>${user[5]}</td>
       <td>
-        <button>Edit</button>
-        <button>Suspend</button>
+        <button onclick="editUser('${user[0]}')">Edit</button>
+        <button onclick="suspendUser('${user[0]}')">Suspend</button>
       </td>
-    `;
-    userTable.appendChild(row);
-  });
+    </tr>
+  `).join('');
 }
 
-// Populate exam table
-async function populateExamTable() {
-  const examTable = document.getElementById("examTable");
-  const exams = await fetchData("Sheet1!F:J");
-  exams.forEach((exam) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${exam[0]}</td>
-      <td>${exam[5]}</td>
-      <td>${exam[6]}</td>
-      <td>${exam[7]}</td>
-      <td>${exam[8]}</td>
-    `;
-    examTable.appendChild(row);
-  });
-}
-
-// Add exam data
+// Add exam data and update chart
 document.getElementById("examForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const userId = document.getElementById("userId").value;
@@ -73,11 +54,18 @@ document.getElementById("examForm").addEventListener("submit", async (e) => {
       }),
     }
   );
+
   alert("Exam added successfully!");
+  updateChart(); // Update the grades chart
 });
 
-// Initialize data
-document.addEventListener("DOMContentLoaded", () => {
-  populateUserTable();
-  populateExamTable();
-});
+// Initialize grades chart
+async function updateChart() {
+  const exams = await fetchData("Sheet1!G:I");
+  const labels = exams.map((exam) => exam[0]); // Exam Names
+  const scores = exams.map((exam) => exam[2]); // Obtained Marks
+
+  const ctx = document.getElementById("gradesChart").getContext("2d");
+  new Chart(ctx, {
+    type: 'bar',
+    data
