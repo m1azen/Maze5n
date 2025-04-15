@@ -1,77 +1,65 @@
-// admain.js
-const SHEET_ID = "1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo";
-const API_KEY = "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0";
-const BASE = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values`;
+const sheetId = "1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo";
+const apiKey = "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0";
+const usersRange = "users";
 
-async function fetchData() {
-  const res = await fetch(`${BASE}/users?key=${API_KEY}`);
-  const json = await res.json();
-  return json.values.slice(1); // Skip header row
+async function fetchUsers() {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${usersRange}?key=${apiKey}`;
+  const response = await fetch(url);
+  const result = await response.json();
+  const users = result.values ? result.values.slice(1) : [];
+  renderUsers(users);
+  updateStats(users);
 }
 
-function renderTable(users) {
-  const table = document.getElementById("usersTable");
-  table.innerHTML = "";
-  users.forEach((user, i) => {
-    const [id, username, email, status, msg, score] = user;
-    table.innerHTML += `
-      <tr>
-        <td>${id}</td>
-        <td>${username}</td>
-        <td>${email}</td>
-        <td>${status}</td>
-        <td><input type="text" placeholder="رسالة" onchange="sendMsg(${id}, this.value)"></td>
-        <td>
-          <button onclick="editUser(${id})">تعديل</button>
-          <button onclick="suspendUser(${id})">إيقاف</button>
-          <button onclick="deleteUser(${id})">حذف</button>
-        </td>
-      </tr>
+function renderUsers(users) {
+  const tbody = document.getElementById("userTableBody");
+  tbody.innerHTML = "";
+  users.forEach(user => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${user[0]}</td>
+      <td>${user[1]}</td>
+      <td>${user[2]}</td>
+      <td>${user[3] || 'لا توجد'}</td>
+      <td>${user[4] || '0'}</td>
+      <td>
+        <button onclick="toggleStatus('${user[0]}')">إيقاف</button>
+        <button onclick="resetPassword('${user[0]}')">تعديل الباسورد</button>
+      </td>
     `;
+    tbody.appendChild(row);
   });
 }
 
-function calcStats(users) {
+function updateStats(users) {
   document.getElementById("totalUsers").textContent = users.length;
-  const active = users.filter(user => user[3] === "نشط").length;
+  const active = users.filter(u => u[2] === "نشط").length;
   document.getElementById("activeUsers").textContent = active;
-  const scores = users.map(u => parseFloat(u[5]) || 0);
-  const avg = scores.reduce((a, b) => a + b, 0) / users.length;
-  document.getElementById("avgGrades").textContent = avg.toFixed(1);
-  const maxIndex = scores.indexOf(Math.max(...scores));
-  document.getElementById("bestUser").textContent = users[maxIndex]?.[1] || "--";
+  const grades = users.map(u => parseInt(u[4] || 0));
+  const avg = grades.reduce((a, b) => a + b, 0) / grades.length;
+  document.getElementById("averageGrades").textContent = isNaN(avg) ? 0 : avg.toFixed(1);
 }
 
-function sendMsg(userId, msg) {
-  alert(`سيتم إرسال: ${msg} للمستخدم ${userId}`);
-  // هنا تقدر تبعت الرسالة وتعدل الجدول من Google Sheets API
-}
-
-function editUser(id) {
-  alert(`تعديل المستخدم ${id}`);
-}
-
-function suspendUser(id) {
-  const reason = prompt("سبب الإيقاف:");
-  alert(`سيتم إيقاف المستخدم ${id} بسبب: ${reason}`);
-}
-
-function deleteUser(id) {
-  if (confirm("هل أنت متأكد أنك تريد حذف هذا المستخدم؟")) {
-    alert(`تم حذف المستخدم ${id}`);
-  }
-}
-
-document.getElementById("examForm").addEventListener("submit", e => {
-  e.preventDefault();
+function addExam() {
   const id = document.getElementById("examUserId").value;
-  const name = document.getElementById("examName").value;
-  const total = document.getElementById("totalMark").value;
-  const mark = document.getElementById("userMark").value;
-  alert(`تم إضافة امتحان ${name} للمستخدم ${id}: ${mark}/${total}`);
-});
+  const exam = document.getElementById("examName").value;
+  const total = document.getElementById("examTotal").value;
+  const score = document.getElementById("examScore").value;
+  alert(`تمت إضافة الامتحان: ${exam} للمستخدم ID: ${id} - (${score}/${total})`);
+}
 
-fetchData().then(users => {
-  renderTable(users);
-  calcStats(users);
-});
+function sendMessage() {
+  const id = document.getElementById("msgUserId").value;
+  const msg = document.getElementById("userMessage").value;
+  alert(`تم إرسال الرسالة للمستخدم ID: ${id} \n "${msg}"`);
+}
+
+function toggleStatus(id) {
+  alert(`تم تغيير حالة الحساب ID: ${id}`);
+}
+
+function resetPassword(id) {
+  alert(`تم تعديل كلمة السر للمستخدم ID: ${id}`);
+}
+
+fetchUsers
