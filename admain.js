@@ -1,65 +1,72 @@
-const SHEET_ID = '1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo'; // Google Sheets ID
-const API_KEY = 'AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0'; // API Key
+const SHEET_ID = "1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo";
+const API_KEY = "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0";
+const RANGE = "Sheet1";
 
-// دالة لجلب البيانات من Google Sheets
-async function fetchData(range) {
-  const response = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`
-  );
-  if (!response.ok) throw new Error(`خطأ: ${response.status} ${response.statusText}`);
+const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const response = await fetch(url);
   const data = await response.json();
-  return data.values || [];
-}
 
-// دالة لعرض الإحصائيات
-async function displayStatistics() {
-  const users = await fetchData('Sheet1!A:E');
-  const exams = await fetchData('Sheet3!A:E');
+  const users = data.values.slice(1).map(row => ({
+    id: row[0],
+    username: row[1],
+    email: row[2],
+    status: row[3],
+    score: parseFloat(row[4]) || 0
+  }));
 
-  const totalUsers = users.length;
-  const suspendedUsers = users.filter((user) => user[3] === "موقوف").length;
-  const grades = exams.map((exam) => parseFloat(exam[3]) || 0);
-  const averageGrades = grades.reduce((a, b) => a + b, 0) / grades.length;
+  // إحصائيات
+  const total = users.length;
+  const active = users.filter(u => u.status === 'نشط').length;
+  const suspended = users.filter(u => u.status === 'موقوف').length;
+  const average = (users.reduce((sum, u) => sum + u.score, 0) / total).toFixed(2);
 
-  document.getElementById("totalUsersChart").style.setProperty("--value", `${100}%`);
-  document.getElementById("totalUsersChart").textContent = totalUsers;
+  document.getElementById('totalUsers').textContent = total;
+  document.getElementById('activeUsers').textContent = active;
+  document.getElementById('suspendedUsers').textContent = suspended;
+  document.getElementById('averageScore').textContent = average;
 
-  document.getElementById("suspendedUsersChart").style.setProperty("--value", `${(suspendedUsers / totalUsers) * 100}%`);
-  document.getElementById("suspendedUsersChart").textContent = suspendedUsers;
-
-  document.getElementById("averageGradesChart").style.setProperty("--value", `${(averageGrades / 100) * 100}%`);
-  document.getElementById("averageGradesChart").textContent = averageGrades.toFixed(1);
-}
-
-// دالة لعرض المستخدمين
-async function displayUsers() {
-  const usersTable = document.getElementById("usersTable");
-  const users = await fetchData('Sheet1!A:E');
-  usersTable.innerHTML = "";
-  users.forEach((user, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${user[0]}</td>
-      <td>${user[1]}</td>
-      <td>${user[2]}</td>
+  // جدول المستخدمين
+  const table = document.getElementById("usersTable");
+  users.forEach(u => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${u.id}</td>
+      <td>${u.username}</td>
+      <td>${u.email}</td>
+      <td>${u.status}</td>
+      <td>${u.score}</td>
       <td>
-        <button>تعديل</button>
-        <button>حذف</button>
+        <button onclick="editUser('${u.id}')">تعديل</button>
+        <button onclick="suspendUser('${u.id}')">إيقاف</button>
       </td>
     `;
-    usersTable.appendChild(row);
+    table.appendChild(tr);
+  });
+
+  drawChart(active, suspended);
+});
+
+// رسم الدوائر
+function drawChart(active, suspended) {
+  new Chart(document.getElementById("statusChart"), {
+    type: 'doughnut',
+    data: {
+      labels: ['نشط', 'موقوف'],
+      datasets: [{
+        label: 'نسبة الحالات',
+        data: [active, suspended],
+        backgroundColor: ['#2b5876', '#f44336']
+      }]
+    }
   });
 }
 
-// دالة لعرض الامتحانات
-async function displayExams() {
-  const examTable = document.getElementById("examTable");
-  const exams = await fetchData('Sheet3!A:E');
-  examTable.innerHTML = "";
-  exams.forEach((exam) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${exam[0]}</td>
-      <td>${exam[1]}</td>
-      <td>${exam[2]}</td>
+function editUser(id) {
+  alert(`تعديل المستخدم: ${id}`);
+}
+
+function suspendUser(id) {
+  alert(`تم إيقاف المستخدم: ${id}`);
+}
