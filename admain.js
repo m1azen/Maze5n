@@ -1,5 +1,5 @@
-const SHEET_ID = '1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo'; // Google Sheets ID
-const API_KEY = 'AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0'; // API Key
+const SHEET_ID = '1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo';
+const API_KEY = 'AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0';
 
 // دالة لجلب البيانات
 async function fetchData(range) {
@@ -14,35 +14,26 @@ async function fetchData(range) {
 // عرض الإحصائيات
 async function displayStatistics() {
   const users = await fetchData('Sheet1!A:E');
-  const totalUsers = users.length;
-  const activeUsers = users.filter((user) => user[3] === "Active").length;
-  const topUser = users.reduce((max, user) => (user[4] > max[4] ? user : max), users[0]);
-
-  document.getElementById("totalUsersChart").style.setProperty("--value", "100%");
-  document.getElementById("totalUsersChart").textContent = totalUsers;
-
-  document.getElementById("activeUsersChart").style.setProperty("--value", `${(activeUsers / totalUsers) * 100}%`);
-  document.getElementById("activeUsersChart").textContent = activeUsers;
-
-  document.getElementById("topUserChart").textContent = topUser[0];
+  document.getElementById('total-users').textContent = users.length;
+  document.getElementById('active-users').textContent = users.filter(user => user[3] === 'Active').length;
 }
 
-// دالة لعرض المستخدمين
+// عرض المستخدمين
 async function displayUsers() {
-  const usersTable = document.getElementById("usersTable");
+  const usersTable = document.getElementById('users-table');
   const users = await fetchData('Sheet1!A:E');
-  usersTable.innerHTML = users.map((user) => `
+  usersTable.innerHTML = users.map(user => `
     <tr>
       <td>${user[0]}</td>
       <td>${user[1]}</td>
       <td>${user[3]}</td>
-      <td><button>رسالة</button></td>
+      <td><button>تعديل</button><button>حذف</button></td>
     </tr>
-  `).join("");
+  `).join('');
 }
 
-// تحميل البيانات عند فتح الصفحة
-document.addEventListener("DOMContentLoaded", () => {
+// عند التحميل
+document.addEventListener('DOMContentLoaded', () => {
   displayStatistics();
   displayUsers();
 });
