@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard</title>
+  <title>Future Admin Dashboard</title>
   <link rel="stylesheet" href="admain.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- مكتبة الرسم البياني -->
   <script src="admain.js" defer></script>
@@ -11,27 +11,26 @@
 <body>
   <header>
     <h1>Future Admin Dashboard</h1>
-    <p>Welcome to the most advanced management tool</p>
+    <p>Manage users, exams, stats, and talk with AI chatbot</p>
     <button id="logoutButton">Logout</button>
   </header>
 
-  <!-- Sidebar -->
   <nav id="sidebar">
     <button id="toggleSidebar">☰</button>
     <ul id="sidebarMenu" style="display: none;">
       <li><a href="#dashboard">Dashboard</a></li>
       <li><a href="#userManagement">Manage Users</a></li>
       <li><a href="#examManagement">Manage Exams</a></li>
+      <li><a href="#chatbot">AI Chatbot</a></li>
     </ul>
   </nav>
 
-  <!-- Main Content -->
   <main>
-    <!-- Dashboard Section -->
+    <!-- Dashboard Statistics -->
     <section id="dashboard">
       <h2>Dashboard Overview</h2>
-      <div id="statsContainer">
-        <canvas id="gradesChart"></canvas>
+      <canvas id="gradesChart"></canvas>
+      <div class="statContainer">
         <div class="stat">
           <h3>Total Users</h3>
           <p id="totalUsers">-</p>
@@ -43,34 +42,31 @@
       </div>
     </section>
 
-    <!-- User Management -->
+    <!-- Manage Users -->
     <section id="userManagement">
       <h2>Manage Users</h2>
       <table>
         <thead>
           <tr>
-            <th>ID</th>
             <th>Username</th>
             <th>Email</th>
             <th>Status</th>
-            <th>Reason</th>
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody id="userTable">
-          <!-- Users will be dynamically loaded -->
+        <tbody id="usersTable">
+          <!-- Data dynamically populated -->
         </tbody>
       </table>
     </section>
 
-    <!-- Exam Management -->
+    <!-- Manage Exams -->
     <section id="examManagement">
       <h2>Manage Exams</h2>
       <form id="examForm">
-        <input type="number" id="userId" placeholder="User ID" required>
-        <input type="text" id="examName" placeholder="Exam Name" required>
-        <input type="number" id="totalMarks" placeholder="Total Marks" required>
-        <input type="number" id="obtainedMarks" placeholder="Obtained Marks" required>
+        <input type="text" id="examName" placeholder="Exam Name" required />
+        <input type="number" id="totalMarks" placeholder="Total Marks" required />
+        <input type="number" id="obtainedMarks" placeholder="Obtained Marks" required />
         <button type="submit">Add Exam</button>
       </form>
       <table>
@@ -83,9 +79,19 @@
           </tr>
         </thead>
         <tbody id="examTable">
-          <!-- Exam data will be dynamically loaded -->
+          <!-- Data dynamically populated -->
         </tbody>
       </table>
+    </section>
+
+    <!-- Chatbot Section -->
+    <section id="chatbot">
+      <h2>AI Chatbot</h2>
+      <div id="chatbox">
+        <div id="chatMessages"></div>
+        <input type="text" id="chatInput" placeholder="Ask AI anything..." />
+        <button id="sendMessage">Send</button>
+      </div>
     </section>
   </main>
 
