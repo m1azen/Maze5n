@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم - مازن جلال</title>
     <link rel="stylesheet" href="admain.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <header>
@@ -25,9 +26,16 @@
             <table id="user-table">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>اسم المستخدم</th>
                         <th>البريد الإلكتروني</th>
-                        <th>الدرجات</th>
+                        <th>كلمة المرور</th>
+                        <th>الحالة</th>
+                        <th>السبب</th>
+                        <th>اسم الامتحان</th>
+                        <th>الدرجات الكلية</th>
+                        <th>الدرجات المكتسبة</th>
+                        <th>رسالة</th>
                         <th>الإجراء</th>
                     </tr>
                 </thead>
@@ -40,9 +48,9 @@
 
         <section id="statistics">
             <h2>الإحصائيات</h2>
-            <div id="stats">
-                <p>عدد المستخدمين: <span id="user-count">0</span></p>
-                <p>متوسط الدرجات: <span id="average-score">0</span></p>
+            <div id="charts">
+                <canvas id="user-status-chart"></canvas>
+                <canvas id="exam-scores-chart"></canvas>
             </div>
         </section>
     </main>
@@ -51,6 +59,7 @@
         <p>جميع الحقوق محفوظة &copy; 2025 مازن جلال</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="admain.js"></script>
 </body>
 </html>
