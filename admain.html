@@ -9,33 +9,39 @@
 </head>
 <body>
     <header>
-        <h1>لوحة التحكم</h1>
-        <nav>
-            <ul>
-                <li><a href="#">الصفحة الرئيسية</a></li>
-                <li><a href="#">إدارة المستخدمين</a></li>
-                <li><a href="#">إحصائيات</a></li>
-                <li><a href="#">تسجيل الخروج</a></li>
-            </ul>
-        </nav>
+        <h1>مرحبا، مدير</h1>
+        <p>إدارة منصتك بكفاءة</p>
     </header>
 
     <main>
-        <section id="user-management">
+        <section class="stats">
+            <div class="card">
+                <h3>إجمالي المستخدمين</h3>
+                <p id="total-users">136</p>
+            </div>
+            <div class="card">
+                <h3>المستخدمون النشطون</h3>
+                <p id="active-users">97</p>
+            </div>
+            <div class="card">
+                <h3>أفضل مستخدم</h3>
+                <p id="top-user">ماجد</p>
+                <p>92%</p>
+            </div>
+            <div class="card">
+                <h3>متوسط الدرجات</h3>
+                <p id="avg-scores">34</p>
+            </div>
+        </section>
+
+        <section class="user-management">
             <h2>إدارة المستخدمين</h2>
             <table id="user-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>اسم المستخدم</th>
                         <th>البريد الإلكتروني</th>
-                        <th>كلمة المرور</th>
                         <th>الحالة</th>
-                        <th>السبب</th>
-                        <th>اسم الامتحان</th>
-                        <th>الدرجات الكلية</th>
-                        <th>الدرجات المكتسبة</th>
-                        <th>رسالة</th>
                         <th>الإجراء</th>
                     </tr>
                 </thead>
@@ -46,12 +52,17 @@
             <button id="add-user-btn">إضافة مستخدم</button>
         </section>
 
-        <section id="statistics">
-            <h2>الإحصائيات</h2>
-            <div id="charts">
-                <canvas id="user-status-chart"></canvas>
+        <section class="exam-scores">
+            <h2>درجات الامتحانات</h2>
+            <div class="exam-scores-chart">
                 <canvas id="exam-scores-chart"></canvas>
             </div>
+        </section>
+
+        <section class="send-message">
+            <h2>إرسال إعلان</h2>
+            <textarea id="announcement" placeholder="اكتب رسالتك هنا..."></textarea>
+            <button id="send-announcement-btn">إرسال</button>
         </section>
     </main>
 
