@@ -1,89 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Dashboard | Mazen</title>
-  <link rel="stylesheet" href="admain.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - مازن جلال</title>
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-  <!-- شاشة تحميل أولية -->
-  <div id="preloader">
-    <div class="code-loader">Loading Code...</div>
-  </div>
+    <header>
+        <h1>لوحة التحكم</h1>
+        <nav>
+            <ul>
+                <li><a href="#">الصفحة الرئيسية</a></li>
+                <li><a href="#">إدارة المستخدمين</a></li>
+                <li><a href="#">إحصائيات</a></li>
+                <li><a href="#">تسجيل الخروج</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <!-- رأس الصفحة -->
-  <header>
-    <h1>Welcome, Mazen</h1>
-    <p class="greeting">أهلاً بك يا مازن، أنت المبرمج الأسطوري!</p>
-  </header>
+    <main>
+        <section id="user-management">
+            <h2>إدارة المستخدمين</h2>
+            <table id="user-table">
+                <thead>
+                    <tr>
+                        <th>اسم المستخدم</th>
+                        <th>البريد الإلكتروني</th>
+                        <th>الدرجات</th>
+                        <th>الإجراء</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- البيانات ستظهر هنا -->
+                </tbody>
+            </table>
+            <button id="add-user-btn">إضافة مستخدم</button>
+        </section>
 
-  <!-- الإحصائيات -->
-  <section class="stats">
-    <div class="stat-card">
-      <h3>عدد المستخدمين</h3>
-      <p id="totalUsers">0</p>
-    </div>
-    <div class="stat-card">
-      <h3>المستخدمين النشطين</h3>
-      <p id="activeUsers">0</p>
-    </div>
-    <div class="stat-card">
-      <h3>متوسط الدرجات</h3>
-      <p id="avgScore">0</p>
-    </div>
-  </section>
+        <section id="statistics">
+            <h2>الإحصائيات</h2>
+            <div id="stats">
+                <p>عدد المستخدمين: <span id="user-count">0</span></p>
+                <p>متوسط الدرجات: <span id="average-score">0</span></p>
+            </div>
+        </section>
+    </main>
 
-  <!-- جدول المستخدمين -->
-  <div class="table-container">
-    <table id="userTable">
-      <thead>
-        <tr>
-          <th>الاسم</th>
-          <th>البريد</th>
-          <th>الحالة</th>
-          <th>الدرجة</th>
-          <th>التحكم</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+    <footer>
+        <p>جميع الحقوق محفوظة &copy; 2025 مازن جلال</p>
+    </footer>
 
-  <!-- إضافة درجات -->
-  <div id="examForm">
-    <h2>إضافة درجات الامتحان</h2>
-    <input type="text" id="examUser" placeholder="اسم المستخدم" />
-    <input type="text" id="examName" placeholder="اسم الامتحان" />
-    <input type="number" id="examGrade" placeholder="الدرجة" />
-    <button onclick="addExamGrade()">إضافة</button>
-  </div>
-
-  <!-- إرسال رسالة عامة -->
-  <div id="messageForm">
-    <h2>إرسال رسالة لكل المستخدمين</h2>
-    <textarea id="generalMessage" placeholder="اكتب الرسالة هنا"></textarea>
-    <button onclick="sendGeneralMessage()">إرسال</button>
-  </div>
-
-  <!-- الذكاء الاصطناعي -->
-  <div id="aiAssistant">
-    <h2>الذكاء الاصطناعي</h2>
-    <input type="text" id="aiQuestion" placeholder="اسأل في البرمجة هنا..." />
-    <button onclick="askAI()">اسأل</button>
-    <pre id="aiResponse"></pre>
-  </div>
-
-  <!-- رسم بياني -->
-  <div id="chartContainer">
-    <canvas id="gradeChart"></canvas>
-  </div>
-
-  <footer>
-    تصميم عبقري بإشراف المبرمج العالمي <strong>Mazen</strong>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="admain.js"></script>
+    <script src="admin.js"></script>
 </body>
 </html>
