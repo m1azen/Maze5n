@@ -8,7 +8,7 @@ body {
 header {
     background: #35424a;
     color: #ffffff;
-    padding: 10px 20px;
+    padding: 15px 20px;
     text-align: center;
 }
 
@@ -63,7 +63,16 @@ footer {
     padding: 10px;
     background-color: #35424a;
     color: white;
-    position: absolute;
-    width: 100%;
+    position: relative;
     bottom: 0;
+}
+
+#charts {
+    display: flex;
+    justify-content: space-around;
+}
+
+canvas {
+    max-width: 400px;
+    max-height: 300px;
 }
