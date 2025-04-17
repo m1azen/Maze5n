@@ -39,6 +39,7 @@
             <table id="user-table">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>اسم المستخدم</th>
                         <th>البريد الإلكتروني</th>
                         <th>الحالة</th>
@@ -54,9 +55,21 @@
 
         <section class="exam-scores">
             <h2>درجات الامتحانات</h2>
-            <div class="exam-scores-chart">
-                <canvas id="exam-scores-chart"></canvas>
-            </div>
+            <table id="exam-table">
+                <thead>
+                    <tr>
+                        <th>ID المستخدم</th>
+                        <th>اسم الامتحان</th>
+                        <th>الدرجة الكلية</th>
+                        <th>الدرجة المكتسبة</th>
+                        <th>الإجراء</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- درجات الامتحانات ستظهر هنا -->
+                </tbody>
+            </table>
+            <button id="add-exam-btn">إضافة امتحان</button>
         </section>
 
         <section class="send-message">
