@@ -29,6 +29,11 @@ h1 {
     text-align: center;
     flex: 1;
     margin: 0 10px;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
 }
 
 .user-management, .exam-scores, .send-message {
@@ -60,6 +65,7 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 button:hover {
