@@ -10,13 +10,31 @@ document.addEventListener("DOMContentLoaded", function() {
     const topUserScore = document.getElementById("top-user-score");
     const avgScores = document.getElementById("avg-scores");
 
-    let users = []; // مصفوفة لتخزين بيانات المستخدمين
-    let exams = []; // مصفوفة لتخزين درجات الامتحانات
+    let users = [];
+    let exams = [];
 
     async function fetchData() {
-        const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1?key=${API_KEY}`);
-        const data = await response.json();
-        populateUsers(data.values);
+        try {
+            const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1?key=${API_KEY}`);
+            const data = await response.json();
+            populateUsers(data.values);
+            
+            // جلب بيانات الامتحانات
+            const examsResponse = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet2?key=${API_KEY}`);
+            const examsData = await examsResponse.json();
+            if (examsData.values) {
+                exams = examsData.values.slice(1).map(row => ({
+                    userId: row[0],
+                    examName: row[1],
+                    totalMarks: row[2],
+                    obtainedMarks: row[3]
+                }));
+                updateExamTable();
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            alert("حدث خطأ أثناء جلب البيانات");
+        }
     }
 
     function populateUsers(data) {
@@ -42,6 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <td>${user.email}</td>
                 <td>${user.password}</td>
                 <td>${user.status}</td>
+                <td>${user.reason || ''}</td>
                 <td>
                     <button onclick="editUser('${user.id}')">تعديل</button>
                     <button onclick="removeUser('${user.id}')">حذف</button>
@@ -52,20 +71,102 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    async function updateGoogleSheet() {
+        try {
+            const values = [
+                ["ID", "Username", "Email", "Password", "Status", "Reason"],
+                ...users.map(user => [user.id, user.username, user.email, user.password, user.status, user.reason])
+            ];
+            
+            const response = await fetch(
+                `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1?valueInputOption=USER_ENTERED&key=${API_KEY}`, 
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        range: "Sheet1!A1:F" + (users.length + 1),
+                        majorDimension: "ROWS",
+                        values: values
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                const error = await response.json();
+                console.error("Error updating sheet:", error);
+                alert("حدث خطأ أثناء التحديث: " + (error.error?.message || "Unknown error"));
+                return false;
+            }
+            
+            console.log("تم تحديث البيانات بنجاح");
+            return true;
+        } catch (error) {
+            console.error("Error:", error);
+            alert("حدث خطأ غير متوقع: " + error.message);
+            return false;
+        }
+    }
+
+    async function updateGoogleSheetExams() {
+        try {
+            const values = [
+                ["User ID", "Exam Name", "Total Marks", "Obtained Marks"],
+                ...exams.map(exam => [exam.userId, exam.examName, exam.totalMarks, exam.obtainedMarks])
+            ];
+            
+            const response = await fetch(
+                `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet2?valueInputOption=USER_ENTERED&key=${API_KEY}`, 
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        range: "Sheet2!A1:D" + (exams.length + 1),
+                        majorDimension: "ROWS",
+                        values: values
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                const error = await response.json();
+                console.error("Error updating exams sheet:", error);
+                return false;
+            }
+            
+            console.log("تم تحديث بيانات الامتحانات بنجاح");
+            return true;
+        } catch (error) {
+            console.error("Error:", error);
+            return false;
+        }
+    }
+
     window.editUser = async function(id) {
         const user = users.find(user => user.id === id);
         const newPassword = prompt("أدخل كلمة المرور الجديدة:", user.password);
         if (newPassword) {
-            user.password = newPassword; // تحديث كلمة المرور في المصفوفة
-            await updateGoogleSheet(); // تحديث Google Sheets
-            alert(`تم تحديث كلمة المرور للمستخدم ${user.username}`);
+            user.password = newPassword;
+            const success = await updateGoogleSheet();
+            if (success) {
+                alert(`تم تحديث كلمة المرور للمستخدم ${user.username}`);
+                updateUserTable();
+            }
         }
     };
 
     window.removeUser = async function(id) {
-        users = users.filter(user => user.id !== id);
-        await updateGoogleSheet(); // تحديث Google Sheets بعد الحذف
-        updateUserTable();
+        if (confirm("هل أنت متأكد من حذف هذا المستخدم؟")) {
+            users = users.filter(user => user.id !== id);
+            const success = await updateGoogleSheet();
+            if (success) {
+                updateUserTable();
+                updateStatistics();
+            }
+        }
     };
 
     window.suspendUser = async function(id) {
@@ -74,9 +175,11 @@ document.addEventListener("DOMContentLoaded", function() {
         if (reason && duration) {
             const user = users.find(user => user.id === id);
             user.status = "موقوف";
-            user.reason = reason; // تحديث السبب في المصفوفة
-            await updateGoogleSheet(); // تحديث Google Sheets
-            updateUserTable();
+            user.reason = `${reason} (لمدة ${duration} أيام)`;
+            const success = await updateGoogleSheet();
+            if (success) {
+                updateUserTable();
+            }
         }
     };
 
@@ -87,9 +190,17 @@ document.addEventListener("DOMContentLoaded", function() {
         const obtainedMarks = prompt("الدرجة المكتسبة:");
 
         if (userId && examName && totalMarks && obtainedMarks) {
-            exams.push({ userId, examName, totalMarks, obtainedMarks });
-            await updateExamTable();
-            // هنا يجب إضافة كود لتحديث Google Sheets
+            exams.push({ 
+                userId, 
+                examName, 
+                totalMarks, 
+                obtainedMarks 
+            });
+            const success = await updateGoogleSheetExams();
+            if (success) {
+                updateExamTable();
+                updateStatistics();
+            }
         }
     });
 
@@ -108,62 +219,52 @@ document.addEventListener("DOMContentLoaded", function() {
             `;
             examTableBody.appendChild(row);
         });
-        await updateGoogleSheetExams(); // تحديث Google Sheets بعد إضافة الامتحانات
     }
 
     window.removeExam = async function(userId, examName) {
-        exams = exams.filter(exam => !(exam.userId === userId && exam.examName === examName));
-        await updateExamTable();
+        if (confirm("هل أنت متأكد من حذف هذا الامتحان؟")) {
+            exams = exams.filter(exam => !(exam.userId === userId && exam.examName === examName));
+            const success = await updateGoogleSheetExams();
+            if (success) {
+                updateExamTable();
+                updateStatistics();
+            }
+        }
     };
 
     function updateStatistics() {
         totalUsers.textContent = users.length;
         activeUsers.textContent = users.filter(user => user.status === "نشط").length;
 
-        // حساب أفضل مستخدم ومتوسط الدرجات
         const totalScores = exams.reduce((acc, exam) => acc + Number(exam.obtainedMarks), 0);
-        const averageScore = totalScores / exams.length || 0;
-        avgScores.textContent = averageScore.toFixed(2);
+        const averageScore = exams.length > 0 ? (totalScores / exams.length).toFixed(2) : "0.00";
+        avgScores.textContent = averageScore;
 
-        const topScorer = exams.reduce((acc, exam) => {
-            const userExamScores = exams.filter(e => e.userId === exam.userId);
-            const userTotalScore = userExamScores.reduce((sum, e) => sum + Number(e.obtainedMarks), 0);
-            if (userTotalScore > acc.score) {
-                return { username: exam.userId, score: userTotalScore };
+        if (exams.length > 0) {
+            const userScores = {};
+            exams.forEach(exam => {
+                if (!userScores[exam.userId]) {
+                    userScores[exam.userId] = 0;
+                }
+                userScores[exam.userId] += Number(exam.obtainedMarks);
+            });
+
+            let topUserId = "";
+            let topScore = 0;
+            for (const [userId, score] of Object.entries(userScores)) {
+                if (score > topScore) {
+                    topScore = score;
+                    topUserId = userId;
+                }
             }
-            return acc;
-        }, { username: "لا يوجد", score: 0 });
 
-        topUser.textContent = topScorer.username;
-        topUserScore.textContent = (topScorer.score / (userExamScores.length * 100) * 100).toFixed(2) + "%";
-    }
-
-    async function updateGoogleSheet() {
-        const values = users.map(user => [user.id, user.username, user.email, user.password, user.status, user.reason]);
-        const body = {
-            "values": values
-        };
-        await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A2:F?valueInputOption=RAW&key=${API_KEY}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-        });
-    }
-
-    async function updateGoogleSheetExams() {
-        const values = exams.map(exam => [exam.userId, exam.examName, exam.totalMarks, exam.obtainedMarks]);
-        const body = {
-            "values": values
-        };
-        await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet2!A2:D?valueInputOption=RAW&key=${API_KEY}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-        });
+            const user = users.find(u => u.id === topUserId);
+            topUser.textContent = user ? user.username : "غير معروف";
+            topUserScore.textContent = topScore;
+        } else {
+            topUser.textContent = "لا يوجد";
+            topUserScore.textContent = "0";
+        }
     }
 
     fetchData();
