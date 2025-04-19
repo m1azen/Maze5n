@@ -1,32 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="login.css" />
-  <script type="module" src="login.js" defer></script>
-  <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <link rel="stylesheet" href="login.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Login</h1>
-    <form id="loginForm">
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" placeholder="Enter your email" required />
-
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" placeholder="Enter your password" required />
-
-      <button type="submit">Login</button>
-    </form>
-  </div>
-
-  <!-- رسالة تظهر كإشعار -->
-  <div class="message-overlay" id="messageOverlay" style="display: none;">
-    <div class="message-box">
-      <p id="messageText"></p>
-      <button id="ok-button" style="display: none;">OK</button>
+    <div class="login-container">
+        <h1>تسجيل الدخول</h1>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="username">اسم المستخدم:</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">كلمة المرور:</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit">تسجيل الدخول</button>
+        </form>
+        <p id="message"></p>
     </div>
-  </div>
+
+    <script src="login.js"></script>
 </body>
 </html>
