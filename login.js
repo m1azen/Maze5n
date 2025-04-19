@@ -30,7 +30,7 @@ document.getElementById("login-form").addEventListener("submit", async function(
             return; // يمنع الدخول
         }
         // إذا كانت بيانات الدخول صحيحة، انتقل إلى session.html
-        window.location.href = "myacaunt.html";
+        window.location.href = "Myacaunt.html";
     } else {
         document.getElementById("message").textContent = "اسم المستخدم أو كلمة المرور غير صحيحة.";
     }
