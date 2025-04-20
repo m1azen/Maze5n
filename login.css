@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #538ae9;
+    background-color: #538ae9; /* اللون الأساسي */
     color: #ffffff;
     display: flex;
     justify-content: center;
@@ -9,7 +9,7 @@ body {
     margin: 0;
 }
 
-.login-container {
+.container {
     background: #ffffff;
     padding: 20px;
     border-radius: 8px;
@@ -18,18 +18,10 @@ body {
     text-align: center;
 }
 
-h1 {
+h2 {
     margin-bottom: 20px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-    text-align: left;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
+    font-size: 24px;
+    color: #538ae9; /* يتماشى مع اللون الأساسي */
 }
 
 input {
@@ -39,6 +31,12 @@ input {
     border-radius: 5px;
     background: #44475a;
     color: #ffffff;
+    font-size: 1rem;
+}
+
+input:focus {
+    outline: none;
+    background: #626e92; /* تأثير بسيط عند التركيز */
 }
 
 button {
@@ -48,14 +46,16 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+    font-size: 1rem;
 }
 
 button:hover {
-    background-color: #45e062;
+    background-color: #45e062; /* لون مميز عند تمرير الماوس */
 }
 
-#message {
+#statusMsg {
     margin-top: 15px;
     color: #ff5555;
 }
