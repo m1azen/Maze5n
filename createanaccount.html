@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Account</title>
-  <link rel="stylesheet" href="createanaccount.css" />
+  <link rel="stylesheet" href="createanaccount.css">
 </head>
 <body>
   <div class="container">
     <h2>✨ Create Your Account</h2>
     <form id="signupForm">
-      <input type="text" id="username" placeholder="Username" required />
-      <input type="email" id="email" placeholder="Email" required />
-      <input type="password" id="password" placeholder="Password" required />
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
       <button type="submit">Create Account</button>
     </form>
-    <p id="statusMsg"></p>
+    <div id="statusContainer">
+      <p id="statusMsg"></p>
+    </div>
   </div>
   <script src="createanaccount.js"></script>
 </body>
