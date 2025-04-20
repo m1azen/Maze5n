@@ -10,7 +10,7 @@ body {
 }
 
 .login-container {
-    background: #282a36;
+    background: #ffffff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -33,7 +33,7 @@ label {
 }
 
 input {
-    width: 100%;
+    width: 95%;
     padding: 10px;
     border: 1px solid #6272a4;
     border-radius: 5px;
@@ -44,7 +44,7 @@ input {
 button {
     width: 100%;
     padding: 10px;
-    background-color: #50fa7b;
+    background-color: #5083ed;
     border: none;
     border-radius: 5px;
     cursor: pointer;
