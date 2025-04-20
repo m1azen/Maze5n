@@ -1,6 +1,9 @@
 let attendanceCount = 0; // عدد الحضور
 const totalLessons = 20; // العدد الإجمالي للدروس
-
+const email = localStorage.getItem("userEmail");
+if (!email) {
+  window.location.href = "login.html";
+}
 // تفعيل الشريط الجانبي
 function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
