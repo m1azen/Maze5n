@@ -3,12 +3,10 @@ const API_KEY = 'AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0';
 
 document.addEventListener("DOMContentLoaded", () => {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
-
-  if (isLoggedIn !== "true") {
-    // إذا لم يكن مسجل الدخول، يتم تحويله إلى صفحة تسجيل الدخول
-    window.location.href = "login.html";
-  }
-});
+const email = localStorage.getItem("userEmail");
+if (!email) {
+  window.location.href = "login.html";
+}
 
 
 
