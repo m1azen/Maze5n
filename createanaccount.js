@@ -1,116 +1,75 @@
-const SHEET_ID = '1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo'; // Google Sheets ID
-const API_KEY = 'AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0'; // API Key
-const RANGE = 'Sheet1!A:E'; // النطاق داخل Google Sheets
+const SHEET_ID = "1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo";
+const API_KEY = "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0";
 
-// تشفير كلمة المرور باستخدام bcryptjs
-async function hashPassword(password) {
-  const saltRounds = 10; // عدد دورات التشفير
-  return bcrypt.hash(password, saltRounds);
+
+async function fetchUsedIds() {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  const rows = data.values || [];
+  const ids = new Set();
+
+  for (let i = 1; i < rows.length; i++) {
+    ids.add(rows[i][0]); // أول عمود هو الـ ID
+  }
+
+  return ids;
 }
 
-// معالجة إرسال النموذج
-document.getElementById("accountForm").addEventListener("submit", async (e) => {
+function generateUniqueId(usedIds) {
+  let id;
+  do {
+    id = Math.floor(1000 + Math.random() * 9000).toString(); // توليد ID من 4 أرقام
+  } while (usedIds.has(id));
+  return id;
+}
+
+async function submitUser(userData) {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A1:append?valueInputOption=USER_ENTERED&key=${API_KEY}`;
+
+  await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      values: [
+        [userData.id, userData.username, userData.email, userData.password, "active"]
+      ],
+    }),
+  });
+}
+
+document.getElementById("signupForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const username = document.getElementById("username").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const confirmPassword = document.getElementById("confirmPassword").value.trim();
-
-  // التحقق من صحة البيانات
-  if (password !== confirmPassword) {
-    displayMessage("كلمات المرور غير متطابقة", "error");
-    return;
-  }
-
-  if (!isValidEmail(email)) {
-    displayMessage("صيغة البريد الإلكتروني غير صحيحة", "error");
-    return;
-  }
-
-  const loadingOverlay = document.getElementById("loadingOverlay");
-  loadingOverlay.style.display = "flex";
+  const statusMsg = document.getElementById("statusMsg");
+  statusMsg.textContent = "Creating account... ⏳";
 
   try {
-    // التحقق إذا كان البريد الإلكتروني موجودًا بالفعل
-    const existingUser = await checkIfEmailExists(email);
-    if (existingUser) {
-      throw new Error("البريد الإلكتروني مستخدم بالفعل.");
-    }
+    const usedIds = await fetchUsedIds();
+    const id = generateUniqueId(usedIds);
 
-    // تشفير كلمة المرور
-    const hashedPassword = await hashPassword(password);
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
 
-    // إضافة المستخدم إلى Google Sheets
-    await addUserToGoogleSheets(username, email, hashedPassword);
+    const userData = {
+      id,
+      username,
+      email,
+      password,
+    };
 
-    displayMessage(`تم إنشاء الحساب بنجاح! مرحبًا بك، ${username}.`, "success");
+    await submitUser(userData);
+
+    statusMsg.textContent = `✅ Account created! Your ID: ${id}`;
+
+    setTimeout(() => {
+      window.location.reload(); // أو بدّلها بـ window.location.href = "myaccount.html";
+    }, 2000);
   } catch (err) {
-    displayMessage(err.message, "error");
-  } finally {
-    loadingOverlay.style.display = "none";
+    console.error("Error:", err);
+    statusMsg.textContent = "❌ Something went wrong. Please try again.";
   }
 });
-
-// التحقق من صيغة البريد الإلكتروني
-function isValidEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
-// عرض الرسائل
-function displayMessage(message, type) {
-  const messageOverlay = document.getElementById("messageOverlay");
-  const messageText = document.getElementById("messageText");
-
-  messageText.textContent = message;
-  messageOverlay.style.backgroundColor = type === "success" ? "green" : "red";
-  messageOverlay.style.display = "flex";
-
-  setTimeout(() => {
-    messageOverlay.style.display = "none";
-  }, 3000);
-}
-
-// التحقق إذا كان البريد الإلكتروني موجودًا بالفعل
-async function checkIfEmailExists(email) {
-  try {
-    const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`
-    );
-    const data = await response.json();
-
-    if (data.values) {
-      return data.values.some((row) => row[1] === email); // افتراض أن البريد الإلكتروني في العمود الثاني
-    }
-    return false;
-  } catch (err) {
-    console.error("Error checking email:", err);
-    throw new Error("تعذر التحقق من البريد الإلكتروني.");
-  }
-}
-
-// إضافة المستخدم إلى Google Sheets
-async function addUserToGoogleSheets(username, email, hashedPassword) {
-  try {
-    const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}:append?valueInputOption=RAW&key=${API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          values: [[username, email, hashedPassword, "Active", new Date().toISOString()]],
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Google Sheets Error:", errorText);
-      throw new Error("فشل في إضافة المستخدم إلى Google Sheets.");
-    }
-  } catch (err) {
-    console.error("Error adding user:", err);
-    throw new Error("فشل في إضافة المستخدم إلى Google Sheets.");
-  }
-}
