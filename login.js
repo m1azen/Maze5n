@@ -29,6 +29,7 @@ document.getElementById("login-form").addEventListener("submit", async function(
             document.getElementById("message").textContent = `حسابك موقوف. السبب: ${user.reason}`;
             return; // يمنع الدخول
         }
+        localStorage.setItem("userEmail", email);
         // إذا كانت بيانات الدخول صحيحة، انتقل إلى session.html
         window.location.href = "Myacaunt.html";
     } else {
