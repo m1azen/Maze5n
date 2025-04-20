@@ -1,82 +1,50 @@
-/* الصفحة الرئيسية */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #1e3c72, #2a5298);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  background-color: #f0f0f0; /* لون الخلفية */
-  direction: rtl; /* توجيه الصفحة من اليمين إلى اليسار */
 }
 
-h1 {
+.container {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px #00000066;
   text-align: center;
-  color: #0033cc;
-  margin: 20px 0;
-}
-
-/* النموذج */
-form {
-  max-width: 400px;
-  margin: 0 auto;
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 300px;
 }
 
 input {
   width: 100%;
   padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box;
+  margin: 10px 0;
+  border: none;
+  border-radius: 10px;
+  background: #ffffffcc;
+  color: #333;
 }
 
 button {
   width: 100%;
   padding: 10px;
-  background-color: #0033cc;
+  background-color: #005bea;
   color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 10px;
   cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
 }
 
 button:hover {
-  background-color: #002699;
+  background-color: #003eaa;
 }
 
-/* الرسائل */
-#loadingOverlay, #messageOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-#loadingOverlay {
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  font-size: 18px;
-}
-
-#messageOverlay {
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  font-size: 18px;
-}
-
-#messageText {
-  padding: 10px;
-  background-color: #0033cc;
-  border-radius: 8px;
-  color: white;
-  font-size: 18px;
+#statusMsg {
+  margin-top: 10px;
+  font-size: 14px;
 }
