@@ -35,3 +35,5 @@ document.getElementById("login-form").addEventListener("submit", async function(
         document.getElementById("message").textContent = "اسم المستخدم أو كلمة المرور غير صحيحة.";
     }
 });
+localStorage.setItem("isLoggedIn", "true");
+localStorage.setItem("username", "Mazen"); // اسم المستخدم
