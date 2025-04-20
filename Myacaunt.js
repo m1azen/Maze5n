@@ -1,6 +1,19 @@
 const SHEET_ID = '1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo';
 const API_KEY = 'AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0';
 
+document.addEventListener("DOMContentLoaded", () => {
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+  if (isLoggedIn !== "true") {
+    // إذا لم يكن مسجل الدخول، يتم تحويله إلى صفحة تسجيل الدخول
+    window.location.href = "login.html";
+  }
+});
+
+
+
+
+
 // Ensure user is logged in
 document.addEventListener('DOMContentLoaded', async () => {
   const isLoggedIn = true; // Example login check
@@ -61,4 +74,9 @@ function populateExamResults(exams) {
   examTable.innerHTML = exams.map(exam => `
     <tr>
       <td>${exam[6]}</td>
-      <td>${exam
+      <td>${exam[6]}</td> 
+      
+      
+      
+      
+      
