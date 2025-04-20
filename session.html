@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sessions by Mazen</title>
+  <link rel="stylesheet" href="sessions.css">
+  <script src="sessions.js" defer></script>
+</head>
+<body>
+  <!-- زرار الشريط الجانبي -->
+  <div class="sidebar-toggle" onclick="toggleSidebar()">&#x25B6;</div>
+
+  <!-- الهيدر -->
+  <header class="header">
+    <h1>Sessions by Mazen</h1>
+    <div id="progressInfo">Attendance: 0%</div>
+  </header>
+
+  <div class="layout">
+    <!-- الشريط الجانبي -->
+    <aside class="sidebar hidden" id="sidebar">
+      <ul id="lessonList">
+       
+        <li onclick="showLesson('Lesson 1', '15/6/2025', 'https://www.youtube.com/embed/example1', 'شرح درس 1 هنا')" id="lesson1">Lesson 1 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 2', '20/6/2025', 'https://www.youtube.com/embed/example2', 'شرح درس 2 هنا')" id="lesson2">Lesson 2 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 3', '25/6/2025', 'https://www.youtube.com/embed/example3', 'شرح درس 3 هنا')" id="lesson3">Lesson 3 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 4', '30/6/2025', 'https://www.youtube.com/embed/example4', 'شرح درس 4 هنا')" id="lesson4">Lesson 4 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 5', '5/7/2025', 'https://www.youtube.com/embed/example5', 'شرح درس 5 هنا')" id="lesson5">Lesson 5 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 6', '10/7/2025', 'https://www.youtube.com/embed/example6', 'شرح درس 6 هنا')" id="lesson6">Lesson 6 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 7', '15/7/2025', 'https://www.youtube.com/embed/example7', 'شرح درس 7 هنا')" id="lesson7">Lesson 7 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 8', '20/7/2025', 'https://www.youtube.com/embed/example8', 'شرح درس 8 هنا')" id="lesson8">Lesson 8 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 9', '25/7/2025', 'https://www.youtube.com/embed/example9', 'شرح درس 9 هنا')" id="lesson9">Lesson 9 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 10', '30/7/2025', 'https://www.youtube.com/embed/example10', 'شرح درس 10 هنا')" id="lesson10">Lesson 10 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 11', '5/8/2025', 'https://www.youtube.com/embed/example11', 'شرح درس 11 هنا')" id="lesson11">Lesson 11 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 12', '10/8/2025', 'https://www.youtube.com/embed/example12', 'شرح درس 12 هنا')" id="lesson12">Lesson 12 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 13', '15/8/2025', 'https://www.youtube.com/embed/example13', 'شرح درس 13 هنا')" id="lesson13">Lesson 13 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 14', '20/8/2025', 'https://www.youtube.com/embed/example14', 'شرح درس 14 هنا')" id="lesson14">Lesson 14 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 15', '25/8/2025', 'https://www.youtube.com/embed/example15', 'شرح درس 15 هنا')" id="lesson15">Lesson 15 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 16', '30/8/2025', 'https://www.youtube.com/embed/example16', 'شرح درس 16 هنا')" id="lesson16">Lesson 16 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 17', '5/9/2025', 'https://www.youtube.com/embed/example17', 'شرح درس 17 هنا')" id="lesson17">Lesson 17 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 18', '10/9/2025', 'https://www.youtube.com/embed/example18', 'شرح درس 18 هنا')" id="lesson18">Lesson 18 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 19', '15/9/2025', 'https://www.youtube.com/embed/example19', 'شرح درس 19 هنا')" id="lesson19">Lesson 19 <span class="status">Pending</span></li>
+        <li onclick="showLesson('Lesson 20', '20/9/2025', 'https://www.youtube.com/embed/example20', 'شرح درس 20 هنا')" id="lesson20">Lesson 20 <span class="status">Pending</span></li>
+      </ul>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="content">
+      <h2 id="lessonTitle">Choose a Lesson</h2>
+      <p id="lessonDate">Select a lesson to see its details here.</p>
+      <div id="lessonVideoContainer"></div>
+      <div id="lessonTextContainer"></div>
+    </main>
+  </div>
+</body>
+</html>
