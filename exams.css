@@ -91,3 +91,21 @@ body {
   height: 90%;
   pointer-events: none;
 }
+
+.balloon {
+  width: 20px;
+  height: 30px;
+  position: absolute;
+  border-radius: 50%;
+  background-color: red;
+  animation: floatUp 10s linear infinite;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
