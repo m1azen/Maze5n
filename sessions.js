@@ -1,21 +1,28 @@
-let attendanceCount = 0; // عدد الحضور
-const totalLessons = 20; // العدد الإجمالي للدروس
-const email = localStorage.getItem("userEmail");
-if (!email) {
+let attendanceCount = 0;
+const totalLessons = 20;
+
+// التحقق من تسجيل الدخول
+const username = localStorage.getItem("username");
+if (!username || localStorage.getItem("isLoggedIn") !== "true") {
   window.location.href = "login.html";
 }
+
 // تفعيل الشريط الجانبي
 function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
   const content = document.querySelector('.content');
   if (sidebar.style.left === '0px') {
-    sidebar.style.left = '-250px'; // إخفاء الشريط
+    sidebar.style.left = '-250px';
     content.style.marginLeft = '0';
   } else {
-    sidebar.style.left = '0px'; // إظهار الشريط
+    sidebar.style.left = '0px';
     content.style.marginLeft = '250px';
   }
 }
+
+// تحميل البيانات المحفوظة
+const attendanceData = JSON.parse(localStorage.getItem('attendance')) || {};
+attendanceCount = Object.keys(attendanceData).length;
 
 // عرض محتوى الدرس وتسجيل الحضور
 function showLesson(lesson, date, videoUrl, lessonText) {
@@ -23,53 +30,54 @@ function showLesson(lesson, date, videoUrl, lessonText) {
   const lessonDate = document.getElementById('lessonDate');
   const lessonVideoContainer = document.getElementById('lessonVideoContainer');
   const lessonTextContainer = document.getElementById('lessonTextContainer');
-  const lessonElement = document.getElementById(lesson.replace(/\s+/g, '').toLowerCase());
+  const lessonElement = document.getElementById(lesson.replace(/\s+/g, ''));
 
-  // تعيين محتويات الدرس
+  // عرض البيانات
   lessonTitle.textContent = lesson;
   lessonDate.textContent = `The lesson will start on ${date}.`;
-  lessonVideoContainer.innerHTML = `<iframe src="${videoUrl}" frameborder="0" allowfullscreen></iframe>`;
+  lessonVideoContainer.innerHTML = `<iframe src="${videoUrl}" width="100%" height="315" frameborder="0" allowfullscreen></iframe>`;
   lessonTextContainer.textContent = lessonText;
 
-  // تسجيل الحضور وحفظه في localStorage
+  // تسجيل الحضور إن لم يكن قد سُجل
   if (!lessonElement.classList.contains('visited')) {
     lessonElement.classList.add('visited');
-    lessonElement.querySelector('.status').textContent = '✔'; // إضافة علامة صح
-    saveAttendance(lesson); // حفظ الحضور
-    attendanceCount++;
-    updateProgress();
+    const status = lessonElement.querySelector('.status');
+    if (status) status.textContent = '✔';
+    saveAttendance(lesson);
   }
 }
 
 // حفظ الحضور في localStorage
 function saveAttendance(lesson) {
-  const attendanceData = JSON.parse(localStorage.getItem('attendance')) || {}; // استرجاع البيانات القديمة
-  attendanceData[lesson] = true; // تعيين الحضور
-  localStorage.setItem('attendance', JSON.stringify(attendanceData)); // حفظ البيانات
+  const attendanceData = JSON.parse(localStorage.getItem('attendance')) || {};
+  if (!attendanceData[lesson]) {
+    attendanceData[lesson] = true;
+    localStorage.setItem('attendance', JSON.stringify(attendanceData));
+    attendanceCount++;
+    updateProgress();
+  }
 }
 
 // تحديث نسبة الحضور
 function updateProgress() {
   const progressInfo = document.getElementById('progressInfo');
   const percentage = Math.round((attendanceCount / totalLessons) * 100);
-  progressInfo.textContent = `Attendance: ${percentage}%`; // تحديث النسبة المعروضة
+  progressInfo.textContent = `Attendance: ${percentage}%`;
 }
 
 // تحميل الحضور من localStorage عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', () => {
-  const attendanceData = JSON.parse(localStorage.getItem('attendance')) || {}; // قراءة البيانات المخزنة
+  const attendanceData = JSON.parse(localStorage.getItem('attendance')) || {};
   const lessonElements = document.querySelectorAll('.sidebar li');
 
-  // تحديث الواجهة استنادًا إلى حالة الحضور
   lessonElements.forEach((lessonElement) => {
-    const lessonName = lessonElement.textContent.split(' ')[0]; // استخراج اسم الدرس
+    const lessonName = lessonElement.textContent.split(' ')[0].trim();
     if (attendanceData[lessonName]) {
-      lessonElement.classList.add('visited'); // وضع الحالة كـ "تم الحضور"
-      lessonElement.querySelector('.status').textContent = '✔'; // عرض علامة "صح"
-      attendanceCount++;
+      lessonElement.classList.add('visited');
+      const status = lessonElement.querySelector('.status');
+      if (status) status.textContent = '✔';
     }
   });
 
-  // تحديث نسبة الحضور
   updateProgress();
 });
