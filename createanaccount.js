@@ -3,7 +3,7 @@ const SHEET_NAME = "Sheet1"; // اسم الورقة
 const API_KEY = "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0";
 
 async function fetchUsedIds() {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+  const url = "https://script.google.com/macros/s/AKfycbxVE5fLRVoB_iGDmqM-t4AOk_nb9qDoeQenTaClRoZVaZ8QLf0X4_sQ2I1R5eC0np6wHw/exec";
   const response = await fetch(url);
   
   if (!response.ok) {
