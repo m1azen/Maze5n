@@ -45,6 +45,24 @@ async function submitUser(userData) {
   });
 
   if (!response.ok) {
+    const errorDetails = await response.text(); // احصل على تفاصيل الخطأ
+    throw new Error(`Failed to save data to Google Sheets: ${errorDetails}`);
+  }
+}
+  
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      values: [
+        [userData.id, userData.username, userData.email, userData.password, "active"]
+      ],
+    }),
+  });
+
+  if (!response.ok) {
     throw new Error("Failed to save data to Google Sheets.");
   }
 }
