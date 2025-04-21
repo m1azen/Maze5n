@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programming Exams</title>
+  <link rel="stylesheet" href="exams.css">
+  <script src="exams.js" defer></script>
+</head>
+<body onload="loadExams()">
+  <!-- زر التحكم في الشريط الجانبي -->
+  <div class="sidebar-toggle" onclick="toggleSidebar()">&#x25B6;</div>
+
+  <!-- الشريط الجانبي -->
+  <aside class="sidebar hidden" id="sidebar">
+    <h2>Exams List</h2>
+    <ul id="examList">
+      <!-- 20 امتحان -->
+      <li onclick="startExam('Exam 1')">Exam 1</li>
+      <li onclick="startExam('Exam 2')">Exam 2</li>
+      <li onclick="startExam('Exam 3')">Exam 3</li>
+      <li onclick="startExam('Exam 4')">Exam 4</li>
+      <li onclick="startExam('Exam 5')">Exam 5</li>
+      <li onclick="startExam('Exam 6')">Exam 6</li>
+      <li onclick="startExam('Exam 7')">Exam 7</li>
+      <li onclick="startExam('Exam 8')">Exam 8</li>
+      <li onclick="startExam('Exam 9')">Exam 9</li>
+      <li onclick="startExam('Exam 10')">Exam 10</li>
+      <li onclick="startExam('Exam 11')">Exam 11</li>
+      <li onclick="startExam('Exam 12')">Exam 12</li>
+      <li onclick="startExam('Exam 13')">Exam 13</li>
+      <li onclick="startExam('Exam 14')">Exam 14</li>
+      <li onclick="startExam('Exam 15')">Exam 15</li>
+      <li onclick="startExam('Exam 16')">Exam 16</li>
+      <li onclick="startExam('Exam 17')">Exam 17</li>
+      <li onclick="startExam('Exam 18')">Exam 18</li>
+      <li onclick="startExam('Exam 19')">Exam 19</li>
+      <li onclick="startExam('Exam 20')">Exam 20</li>
+    </ul>
+  </aside>
+
+  <!-- المحتوى الرئيسي -->
+  <main class="content">
+    <div id="examContainer" class="hidden">
+      <h2 id="examTitle"></h2>
+      <div id="questionsContainer"></div>
+      <div id="timer">Time Remaining: <span id="timeLeft">30:00</span></div>
+      <button onclick="submitExam()">Submit Exam</button>
+    </div>
+    <div id="resultContainer" class="hidden">
+      <h2>Exam Results</h2>
+      <p id="resultDetails"></p>
+      <div id="balloonsContainer" class="hidden"></div>
+      <button onclick="backToExams()">Back to Exams</button>
+    </div>
+    <div id="chartContainer" class="hidden">
+      <h2>Performance Chart</h2>
+      <canvas id="chartCanvas"></canvas>
+    </div>
+  </main>
+</body>
+</html>
