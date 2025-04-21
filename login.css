@@ -1,6 +1,6 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #538ae9; /* اللون الأساسي */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #538ae9;
     color: #ffffff;
     display: flex;
     justify-content: center;
@@ -11,51 +11,68 @@ body {
 
 .container {
     background: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 300px;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    width: 350px;
     text-align: center;
+    transition: 0.3s ease;
+}
+
+.container:hover {
+    transform: scale(1.02);
 }
 
 h2 {
     margin-bottom: 20px;
-    font-size: 24px;
-    color: #538ae9; /* يتماشى مع اللون الأساسي */
+    font-size: 28px;
+    color: #2a62c3;
+    font-weight: bold;
 }
 
 input {
-    width: 95%;
-    padding: 10px;
-    border: 1px solid #6272a4;
-    border-radius: 5px;
-    background: #44475a;
-    color: #ffffff;
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #b2c6ff;
+    border-radius: 6px;
+    background: #f0f4ff;
+    color: #000;
     font-size: 1rem;
+    transition: 0.2s;
 }
 
 input:focus {
     outline: none;
-    background: #626e92; /* تأثير بسيط عند التركيز */
+    background: #dbe8ff;
+    border-color: #538ae9;
+    box-shadow: 0 0 5px rgba(83, 138, 233, 0.6);
 }
 
 button {
     width: 100%;
-    padding: 10px;
-    background-color: #5083ed;
+    padding: 12px;
+    background-color: #538ae9;
+    color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
     font-weight: bold;
     font-size: 1rem;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
 }
 
 button:hover {
-    background-color: #45e062; /* لون مميز عند تمرير الماوس */
+    background-color: #3f6fcb;
 }
 
 #statusMsg {
     margin-top: 15px;
-    color: #ff5555;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    color: #fff;
+    background: #ff5555;
+    display: inline-block;
 }
