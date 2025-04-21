@@ -1,36 +1,44 @@
 const SHEET_ID = '1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo';
 const API_KEY = 'AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0';
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  const email = localStorage.getItem("userEmail");
   const isLoggedIn = localStorage.getItem("isLoggedIn");
-const email = localStorage.getItem("userEmail");
-if (!email) {
-  window.location.href = "login.html";
-}
 
-
-
-
-
-// Ensure user is logged in
-document.addEventListener('DOMContentLoaded', async () => {
-  const isLoggedIn = true; // Example login check
-  const userId = "1"; // Example user ID
-  if (isLoggedIn) {
-    loadUserData(userId);
-  } else {
-    alert("You must be logged in to view this page!");
-    window.location.href = '/login'; // Redirect to login page
+  if (!email || isLoggedIn !== "true") {
+    window.location.href = "login.html";
+    return;
   }
 
-  // Logout functionality
+  const users = await fetchData('Sheet1!A:J');
+  const currentUser = users.find(user => user[2] === email); // عمود 2 = الإيميل
+
+  if (!currentUser) {
+    alert("User not found.");
+    return;
+  }
+
+  // عرض البيانات
+  document.getElementById('username').textContent = currentUser[1]; // الاسم
+  document.getElementById('email').textContent = currentUser[2]; // الإيميل
+  document.getElementById('status').textContent = currentUser[4]; // الحالة
+  document.getElementById('reason').textContent = currentUser[5] || "None";
+  document.getElementById('messageContent').textContent = currentUser[9] || "No new messages.";
+
+  // عرض الدرجات
+  const exams = users.filter(user => user[2] === email && user[6]);
+  updatePerformanceCircle(exams);
+  populateExamResults(exams);
+
+  // زر تسجيل الخروج
   document.getElementById('logoutButton').addEventListener('click', () => {
+    localStorage.clear();
     alert('Logged out successfully!');
-    window.location.href = '/login'; // Redirect to login page
+    window.location.href = 'login.html';
   });
 });
 
-// Fetch data from Google Sheets
+// Fetch from Google Sheets
 async function fetchData(range) {
   const response = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`
@@ -39,42 +47,23 @@ async function fetchData(range) {
   return data.values || [];
 }
 
-// Load user data
-async function loadUserData(userId) {
-  const users = await fetchData('Sheet1!A:J');
-  const currentUser = users.find(user => user[0] === userId);
-
-  if (currentUser) {
-    document.getElementById('username').textContent = currentUser[1];
-    document.getElementById('email').textContent = currentUser[2];
-    document.getElementById('status').textContent = currentUser[4];
-    document.getElementById('reason').textContent = currentUser[5] || "None";
-
-    const exams = users.filter(user => user[0] === userId && user[6]);
-    updatePerformanceCircle(exams);
-    populateExamResults(exams);
-    document.getElementById('messageContent').textContent = currentUser[9] || "No new messages.";
-  }
-}
-
-// Update performance circle
+// عرض المتوسط
 function updatePerformanceCircle(exams) {
-  const averageGrade = exams.reduce((sum, exam) => sum + parseFloat(exam[8]), 0) / exams.length || 0;
+  const averageGrade = exams.reduce((sum, exam) => sum + parseFloat(exam[8] || 0), 0) / exams.length || 0;
   document.documentElement.style.setProperty('--percentage', `${averageGrade}%`);
   document.getElementById('averageGrade').textContent = `${averageGrade.toFixed(2)}%`;
-  const performanceMessage = averageGrade < 50 ? "Keep pushing forward! 💪" : "Great performance! Keep it up! 🎉";
-  document.getElementById('performanceMessage').textContent = performanceMessage;
+  const message = averageGrade < 50 ? "Keep pushing forward! 💪" : "Great performance! Keep it up! 🎉";
+  document.getElementById('performanceMessage').textContent = message;
 }
 
-// Populate exam results
+// جدول النتائج
 function populateExamResults(exams) {
   const examTable = document.getElementById('examTable');
   examTable.innerHTML = exams.map(exam => `
     <tr>
       <td>${exam[6]}</td>
-      <td>${exam[6]}</td> 
-      
-      
-      
-      
-      
+      <td>${exam[7]}</td>
+      <td>${exam[8]}%</td>
+    </tr>
+  `).join('');
+                          }
