@@ -1,15 +1,27 @@
 const SHEET_ID = "1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo";
 const SHEET_NAME = "Sheet1"; // اسم الورقة
-const API_KEY = "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0";
+const API_KEY = "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0"; // أدخل مفتاح API هنا
 
-async function fetchUsedIds() {
-  const url = "https://script.google.com/macros/s/AKfycbxVE5fLRVoB_iGDmqM-t4AOk_nb9qDoeQenTaClRoZVaZ8QLf0X4_sQ2I1R5eC0np6wHw/exec";
-  const response = await fetch(url);
+async function submitUser(userData) {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A1:append?valueInputOption=USER_ENTERED&key=${API_KEY}`;
   
-  if (!response.ok) {
-    throw new Error("Failed to fetch used IDs from Google Sheets.");
-  }
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      values: [
+        [userData.id, userData.username, userData.email, userData.password, "active"]
+      ],
+    }),
+  });
 
+  if (!response.ok) {
+    const errorDetails = await response.text();
+    throw new Error(`Failed to save data to Google Sheets: ${errorDetails}`);
+  }
+}
   const data = await response.json();
   const rows = data.values || [];
   const ids = new Set();
@@ -29,26 +41,7 @@ function generateUniqueId(usedIds) {
   return id;
 }
 
-async function submitUser(userData) {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A1:append?valueInputOption=USER_ENTERED&key=${API_KEY}`;
-  
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      values: [
-        [userData.id, userData.username, userData.email, userData.password, "active"]
-      ],
-    }),
-  });
 
-  if (!response.ok) {
-    const errorDetails = await response.text(); // احصل على تفاصيل الخطأ
-    throw new Error(`Failed to save data to Google Sheets: ${errorDetails}`);
-  }
-}
   
   const response = await fetch(url, {
     method: "POST",
