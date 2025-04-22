@@ -14,7 +14,7 @@ function toggleSidebar() {
 
 function handleExamSelection(examName, password) {
   if (examsData[examName]) {
-    openModal("This exam is completed. What would you like to do?");
+    alert("This exam is completed. View results or retake!");
   } else {
     const enteredPassword = prompt(`Enter password for ${examName}:`);
     if (enteredPassword === password) {
@@ -39,8 +39,11 @@ function startExam(examName) {
       <p>Question ${index + 1}: ${question.text}</p>
       ${question.options.map(
         (option, i) =>
-          `<input type="radio" name="q${index + 1}" value="${i === question.correctAnswer ? "correct" : "wrong"}"> ${option}`
-      ).join("<br>")}
+          `<div class="option">
+             <input type="radio" name="q${index + 1}" value="${i === question.correctAnswer ? "correct" : "wrong"}"> 
+             <label>${option}</label>
+          </div>`
+      ).join("")}
     `;
     questionsContainer.appendChild(questionDiv);
   });
@@ -50,6 +53,7 @@ function startExam(examName) {
 
 function getQuestionsForExam(examName) {
   const questionsPool = {
+    
     "Exam 1": [
       { text: "What is 5 + 5?", options: ["10", "12", "15", "8"], correctAnswer: 0 },
       { text: "What is 3 * 3?", options: ["9", "6", "8", "7"], correctAnswer: 1 },
