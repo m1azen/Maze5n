@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +7,10 @@
   <link rel="stylesheet" href="exams.css">
   <script src="exams.js" defer></script>
 </head>
-<body>
+<body onload="loadExams()">
   <header>
     <h1>Programming Exams</h1>
+    <!-- زر فتح القائمة الجانبية -->
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
   </header>
 
@@ -27,13 +28,13 @@
           </tr>
         </thead>
         <tbody>
-          <!-- يتم إدخال البيانات ديناميكيًا -->
+          <!-- ستملأ البيانات ديناميكيًا -->
         </tbody>
       </table>
     </section>
 
     <!-- القائمة الجانبية للامتحانات -->
-    <div id="sidebar" class="sidebar hidden">
+    <div id="sidebar" class="sidebar">
       <ul id="examList">
         <li onclick="handleExamSelection('Exam 1', '2009')">Exam 1</li>
         <li onclick="handleExamSelection('Exam 2', '4444')">Exam 2</li>
