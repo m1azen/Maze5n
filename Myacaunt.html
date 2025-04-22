@@ -1,76 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>حسابي</title>
   <link rel="stylesheet" href="Myacaunt.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- مكتبة الرسم البياني -->
-  <script src="Myacaunt.js" defer></script>
-  <script src="authCheck.js"></script>
-
-
-  <title>My Account</title>
 </head>
 <body>
-  <header>
-    <h1>Welcome to Your Future Account</h1>
-    <button id="logoutButton">Logout</button>
-  </header>
-
-  <main>
-    <!-- User Info Section -->
-    <section id="userInfo">
-      <div class="card">
-        <h2>Your Details</h2>
-        <p><strong>Username:</strong> <span id="username">-</span></p>
-        <p><strong>Email:</strong> <span id="email">-</span></p>
-        <p><strong>Status:</strong> <span id="status">-</span></p>
-        <p><strong>Suspension Reason:</strong> <span id="reason">-</span></p>
-      </div>
-    </section>
-
-    <!-- Performance Section -->
-    <section id="performance">
-      <h2>Your Performance</h2>
-      <div class="circle-container">
-        <div class="circle">
-          <span id="averageGrade">-</span>
-          <p>Average Grade</p>
-        </div>
-      </div>
-      <p id="performanceMessage"></p>
-    </section>
-
-    <!-- Exam Results Section -->
-    <section id="examResults">
-      <h2>Exam Results</h2>
-      <canvas id="examChart"></canvas>
-      <table>
-        <thead>
-          <tr>
-            <th>Exam Name</th>
-            <th>Total Marks</th>
-            <th>Obtained Marks</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="examTable">
-          <!-- Exam results will be dynamically loaded -->
-        </tbody>
-      </table>
-    </section>
-
-    <!-- Messages Section -->
-    <section id="messages">
-      <h2>Messages</h2>
-      <div class="message-box">
-        <p id="messageContent">No messages available.</p>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>&copy; Future Dashboard | All Rights Reserved</p>
-  </footer>
+  <div class="account-container">
+    <h1>حسابي</h1>
+    <div class="user-data">
+      <p><strong>الاسم:</strong> <span id="username"></span></p>
+      <p><strong>البريد الإلكتروني:</strong> <span id="email"></span></p>
+    </div>
+    <button id="logoutButton">تسجيل الخروج</button>
+  </div>
+  <!-- تحميل سكربت جافاسكريبت بنمط module -->
+  <script type="module" src="Myacaunt.js"></script>
 </body>
 </html>
