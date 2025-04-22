@@ -1,90 +1,58 @@
-const exams = [
-    {
-        id: 1,
-        name: "امتحان 1",
-        password: "2009",
-        questions: [
-            { question: "السؤال 1: ماذا تعني HTML؟", options: ["لغة البرمجة", "لغة وصفية", "نظام تشغيل", "قاعدة بيانات"], answer: 1 },
-            { question: "السؤال 2: ما هو الغرض من CSS؟", options: ["إضافة تفاعلية", "تصميم المظهر", "إدارة البيانات", "تحليل البيانات"], answer: 1 },
-            // أضف المزيد من الأسئلة هنا
-        ]
-    },
-    {
-        id: 2,
-        name: "امتحان 2",
-        password: "4444",
-        questions: [
-            { question: "السؤال 1: ماذا تعني JS؟", options: ["لغة البرمجة", "نظام تشغيل", "قاعدة بيانات", "برنامج تصميم"], answer: 0 },
-            { question: "السؤال 2: ما هو DOM؟", options: ["نظام تشغيل", "هيكل البيانات", "نموذج كائن المستند", "لغة برمجة"], answer: 2 },
-            // أضف المزيد من الأسئلة هنا
-        ]
-    },
-    // أضف المزيد من الامتحانات هنا
-];
+let examsData = {};
+let currentExam = "";
+let timeLeft = 30 * 60; // 30 دقيقة
+let circleCircumference = 283;
 
-document.addEventListener("DOMContentLoaded", () => {
-    const examList = document.getElementById("examList");
-    const gradesBody = document.getElementById("gradesBody");
-
-    exams.forEach(exam => {
-        const li = document.createElement("li");
-        li.innerHTML = `<button onclick="attemptExam('${exam.name}', '${exam.password}', ${exam.id})">${exam.name}</button>`;
-        examList.appendChild(li);
-    });
-
-    document.getElementById("openExamList").onclick = () => {
-        document.getElementById("sidebar").classList.toggle("hidden");
-    };
-
-    loadGrades();
-});
-
-function loadGrades() {
-    const gradesBody = document.getElementById("gradesBody");
-    const grades = JSON.parse(localStorage.getItem("grades")) || [];
-
-    grades.forEach(grade => {
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>${grade.student}</td><td>${grade.exam}</td><td>${grade.score}</td><td>${grade.percentage}%</td>`;
-        gradesBody.appendChild(row);
-    });
+function loadExams() {
+  examsData = JSON.parse(localStorage.getItem("examsData")) || {};
 }
 
-function attemptExam(name, password, examId) {
-    const userPassword = prompt(`أدخل كلمة مرور ${name}`);
-    if (userPassword !== password) {
-        alert("كلمة المرور غير صحيحة!");
-        return;
-    }
-
-    const grades = JSON.parse(localStorage.getItem("grades")) || [];
-    if (grades.find(grade => grade.exam === name)) {
-        alert("لقد قمت بأداء هذا الامتحان بالفعل.");
-        return;
-    }
-
-    startExam(examId);
+function toggleSidebar() {
+  const sidebar = document.querySelector(".sidebar");
+  sidebar.classList.toggle("shown");
 }
 
-function startExam(examId) {
-    const exam = exams.find(e => e.id === examId);
-    let score = 0;
+function handleExamSelection(examName, password) {
+  const sidebar = document.querySelector(".sidebar");
+  sidebar.classList.remove("shown"); // إخفاء القائمة بعد الاختيار
 
-    exam.questions.forEach((q, index) => {
-        const userAnswer = prompt(`${q.question}\n${q.options.map((opt, i) => `${i + 1}. ${opt}`).join('\n')}`);
-        if (parseInt(userAnswer) - 1 === q.answer) {
-            score++;
-        }
-    });
-
-    const percentage = (score / exam.questions.length) * 100;
-    const studentName = "الطالب"; // يمكن استبدالها باسم الطالب الفعلي
-
-    const grades = JSON.parse(localStorage.getItem("grades")) || [];
-    grades.push({ student: studentName, exam: exam.name, score, percentage });
-    localStorage.setItem("grades", JSON.stringify(grades));
-
-    alert(`نتيجتك: ${score} من ${exam.questions.length} (${percentage.toFixed(2)}%)`);
-
-    loadGrades();
+  const enteredPassword = prompt(`Enter password for ${examName}:`);
+  if (enteredPassword === password) {
+    startExam(examName);
+  } else {
+    alert("Incorrect password!");
+  }
 }
+
+function startExam(examName) {
+  currentExam = examName;
+  document.getElementById("examContainer").classList.remove("hidden");
+  const questionsContainer = document.getElementById("questionsContainer");
+  questionsContainer.innerHTML = "";
+
+  const questions = getQuestionsForExam(examName);
+  questions.forEach((question, index) => {
+    const questionDiv = document.createElement("div");
+    questionDiv.classList.add("question-box");
+    questionDiv.innerHTML = `
+      <p>Question ${index + 1}: ${question.text}</p>
+      ${question.options.map(
+        (option, i) =>
+          `<div class="option">
+             <input type="radio" name="q${index + 1}" value="${i === question.correctAnswer ? "correct" : "wrong"}"> 
+             <label>${option}</label>
+          </div>`
+      ).join("")}
+    `;
+    questionsContainer.appendChild(questionDiv);
+  });
+
+  startTimer();
+}
+
+function getQuestionsForExam(examName) {
+  const questionsPool = {
+    "Exam 1": [
+      { text: "What is 5 + 5?", options: ["10", "12", "15", "8"], correctAnswer: 0 },
+      { text: "What is 3 * 3?", options: ["9", "6", "8", "7"], correctAnswer: 1 },
+      { text:
