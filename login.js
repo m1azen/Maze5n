@@ -40,7 +40,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
     localStorage.setItem("userId", user.id);
 
     // توجيه المستخدم
-    window.location.href = "Myacaunt.html";
+    window.location.href = "html.html";
   } else {
     document.getElementById("message").textContent = "❌ اسم المستخدم أو كلمة المرور غير صحيحة.";
   }
