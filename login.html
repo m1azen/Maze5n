@@ -1,29 +1,24 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
-     <link rel="icon" type="image/png" sizes="1000x1000" href="04955d34acd54cd096a4c29e26c2949f-free-removebg-preview.png">
-    <link rel="stylesheet" href="login.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Account</title>
+  <link rel="stylesheet" href="login.css">
 </head>
 <body>
-    <div class="login-container">
-        <h1>login</h1>
-        <form id="login-form">
-            <div class="form-group">
-                <label for="username">user name:</label>
-                <input type="text" id="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">pasword</label>
-                <input type="password" id="password" required>
-            </div>
-            <button type="submit">login</button>
-        </form>
-        <p id="message"></p>
+  <div class="container">
+    <h2>✨ Login to Your Account</h2>
+    <form id="loginForm">
+      <input type="email" id="loginEmail" placeholder="Email" required>
+      <input type="password" id="loginPassword" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <div id="statusContainer">
+      <p id="statusMsg"></p>
     </div>
-
-    <script src="login.js"></script>
+  </div>
+  <!-- تحميل الكود بنوع module -->
+  <script type="module" src="login.js"></script>
 </body>
 </html>
