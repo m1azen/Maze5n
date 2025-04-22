@@ -1,88 +1,65 @@
-const SHEET_ID = "1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo";
-const SHEET_NAME = "Sheet1";
-const API_KEY = "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
-// إرسال بيانات المستخدم إلى Google Sheets
-async function submitUser(userData) {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A1:append?valueInputOption=USER_ENTERED&key=${API_KEY}`;
-  
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      values: [
-        [userData.id, userData.username, userData.email, userData.password, "active"]
-      ],
-    }),
-  });
+// إعداد Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0",
+  authDomain: "admin-panel-5f716.firebaseapp.com",
+  projectId: "admin-panel-5f716",
+  storageBucket: "admin-panel-5f716.firebasestorage.app",
+  messagingSenderId: "488571843727",
+  appId: "1:488571843727:web:3d3d7d5ad495b1fee5acfa",
+  measurementId: "G-ZJ9835SCHW"
+};
 
-  if (!response.ok) {
-    const errorDetails = await response.text();
-    throw new Error(`Failed to save data to Google Sheets: ${errorDetails}`);
-  }
-}
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-// جلب المعرفات المستخدمة سابقًا
-async function fetchUsedIds() {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A:A?key=${API_KEY}`;
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch used IDs.");
-  }
-
-  const data = await response.json();
-  const rows = data.values || [];
-  const ids = new Set();
-
-  for (let i = 1; i < rows.length; i++) {
-    ids.add(rows[i][0]); // جمع جميع المعرفات
-  }
-
-  return ids;
-}
-
-// إنشاء معرف فريد
-function generateUniqueId(usedIds) {
-  let id;
-  do {
-    id = Math.floor(1000 + Math.random() * 9000).toString();
-  } while (usedIds.has(id)); // التحقق من عدم تكرار المعرف
-  return id;
-}
-
-// إضافة استماع للنموذج
-document.getElementById("signupForm").addEventListener("submit", async function (e) {
-  e.preventDefault();
-
+// وظيفة إنشاء حساب جديد
+async function register(email, password) {
   const statusMsg = document.getElementById("statusMsg");
   statusMsg.style.color = "white";
   statusMsg.textContent = "Creating account... ⏳";
 
   try {
-    const usedIds = await fetchUsedIds(); // جلب المعرفات القديمة
-    const id = generateUniqueId(usedIds); // إنشاء معرف فريد
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
 
-    const username = document.getElementById("username").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-
-    const userData = { id, username, email, password };
-
-    await submitUser(userData);
-
+    // نجاح إنشاء الحساب
     statusMsg.style.background = "#00ffcc";
-    statusMsg.textContent = `✅ Account created successfully! Your ID: ${id}`;
-
-    setTimeout(() => {
-      window.location.href = "/html.html"; // الانتقال إلى صفحة الحساب
-    }, 3000);
-  } catch (err) {
-    console.error("Error:", err);
+    statusMsg.textContent = `✅ Account created successfully! Welcome, ${user.email}`;
+  } catch (error) {
+    // التعامل مع الخطأ
+    console.error("Error:", error);
 
     statusMsg.style.background = "red";
-    statusMsg.textContent = "❌ Something went wrong while saving. Please try again.";
+    statusMsg.textContent = "❌ Something went wrong. Please contact Mazen for support.";
+
+    // زر التواصل مع مازن
+    const contactButton = document.createElement("button");
+    contactButton.textContent = "Contact Mazen";
+    contactButton.style.marginTop = "10px";
+    contactButton.style.padding = "10px";
+    contactButton.style.backgroundColor = "#005bea";
+    contactButton.style.color = "white";
+    contactButton.style.border = "none";
+    contactButton.style.borderRadius = "5px";
+    contactButton.style.cursor = "pointer";
+
+    contactButton.addEventListener("click", () => {
+      window.location.href = "https://wa.me/qr/CZO3X7WAZOEEE1"; // رابط للتواصل مع مازن
+    });
+
+    statusMsg.appendChild(contactButton);
   }
+}
+
+// استماع للنموذج
+document.getElementById("signupForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  register(email, password);
 });
