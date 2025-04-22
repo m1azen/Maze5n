@@ -1,124 +1,37 @@
-/* myaccount.css */
 body {
+  font-family: Arial, sans-serif;
+  background: #f0f0f0;
   margin: 0;
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(to bottom, #0a0a0a, #1e1e1e);
-  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  direction: rtl;
 }
 
-header {
-  background: linear-gradient(45deg, #0033cc, #00ffcc);
-  text-align: center;
+.account-container {
+  background: #fff;
   padding: 20px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 2.5rem;
+.user-data p {
+  margin: 12px 0;
 }
 
-header button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: #00ffcc;
+button {
+  background: #004080;
+  color: #fff;
   border: none;
+  border-radius: 5px;
   padding: 10px 20px;
-  border-radius: 5px;
-  color: black;
-  font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-header button:hover {
-  background: #0033cc;
-  color: white;
-}
-
-main {
-  padding: 20px;
-}
-
-section {
-  margin-bottom: 20px;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  animation: fadeIn 1.2s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.card {
-  background: #1e1e1e;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-}
-
-.circle-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-}
-
-.circle {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: conic-gradient(#00ffcc var(--percentage, 0%), #0033cc var(--percentage, 0%));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  color: white;
-  animation: rotate 2s linear infinite;
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-th, td {
-  border: 1px solid #555;
-  padding: 10px;
-  text-align: center;
-}
-
-th {
-  background: #0033cc;
-}
-
-.message-box {
-  background: #1e1e1e;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+button:hover {
+  background: #00264d;
 }
