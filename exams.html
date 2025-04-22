@@ -10,6 +10,7 @@
 <body onload="loadExams()">
   <header>
     <h1>Programming Exams</h1>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
   </header>
 
   <main>
@@ -35,7 +36,6 @@
     <section id="examsList">
       <h2>Exams List</h2>
       <div id="sidebar" class="sidebar hidden">
-        <button class="sidebar-toggle" onclick="toggleSidebar()">&#x25C0;</button>
         <ul id="examList">
           <li onclick="handleExamSelection('Exam 1', '2009')">Exam 1</li>
           <li onclick="handleExamSelection('Exam 2', '4444')">Exam 2</li>
