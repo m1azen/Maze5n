@@ -3,57 +3,77 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exams by Mazen</title>
+  <title>Programming Exams</title>
   <link rel="stylesheet" href="exams.css">
   <script src="exams.js" defer></script>
 </head>
 <body onload="loadExams()">
-  <!-- شريط جانبي للامتحانات -->
-  <div class="sidebar-toggle" onclick="toggleSidebar()">&#x25B6;</div>
-  <aside class="sidebar hidden" id="sidebar">
-    <h2>Exams List</h2>
-    <ul id="examList">
-      <!-- 20 امتحان -->
-      <li onclick="startExam('Exam 1')">Exam 1</li>
-      <li onclick="startExam('Exam 2')">Exam 2</li>
-      <li onclick="startExam('Exam 3')">Exam 3</li>
-      <li onclick="startExam('Exam 4')">Exam 4</li>
-      <li onclick="startExam('Exam 5')">Exam 5</li>
-      <li onclick="startExam('Exam 6')">Exam 6</li>
-      <li onclick="startExam('Exam 7')">Exam 7</li>
-      <li onclick="startExam('Exam 8')">Exam 8</li>
-      <li onclick="startExam('Exam 9')">Exam 9</li>
-      <li onclick="startExam('Exam 10')">Exam 10</li>
-      <li onclick="startExam('Exam 11')">Exam 11</li>
-      <li onclick="startExam('Exam 12')">Exam 12</li>
-      <li onclick="startExam('Exam 13')">Exam 13</li>
-      <li onclick="startExam('Exam 14')">Exam 14</li>
-      <li onclick="startExam('Exam 15')">Exam 15</li>
-      <li onclick="startExam('Exam 16')">Exam 16</li>
-      <li onclick="startExam('Exam 17')">Exam 17</li>
-      <li onclick="startExam('Exam 18')">Exam 18</li>
-      <li onclick="startExam('Exam 19')">Exam 19</li>
-      <li onclick="startExam('Exam 20')">Exam 20</li>
-    </ul>
-  </aside>
+  <header>
+    <h1>Programming Exams</h1>
+  </header>
 
-  <!-- المحتوى الرئيسي -->
-  <main class="content">
+  <main>
+    <!-- قسم الإحصائيات -->
+    <section id="statistics">
+      <h2>Statistics</h2>
+      <table id="statsTable">
+        <thead>
+          <tr>
+            <th>Exam Name</th>
+            <th>Score</th>
+            <th>Percentage</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- يتم إدخال البيانات ديناميكيًا -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- قائمة الامتحانات -->
+    <section id="examsList">
+      <h2>Exams List</h2>
+      <div id="sidebar" class="sidebar hidden">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">&#x25C0;</button>
+        <ul id="examList">
+          <!-- 20 امتحان -->
+          <li onclick="openExam('Exam 1', '2009')">Exam 1</li>
+          <li onclick="openExam('Exam 2', '2010')">Exam 2</li>
+          <li onclick="openExam('Exam 3', '2011')">Exam 3</li>
+          <li onclick="openExam('Exam 4', '2012')">Exam 4</li>
+          <li onclick="openExam('Exam 5', '2013')">Exam 5</li>
+          <li onclick="openExam('Exam 6', '2014')">Exam 6</li>
+          <li onclick="openExam('Exam 7', '2015')">Exam 7</li>
+          <li onclick="openExam('Exam 8', '2016')">Exam 8</li>
+          <li onclick="openExam('Exam 9', '2017')">Exam 9</li>
+          <li onclick="openExam('Exam 10', '2018')">Exam 10</li>
+          <li onclick="openExam('Exam 11', '2019')">Exam 11</li>
+          <li onclick="openExam('Exam 12', '2020')">Exam 12</li>
+          <li onclick="openExam('Exam 13', '2021')">Exam 13</li>
+          <li onclick="openExam('Exam 14', '2022')">Exam 14</li>
+          <li onclick="openExam('Exam 15', '2023')">Exam 15</li>
+          <li onclick="openExam('Exam 16', '2024')">Exam 16</li>
+          <li onclick="openExam('Exam 17', '2025')">Exam 17</li>
+          <li onclick="openExam('Exam 18', '2026')">Exam 18</li>
+          <li onclick="openExam('Exam 19', '2027')">Exam 19</li>
+          <li onclick="openExam('Exam 20', '2028')">Exam 20</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- نافذة الامتحان -->
     <div id="examContainer" class="hidden">
       <h2 id="examTitle"></h2>
       <div id="questionsContainer"></div>
-      <div id="timer">Time Remaining: <span id="timeLeft">30:00</span></div>
+      <div id="circleTimer">
+        <svg>
+          <circle cx="50" cy="50" r="45"></circle>
+          <circle cx="50" cy="50" r="45" id="timeCircle"></circle>
+        </svg>
+        <div id="timeText">30:00</div>
+      </div>
       <button onclick="submitExam()">Submit Exam</button>
-    </div>
-    <div id="resultContainer" class="hidden">
-      <h2>Exam Results</h2>
-      <p id="resultDetails"></p>
-      <div id="balloonsContainer" class="hidden"></div>
-      <button onclick="backToExams()">Back to Exams</button>
-    </div>
-    <div id="chartContainer" class="hidden">
-      <h2>Performance Chart</h2>
-      <canvas id="chartCanvas"></canvas>
     </div>
   </main>
 </body>
