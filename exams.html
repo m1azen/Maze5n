@@ -37,27 +37,26 @@
       <div id="sidebar" class="sidebar hidden">
         <button class="sidebar-toggle" onclick="toggleSidebar()">&#x25C0;</button>
         <ul id="examList">
-          <!-- 20 امتحان -->
-          <li onclick="openExam('Exam 1', '2009')">Exam 1</li>
-          <li onclick="openExam('Exam 2', '2010')">Exam 2</li>
-          <li onclick="openExam('Exam 3', '2011')">Exam 3</li>
-          <li onclick="openExam('Exam 4', '2012')">Exam 4</li>
-          <li onclick="openExam('Exam 5', '2013')">Exam 5</li>
-          <li onclick="openExam('Exam 6', '2014')">Exam 6</li>
-          <li onclick="openExam('Exam 7', '2015')">Exam 7</li>
-          <li onclick="openExam('Exam 8', '2016')">Exam 8</li>
-          <li onclick="openExam('Exam 9', '2017')">Exam 9</li>
-          <li onclick="openExam('Exam 10', '2018')">Exam 10</li>
-          <li onclick="openExam('Exam 11', '2019')">Exam 11</li>
-          <li onclick="openExam('Exam 12', '2020')">Exam 12</li>
-          <li onclick="openExam('Exam 13', '2021')">Exam 13</li>
-          <li onclick="openExam('Exam 14', '2022')">Exam 14</li>
-          <li onclick="openExam('Exam 15', '2023')">Exam 15</li>
-          <li onclick="openExam('Exam 16', '2024')">Exam 16</li>
-          <li onclick="openExam('Exam 17', '2025')">Exam 17</li>
-          <li onclick="openExam('Exam 18', '2026')">Exam 18</li>
-          <li onclick="openExam('Exam 19', '2027')">Exam 19</li>
-          <li onclick="openExam('Exam 20', '2028')">Exam 20</li>
+          <li onclick="handleExamSelection('Exam 1', '2009')">Exam 1</li>
+          <li onclick="handleExamSelection('Exam 2', '4444')">Exam 2</li>
+          <li onclick="handleExamSelection('Exam 3', '3001')">Exam 3</li>
+          <li onclick="handleExamSelection('Exam 4', '8888')">Exam 4</li>
+          <li onclick="handleExamSelection('Exam 5', '5555')">Exam 5</li>
+          <li onclick="handleExamSelection('Exam 6', '6666')">Exam 6</li>
+          <li onclick="handleExamSelection('Exam 7', '1111')">Exam 7</li>
+          <li onclick="handleExamSelection('Exam 8', '7777')">Exam 8</li>
+          <li onclick="handleExamSelection('Exam 9', '2222')">Exam 9</li>
+          <li onclick="handleExamSelection('Exam 10', '1234')">Exam 10</li>
+          <li onclick="handleExamSelection('Exam 11', '4321')">Exam 11</li>
+          <li onclick="handleExamSelection('Exam 12', '9999')">Exam 12</li>
+          <li onclick="handleExamSelection('Exam 13', '1357')">Exam 13</li>
+          <li onclick="handleExamSelection('Exam 14', '2468')">Exam 14</li>
+          <li onclick="handleExamSelection('Exam 15', '3579')">Exam 15</li>
+          <li onclick="handleExamSelection('Exam 16', '8642')">Exam 16</li>
+          <li onclick="handleExamSelection('Exam 17', '1000')">Exam 17</li>
+          <li onclick="handleExamSelection('Exam 18', '4325')">Exam 18</li>
+          <li onclick="handleExamSelection('Exam 19', '5678')">Exam 19</li>
+          <li onclick="handleExamSelection('Exam 20', '9100')">Exam 20</li>
         </ul>
       </div>
     </section>
@@ -65,7 +64,7 @@
     <!-- نافذة الامتحان -->
     <div id="examContainer" class="hidden">
       <h2 id="examTitle"></h2>
-      <div id="questionsContainer"></div>
+      <div id="questionsContainer" class="questions-grid"></div>
       <div id="circleTimer">
         <svg>
           <circle cx="50" cy="50" r="45"></circle>
