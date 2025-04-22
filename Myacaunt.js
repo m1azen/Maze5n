@@ -5,14 +5,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   const email = localStorage.getItem("userEmail");
   const isLoggedIn = localStorage.getItem("isLoggedIn");
 
+  // التحقق من تسجيل الدخول
   if (!email || isLoggedIn !== "true") {
     window.location.href = "login.html";
     return;
   }
 
+  // جلب البيانات من Google Sheets
   const users = await fetchData('Sheet1!A:J');
   const currentUser = users.find(user => user[2] === email); // عمود 2 = الإيميل
 
+  // التحقق من وجود المستخدم
   if (!currentUser) {
     alert("User not found.");
     return;
@@ -26,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById('messageContent').textContent = currentUser[9] || "No new messages.";
 
   // عرض الدرجات
-  const exams = users.filter(user => user[2] === email && user[6]);
+  const exams = users.filter(user => user[2] === email && user[6]); // تعديل هنا للتحقق من وجود الامتحانات
   updatePerformanceCircle(exams);
   populateExamResults(exams);
 
@@ -43,6 +46,12 @@ async function fetchData(range) {
   const response = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`
   );
+  
+  // التحقق من استجابة الخادم
+  if (!response.ok) {
+    throw new Error('Failed to fetch data from Google Sheets.');
+  }
+
   const data = await response.json();
   return data.values || [];
 }
@@ -66,4 +75,4 @@ function populateExamResults(exams) {
       <td>${exam[8]}%</td>
     </tr>
   `).join('');
-                          }
+}
