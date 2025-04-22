@@ -13,6 +13,9 @@ function toggleSidebar() {
 }
 
 function handleExamSelection(examName, password) {
+  const sidebar = document.querySelector(".sidebar");
+  sidebar.classList.remove("shown"); // إخفاء القائمة بعد الاختيار
+
   if (examsData[examName]) {
     alert("This exam is completed. View results or retake!");
   } else {
