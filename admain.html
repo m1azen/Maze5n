@@ -1,89 +1,73 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - مازن جلال</title>
-    <link rel="stylesheet" href="admain.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم المدير</title>
+  <link rel="stylesheet" href="admain.css">
 </head>
 <body>
-    <header>
-        <h1>مرحبا، مدير</h1>
-        <p>إدارة منصتك بكفاءة</p>
-    </header>
+  <header>
+    <h1>لوحة تحكم المدير</h1>
+  </header>
 
-    <main>
-        <section class="stats">
-            <div class="card">
-                <h3>إجمالي المستخدمين</h3>
-                <p id="total-users">0</p>
-            </div>
-            <div class="card">
-                <h3>المستخدمون النشطون</h3>
-                <p id="active-users">0</p>
-            </div>
-            <div class="card">
-                <h3>أفضل مستخدم</h3>
-                <p id="top-user">لا يوجد</p>
-                <p>نسبة النجاح: <span id="top-user-score">0%</span></p>
-            </div>
-            <div class="card">
-                <h3>متوسط الدرجات</h3>
-                <p id="avg-scores">0</p>
-            </div>
-        </section>
+  <section class="stats">
+    <div class="card">
+      <h3>إجمالي المستخدمين</h3>
+      <p id="total-users">-</p>
+    </div>
+    <div class="card">
+      <h3>المستخدمين النشطين</h3>
+      <p id="active-users">-</p>
+    </div>
+    <div class="card">
+      <h3>متوسط درجات الامتحانات</h3>
+      <p id="avg-scores">-</p>
+    </div>
+  </section>
 
-        <section class="user-management">
-            <h2>إدارة المستخدمين</h2>
-            <table id="user-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>اسم المستخدم</th>
-                        <th>البريد الإلكتروني</th>
-                        <th>كلمة المرور</th>
-                        <th>الحالة</th>
-                        <th>الإجراء</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- البيانات ستظهر هنا -->
-                </tbody>
-            </table>
-            <button id="add-user-btn">إضافة مستخدم</button>
-        </section>
+  <section class="user-management">
+    <h2>إدارة المستخدمين</h2>
+    <table id="user-table">
+      <thead>
+        <tr>
+          <th>معرف المستخدم</th>
+          <th>البريد الإلكتروني</th>
+          <th>الحالة</th>
+          <th>تعديل</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- يتم جلب البيانات ديناميكيًا -->
+      </tbody>
+    </table>
+    <button id="download-users-pdf">تحميل بيانات المستخدمين PDF</button>
+  </section>
 
-        <section class="exam-scores">
-            <h2>درجات الامتحانات</h2>
-            <table id="exam-table">
-                <thead>
-                    <tr>
-                        <th>ID المستخدم</th>
-                        <th>اسم الامتحان</th>
-                        <th>الدرجة الكلية</th>
-                        <th>الدرجة المكتسبة</th>
-                        <th>الإجراء</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- درجات الامتحانات ستظهر هنا -->
-                </tbody>
-            </table>
-            <button id="add-exam-btn">إضافة امتحان</button>
-        </section>
+  <section class="exam-scores">
+    <h2>إضافة درجات الامتحانات</h2>
+    <form id="add-score-form">
+      <input type="text" id="studentId" placeholder="معرف الطالب" required>
+      <input type="text" id="examId" placeholder="معرف الامتحان" required>
+      <input type="number" id="score" placeholder="درجة الطالب" required>
+      <button type="submit">إضافة الدرجة</button>
+    </form>
+    <h3>عرض الدرجات</h3>
+    <table id="exam-table">
+      <thead>
+        <tr>
+          <th>معرف الطالب</th>
+          <th>معرف الامتحان</th>
+          <th>الدرجة</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- يتم جلب البيانات ديناميكيًا -->
+      </tbody>
+    </table>
+    <button id="download-exams-pdf">تحميل درجات الامتحانات PDF</button>
+  </section>
 
-        <section class="send-message">
-            <h2>إرسال إعلان</h2>
-            <textarea id="announcement" placeholder="اكتب رسالتك هنا..."></textarea>
-            <button id="send-announcement-btn">إرسال</button>
-        </section>
-    </main>
-
-    <footer>
-        <p>جميع الحقوق محفوظة &copy; 2025 مازن جلال</p>
-    </footer>
-
-    <script src="admain.js"></script>
+  <script type="module" src="admain.js"></script>
 </body>
 </html>
