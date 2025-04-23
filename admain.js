@@ -1,162 +1,106 @@
-const SHEET_ID = "1tpF88JKEVxgx_5clrUWBNry4htp1QtSJAvMll2np1Mo";
-const API_KEY = "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getFirestore, collection, getDocs, updateDoc, doc, addDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-document.addEventListener("DOMContentLoaded", function() {
-    const userTableBody = document.querySelector("#user-table tbody");
-    const examTableBody = document.querySelector("#exam-table tbody");
-    const totalUsers = document.getElementById("total-users");
-    const activeUsers = document.getElementById("active-users");
-    const topUser = document.getElementById("top-user");
-    const topUserScore = document.getElementById("top-user-score");
-    const avgScores = document.getElementById("avg-scores");
+const firebaseConfigUsers = {
+  apiKey: "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0",
+  authDomain: "admin-panel-5f716.firebaseapp.com",
+  projectId: "admin-panel-5f716",
+  storageBucket: "admin-panel-5f716.firebasestorage.app",
+  messagingSenderId: "488571843727",
+  appId: "1:488571843727:web:3d3d7d5ad495b1fee5acfa",
+  measurementId: "G-ZJ9835SCHW",
+};
 
-    let users = []; // مصفوفة لتخزين بيانات المستخدمين
-    let exams = JSON.parse(localStorage.getItem('exams')) || []; // استرجاع درجات الامتحانات من localStorage
+const firebaseConfigScores = {
+  apiKey: "AIzaSyCc_LyGshkApqre4NIRKF7UTNjfE08cenw",
+  authDomain: "websits-turoria.firebaseapp.com",
+  projectId: "websits-turoria",
+  storageBucket: "websits-turoria.firebasestorage.app",
+  messagingSenderId: "689962826966",
+  appId: "1:689962826966:web:babc4f1bbcc7eeb8705d77",
+  measurementId: "G-L6XTRJQQBH",
+};
 
-    async function fetchData() {
-        const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1?key=${API_KEY}`);
-        const data = await response.json();
-        populateUsers(data.values);
-    }
+// تهيئة Firebase
+const appUsers = initializeApp(firebaseConfigUsers, "usersApp");
+const appScores = initializeApp(firebaseConfigScores, "scoresApp");
 
-    function populateUsers(data) {
-        users = data.slice(1).map(row => ({
-            id: row[0],
-            username: row[1],
-            email: row[2],
-            password: row[3],
-            status: row[4],
-            reason: row[5]
-        }));
-        updateUserTable();
-        updateStatistics();
-    }
+const dbUsers = getFirestore(appUsers);
+const dbScores = getFirestore(appScores);
 
-    function updateUserTable() {
-        userTableBody.innerHTML = "";
-        users.forEach(user => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${user.id}</td>
-                <td>${user.username}</td>
-                <td>${user.email}</td>
-                <td>${user.password}</td>
-                <td>${user.status}</td>
-                <td>
-                    <button onclick="editUser('${user.id}')">تعديل</button>
-                    <button onclick="removeUser('${user.id}')">حذف</button>
-                    <button onclick="suspendUser('${user.id}')">إيقاف</button>
-                </td>
-            `;
-            userTableBody.appendChild(row);
-        });
-    }
+// جلب بيانات المستخدمين
+async function fetchUsers() {
+  const usersCollection = collection(dbUsers, "users");
+  const usersSnapshot = await getDocs(usersCollection);
+  const userTableBody = document.querySelector("#user-table tbody");
 
-    window.editUser = async function(id) {
-        const user = users.find(user => user.id === id);
-        const newPassword = prompt("أدخل كلمة المرور الجديدة:", user.password);
-        const newEmail = prompt("أدخل البريد الإلكتروني الجديد:", user.email);
-        
-        if (newPassword) {
-            user.password = newPassword; // تحديث كلمة المرور في المصفوفة
-        }
-        if (newEmail) {
-            user.email = newEmail; // تحديث البريد الإلكتروني في المصفوفة
-        }
-        
-        await updateGoogleSheet(); // تحديث Google Sheets
-        alert(`تم تحديث معلومات المستخدم ${user.username}`);
-    };
+  userTableBody.innerHTML = "";
+  usersSnapshot.forEach((doc) => {
+    const userData = doc.data();
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${doc.id}</td>
+      <td>${userData.email}</td>
+      <td>${userData.status || "Active"}</td>
+      <td><button onclick="editUser('${doc.id}')">تعديل</button></td>
+    `;
+    userTableBody.appendChild(row);
+  });
+}
 
-    window.removeUser = async function(id) {
-        users = users.filter(user => user.id !== id);
-        await updateGoogleSheet(); // تحديث Google Sheets بعد الحذف
-        updateUserTable();
-    };
+// تعديل بيانات المستخدم
+window.editUser = async function (id) {
+  const newStatus = prompt("أدخل الحالة الجديدة للمستخدم (Active/Inactive):");
+  if (newStatus) {
+    const userDoc = doc(dbUsers, "users", id);
+    await updateDoc(userDoc, { status: newStatus });
+    alert("تم تعديل الحالة بنجاح!");
+    fetchUsers();
+  }
+};
 
-    window.suspendUser = async function(id) {
-        const reason = prompt("اذكر السبب لإيقاف الحساب:");
-        if (reason) {
-            const user = users.find(user => user.id === id);
-            user.status = "موقوف";
-            user.reason = reason; // تحديث السبب في المصفوفة
-            await updateGoogleSheet(); // تحديث Google Sheets
-            updateUserTable();
-        }
-    };
+// إضافة درجة امتحان
+document.getElementById("add-score-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const studentId = document.getElementById("studentId").value.trim();
+  const examId = document.getElementById("examId").value.trim();
+  const score = parseInt(document.getElementById("score").value);
 
-    document.getElementById("add-exam-btn").addEventListener("click", async () => {
-        const userId = prompt("أدخل ID المستخدم:");
-        const examName = prompt("اسم الامتحان:");
-        const totalMarks = prompt("الدرجة الكلية:");
-        const obtainedMarks = prompt("الدرجة المكتسبة:");
-
-        if (userId && examName && totalMarks && obtainedMarks) {
-            const exam = { userId, examName, totalMarks, obtainedMarks };
-            exams.push(exam);
-            localStorage.setItem('exams', JSON.stringify(exams)); // حفظ الدرجات في localStorage
-            await updateExamTable();
-        }
+  try {
+    await addDoc(collection(dbScores, "examScores"), {
+      studentId,
+      examId,
+      score,
+      timestamp: new Date(),
     });
-
-    async function updateExamTable() {
-        examTableBody.innerHTML = "";
-        exams.forEach(exam => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${exam.userId}</td>
-                <td>${exam.examName}</td>
-                <td>${exam.totalMarks}</td>
-                <td>${exam.obtainedMarks}</td>
-                <td>
-                    <button onclick="removeExam('${exam.userId}', '${exam.examName}')">حذف</button>
-                </td>
-            `;
-            examTableBody.appendChild(row);
-        });
-    }
-
-    window.removeExam = function(userId, examName) {
-        exams = exams.filter(exam => !(exam.userId === userId && exam.examName === examName));
-        localStorage.setItem('exams', JSON.stringify(exams)); // تحديث localStorage بعد الحذف
-        updateExamTable();
-    };
-
-    function updateStatistics() {
-        totalUsers.textContent = users.length;
-        activeUsers.textContent = users.filter(user => user.status === "نشط").length;
-
-        const totalScores = exams.reduce((acc, exam) => acc + Number(exam.obtainedMarks), 0);
-        const averageScore = totalScores / exams.length || 0;
-        avgScores.textContent = averageScore.toFixed(2);
-
-        const topScorer = exams.reduce((acc, exam) => {
-            const userExamScores = exams.filter(e => e.userId === exam.userId);
-            const userTotalScore = userExamScores.reduce((sum, e) => sum + Number(e.obtainedMarks), 0);
-            if (userTotalScore > acc.score) {
-                return { username: exam.userId, score: userTotalScore };
-            }
-            return acc;
-        }, { username: "لا يوجد", score: 0 });
-
-        topUser.textContent = topScorer.username;
-        topUserScore.textContent = (topScorer.score / (userExamScores.length * 100) * 100).toFixed(2) + "%";
-    }
-
-    async function updateGoogleSheet() {
-        const values = users.map(user => [user.id, user.username, user.email, user.password, user.status, user.reason]);
-        const body = {
-            "values": values
-        };
-        await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A2:F?valueInputOption=RAW&key=${API_KEY}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-        });
-    }
-
-    fetchData();
-    updateExamTable(); // تحديث جدول الدرجات عند تحميل الصفحة
+    alert("تم حفظ الدرجة بنجاح!");
+    updateExamTable();
+  } catch (error) {
+    console.error("Error adding exam score: ", error);
+    alert("تعذر حفظ الدرجة.");
+  }
 });
+
+// جلب درجات الامتحانات
+async function updateExamTable() {
+  const examTableBody = document.querySelector("#exam-table tbody");
+  const scoresCollection = collection(dbScores, "examScores");
+  const scoresSnapshot = await getDocs(scoresCollection);
+
+  examTableBody.innerHTML = "";
+  scoresSnapshot.forEach((doc) => {
+    const scoreData = doc.data();
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${scoreData.studentId}</td>
+      <td>${scoreData.examId}</td>
+      <td>${scoreData.score}</td>
+    `;
+    examTableBody.appendChild(row);
+  });
+}
+
+// تحميل تقرير المستخدمين PDF
+document.getElementById("download-users-pdf").addEventListener("click", () => {
+  const { jsPDF } = window.jspdf;
+  const doc = new js
