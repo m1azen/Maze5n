@@ -39,9 +39,10 @@ function submitQuiz() {
   const form = document.getElementById("quizForm");
   const resultDiv = document.getElementById("result");
 
+  // التحقق من الإجابات التي تم اختيارها
   for (let question in answers) {
-    const userAnswer = form[question].value;
-    if (userAnswer === answers[question]) {
+    const selectedOption = form.querySelector(`input[name=${question}]:checked`);
+    if (selectedOption && selectedOption.value === answers[question]) {
       score++;
     }
   }
