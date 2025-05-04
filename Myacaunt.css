@@ -1,37 +1,64 @@
 body {
   font-family: Arial, sans-serif;
-  background: #f0f0f0;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  direction: rtl;
+  background: linear-gradient(135deg, #004080, #0080ff);
+  text-align: center;
+  padding: 50px;
+  color: white;
 }
 
 .account-container {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.15);
   padding: 20px;
-  border-radius: 8px;
-  width: 90%;
+  border-radius: 12px;
   max-width: 400px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  text-align: center;
+  margin: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s;
 }
 
-.user-data p {
-  margin: 12px 0;
+.account-container:hover {
+  transform: scale(1.05);
+}
+
+h1, h2 {
+  color: #00ffcc;
+}
+
+p {
+  font-size: 18px;
+  transition: color 0.3s;
+}
+
+p:hover {
+  color: #ffff66;
+}
+
+input {
+  width: 80%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #00ffcc;
+  border-radius: 5px;
+  outline: none;
 }
 
 button {
-  background: #004080;
-  color: #fff;
+  background-color: #00ffcc;
+  color: #004080;
+  padding: 10px;
   border: none;
   border-radius: 5px;
-  padding: 10px 20px;
   cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 button:hover {
-  background: #00264d;
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+}
+
+#logoutBtn {
+  background: red;
+  color: white;
 }
