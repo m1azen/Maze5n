@@ -18,7 +18,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-async function register(email, password) {
+async function register(username, email, password) {
   const statusMsg = document.getElementById("statusMsg");
 
   // التحقق من طول كلمة المرور
@@ -46,16 +46,17 @@ async function register(email, password) {
 
     // حفظ بيانات المستخدم في Firestore
     await addDoc(collection(db, "usersData"), {
+      username: username, // حفظ اسم المستخدم
       email: user.email,
       userId: user.uid,
       createdAt: new Date(),
       status: "Active",
       courses: courses,
-      startMessage: startMessage, // إضافة الرسالة إلى البيانات
+      startMessage: startMessage,
     });
 
     statusMsg.style.background = "#00ffcc";
-    statusMsg.textContent = `✅ Account created successfully! ${startMessage} Redirecting...`;
+    statusMsg.textContent = `✅ Account created successfully, ${username}! ${startMessage} Redirecting...`;
 
     // إعادة التوجيه بعد 3 ثوانٍ
     setTimeout(() => {
@@ -88,7 +89,8 @@ async function register(email, password) {
 // استماع للنموذج الخاص بإنشاء الحساب
 document.getElementById("signupForm").addEventListener("submit", (e) => {
   e.preventDefault();
+  const username = document.getElementById("username").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
-  register(email, password);
+  register(username, email, password);
 });
