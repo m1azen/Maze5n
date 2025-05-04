@@ -1,9 +1,9 @@
-// استيراد الدوال المطلوبة من Firebase
+// Import Firebase functions
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-// إعداد Firebase
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0",
   authDomain: "admin-panel-5f716.firebaseapp.com",
@@ -21,7 +21,7 @@ const db = getFirestore(app);
 async function register(username, email, password) {
   const statusMsg = document.getElementById("statusMsg");
 
-  // التحقق من طول كلمة المرور
+  // Validate password length
   if (password.length < 6) {
     statusMsg.style.background = "red";
     statusMsg.textContent = "❌ Password must be at least 6 characters!";
@@ -32,33 +32,29 @@ async function register(username, email, password) {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // إعداد بيانات الدورات التدريبية
-    const courses = {
-      course1: "Inactive",
-      course2: "Inactive",
-      course3: "Inactive",
-      course4: "Inactive",
-      course5: "Inactive",
-    };
-
-    // إعداد رسالة بدء الكورسات
-    const startMessage = "Your courses will start on June 15, 2025.";
-
-    // حفظ بيانات المستخدم في Firestore
-    await addDoc(collection(db, "usersData"), {
-      username: username, // حفظ اسم المستخدم
+    // User data structure
+    const userData = {
+      username: username,
       email: user.email,
       userId: user.uid,
       createdAt: new Date(),
       status: "Active",
-      courses: courses,
-      startMessage: startMessage,
-    });
+      courses: {
+        course1: "Inactive",
+        course2: "Inactive",
+        course3: "Inactive",
+        course4: "Inactive",
+        course5: "Inactive",
+      },
+      startMessage: "Your courses will start on June 15, 2025."
+    };
+
+    // Save user data using setDoc()
+    await setDoc(doc(db, "usersData", user.uid), userData);
 
     statusMsg.style.background = "#00ffcc";
-    statusMsg.textContent = `✅ Account created successfully, ${username}! ${startMessage} Redirecting...`;
+    statusMsg.textContent = `✅ Account created successfully, ${username}! ${userData.startMessage} Redirecting...`;
 
-    // إعادة التوجيه بعد 3 ثوانٍ
     setTimeout(() => {
       window.location.href = "html.html";
     }, 3000);
@@ -67,7 +63,7 @@ async function register(username, email, password) {
     statusMsg.style.background = "red";
     statusMsg.textContent = "❌ Something went wrong. Please contact Mazen for support.";
 
-    // إضافة زر للتواصل مع مازن عبر واتساب
+    // Add a button to contact Mazen via WhatsApp
     const contactButton = document.createElement("button");
     contactButton.textContent = "Contact Mazen";
     contactButton.style.marginTop = "10px";
@@ -86,7 +82,6 @@ async function register(username, email, password) {
   }
 }
 
-// استماع للنموذج الخاص بإنشاء الحساب
 document.getElementById("signupForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const username = document.getElementById("username").value.trim();
