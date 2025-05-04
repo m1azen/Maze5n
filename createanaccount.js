@@ -1,13 +1,19 @@
-// استيراد الدوال المطلوبة من مكتبة Firebase (الإصدار 11.6.0)
+// استيراد الدوال المطلوبة من مكتبة Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { 
-  getAuth, 
-  setPersistence, 
-  browserLocalPersistence, 
-  createUserWithEmailAndPassword 
+import {
+  getAuth,
+  setPersistence,
+  browserLocalPersistence,
+  createUserWithEmailAndPassword,
+  sendEmailVerification
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-// إعدادات Firebase (استبدلها بإعدادات مشروعك)
+// إعدادات Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0",
   authDomain: "admin-panel-5f716.firebaseapp.com",
@@ -21,19 +27,14 @@ const firebaseConfig = {
 // تهيئة Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-/**
- * وظيفة إنشاء الحساب.
- * تتحقق أولاً من طول كلمة المرور (لا تقل عن 6 أحرف) ثم تُعين persistence لجلسة تسجيل الدخول.
- * عند نجاح العملية، تعرض رسالة نجاح ثم تنتظر 5 ثوانٍ قبل إعادة التوجيه.
- * إذا حدث خطأ يتم إظهار رسالة مناسبة مع زر التواصل مع مازن.
- */
+// دالة إنشاء الحساب وحفظ البيانات
 async function register(email, password) {
   const statusMsg = document.getElementById("statusMsg");
   statusMsg.style.color = "white";
   statusMsg.textContent = "Creating account... ⏳";
 
-  // التحقق من طول كلمة المرور (Firebase تشترط 6 أحرف كحد أدنى)
   if (password.length < 6) {
     statusMsg.style.background = "red";
     statusMsg.textContent = "❌ Password must be at least 6 characters!";
@@ -41,28 +42,43 @@ async function register(email, password) {
   }
 
   try {
-    // تعيين persistence بحيث يبقى المستخدم مُسجّل الدخول (sessions تُحفظ محلياً)
     await setPersistence(auth, browserLocalPersistence);
 
-    // محاولة إنشاء الحساب باستخدام Firebase
+    // التحقق إذا كان الإيميل مستخدم مسبقًا
+    const existingMethods = await fetchSignInMethodsForEmail(auth, email);
+    if (existingMethods.length > 0) {
+      statusMsg.style.background = "orange";
+      statusMsg.textContent = "⚠️ This email is already in use!";
+      return;
+    }
+
+    // إنشاء الحساب
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // عرض رسالة نجاح للمستخدم مع بريدهم المسجّل
-    statusMsg.style.background = "#00ffcc";
-    statusMsg.textContent = `✅ Account created successfully! Welcome, ${user.email}`;
+    // إرسال رسالة تحقق بالبريد الإلكتروني
+    await sendEmailVerification(user);
 
-    // الانتظار لمدة 5 ثواني قبل إعادة التوجيه إلى "html.html"
+    // حفظ بيانات المستخدم في Firestore
+    await setDoc(doc(db, "users", user.uid), {
+      email: user.email,
+      subscribedCourses: [], // هنا هتضيف الكورسات المفعلة للمستخدم
+      registrationDate: new Date(),
+    });
+
+    statusMsg.style.background = "#00cc99";
+    statusMsg.textContent = `✅ Account created for ${user.email}. Please check your inbox to verify your email.`;
+
+    // إعادة التوجيه بعد 5 ثوانٍ
     setTimeout(() => {
-      window.location.href = "html.html"; // تأكد من صحة المسار حسب هيكل مجلدات مشروعك
+      window.location.href = "html.html";
     }, 5000);
-    
+
   } catch (error) {
     console.error("Error:", error);
     statusMsg.style.background = "red";
-    statusMsg.textContent = "❌ Something went wrong. Please contact Mazen for support.";
+    statusMsg.textContent = "❌ Something went wrong. Please contact Mazen for help.";
 
-    // إنشاء زر للتواصل مع مازن في حالة حدوث خطأ
     const contactButton = document.createElement("button");
     contactButton.textContent = "Contact Mazen";
     contactButton.style.marginTop = "10px";
@@ -74,16 +90,16 @@ async function register(email, password) {
     contactButton.style.cursor = "pointer";
 
     contactButton.addEventListener("click", () => {
-      window.location.href = "https://wa.me/qr/CZO3X7WAZOEEE1"; // رابط للتواصل مع مازن عبر واتساب
+      window.location.href = "https://wa.me/qr/CZO3X7WAZOEEE1";
     });
 
     statusMsg.appendChild(contactButton);
   }
 }
 
-// استماع لحدث إرسال النموذج (form submission)
+// الحدث عند إرسال النموذج
 document.getElementById("signupForm").addEventListener("submit", function (e) {
-  e.preventDefault(); // منع إعادة تحميل الصفحة
+  e.preventDefault();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
   register(email, password);
