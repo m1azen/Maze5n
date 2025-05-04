@@ -3,45 +3,139 @@
   position: fixed;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #004080, #0080ff);
+  background: linear-gradient(135deg, #0088cc, #004080);
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: bold;
-  transition: opacity 0.5s ease-out;
+  animation: fadeIn 1s ease-in-out;
 }
 
 /* بعد التحميل */
 .hidden {
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.5s ease-out;
 }
 
-/* باقي التنسيق كما هو */
+/* الخلفية العامة */
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
-  color: #fff;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #003366, #0055aa);
+  color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
 
+/* صندوق الحساب */
 .account-container {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 15px;
   padding: 2rem;
-  width: 380px;
+  width: 400px;
   text-align: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   transition: transform 0.3s;
+  animation: slideUp 1s ease-in-out;
 }
 .account-container:hover {
   transform: scale(1.05);
+}
+
+/* عناوين رئيسية مع إيموجي */
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #00ffcc;
+  text-shadow: 2px 2px 4px rgba(0, 255, 204, 0.5);
+  animation: glow 2s infinite alternate;
+}
+h1::before {
+  content: "🚀 ";
+}
+h2 {
+  font-size: 2rem;
+  margin-top: 1rem;
+  color: #ffcc00;
+}
+h2::before {
+  content: "📚 ";
+}
+
+/* البيانات */
+.account-info p, .courses-info p {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  transition: transform 0.3s;
+}
+.account-info p:hover, .courses-info p:hover {
+  transform: scale(1.05);
+}
+
+/* جدول الامتحان */
+.exam-section {
+  margin: 1.5rem 0;
+}
+.exam-section table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.exam-section th, .exam-section td {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.8rem;
+  text-align: center;
+  transition: background 0.3s;
+}
+.comingSoon {
+  font-style: italic;
+  color: #ff6666;
+  font-weight: bold;
+}
+.exam-section table tr:hover td {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* الأزرار */
+button {
+  background: linear-gradient(135deg, #00ffcc, #0088cc);
+  color: #004080;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
+}
+button:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+}
+#logoutBtn {
+  background: linear-gradient(135deg, red, darkred);
+  color: #ffffff;
+}
+
+/* انيميشن */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes glow {
+  from { text-shadow: 2px 2px 6px rgba(0, 255, 204, 0.7); }
+  to { text-shadow: 2px 2px 12px rgba(255, 255, 255, 0.9); }
 }
