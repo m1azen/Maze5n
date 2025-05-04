@@ -1,26 +1,54 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>My Account</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>حسابي</title>
   <link rel="stylesheet" href="Myacaunt.css">
 </head>
 <body>
-  <div class="account-container">
-    <h1>🚀 حسابي</h1>
-    <p><strong>اسم المستخدم:</strong> <span id="username">-</span></p>
-    <p><strong>البريد الإلكتروني:</strong> <span id="email">-</span></p>
-    <p><strong>حالة الحساب:</strong> <span id="status">-</span></p>
-    <p><strong>رسالة بدء الكورسات:</strong> <span id="startMessage">-</span></p>
-    <input type="text" id="newMessage" placeholder="أدخل رسالة جديدة">
-    <button id="updateMessageBtn">🔄 تحديث الرسالة</button>
 
-    <h2>📚 بيانات الكورسات</h2>
-    <p><strong>إجمالي الكورسات:</strong> <span id="totalCourses">5</span></p>
-    <p><strong>الكورسات المتفاعلة:</strong> <span id="activeCourses">0</span></p>
+  <!-- شاشة التحميل -->
+  <div id="loadingScreen">
+    <h1>Loading...</h1>
+  </div>
 
-    <button id="logoutBtn">🔴 تسجيل الخروج</button>
+  <!-- المحتوى الرئيسي (يظهر بعد التحميل) -->
+  <div class="account-container" id="accountContent" style="display: none;">
+    <h1>My Account</h1>
+    
+    <div class="account-info">
+      <p><strong>Username:</strong> <span id="username">--</span></p>
+      <p><strong>Email:</strong> <span id="email">--</span></p>
+      <p><strong>Status:</strong> <span id="status">--</span></p>
+      <p><strong>Start Message:</strong> <span id="startMessage">--</span></p>
+    </div>
+    
+    <div class="courses-info">
+      <h2>Courses Data</h2>
+      <p><strong>Total Courses:</strong> <span id="totalCourses">5</span></p>
+      <p><strong>Active Courses:</strong> <span id="activeCourses">0</span></p>
+    </div>
+    
+    <div class="exam-section">
+      <h2>Exam Results</h2>
+      <table id="examTable">
+        <thead>
+          <tr>
+            <th>Exam Name</th>
+            <th>Total Grade</th>
+            <th>Obtained Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="3" class="comingSoon">This part will work soon.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <button id="logoutBtn">Logout</button>
   </div>
 
   <script type="module" src="Myacaunt.js"></script>
