@@ -8,14 +8,21 @@
 </head>
 <body>
   <div class="account-container">
-    <h1>حسابي</h1>
-    <div class="user-data">
-      <p><strong>الاسم:</strong> <span id="username"></span></p>
-      <p><strong>البريد الإلكتروني:</strong> <span id="email"></span></p>
-    </div>
-    <button id="logoutButton">تسجيل الخروج</button>
+    <h1>🚀 حسابي</h1>
+    <p><strong>اسم المستخدم:</strong> <span id="username">-</span></p>
+    <p><strong>البريد الإلكتروني:</strong> <span id="email">-</span></p>
+    <p><strong>حالة الحساب:</strong> <span id="status">-</span></p>
+    <p><strong>رسالة بدء الكورسات:</strong> <span id="startMessage">-</span></p>
+    <input type="text" id="newMessage" placeholder="أدخل رسالة جديدة">
+    <button id="updateMessageBtn">🔄 تحديث الرسالة</button>
+
+    <h2>📚 بيانات الكورسات</h2>
+    <p><strong>إجمالي الكورسات:</strong> <span id="totalCourses">5</span></p>
+    <p><strong>الكورسات المتفاعلة:</strong> <span id="activeCourses">0</span></p>
+
+    <button id="logoutBtn">🔴 تسجيل الخروج</button>
   </div>
-  <!-- تحميل سكربت جافاسكريبت بنمط module -->
+
   <script type="module" src="Myacaunt.js"></script>
 </body>
 </html>
