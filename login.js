@@ -95,3 +95,11 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
   const password = document.getElementById("loginPassword").value;
   login(email, password);
 });
+// التحقق من حالة المستخدم عند تحميل الصفحة
+    window.addEventListener("load", () => {
+      const user = auth.currentUser;  // تحقق من المستخدم الحالي
+      if (user) {
+        console.log("المستخدم مسجل دخول:", user.email);
+        window.location.href = "html.html";  // إذا كان مسجل دخول، توجهه مباشرة للصفحة
+      } else {
+        console.log("المستخدم غير مسجل دخول.");
