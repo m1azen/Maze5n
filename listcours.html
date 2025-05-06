@@ -69,8 +69,7 @@
             const courseKey = `course${index + 1}`;
             const courseStatus = courses[courseKey];
 
-            courseDetails[index].textContent = "📢 This course is FREE!"
-            courseMazen[index]."Learn the essential parts of using a computer: files, folders, keyboard, mouse, and more! 😍";
+            courseDetails[index].textContent = "📢 This course is FREE!Learn the essential parts of using a computer: files, folders, keyboard, mouse, and more! 😍";
             courseStatusTexts[index].textContent = courseStatus === "Inactive" 
               ? "🚫 Course is NOT activated. Click below to activate it."
               : "✅ Course is ACTIVE! You can start now.";
@@ -178,10 +177,6 @@
       margin-bottom: 10px;
       text-align: center;
     }
-    .courseMazen {
-      color: rgba(255,255,255,0.6)
-      margin-top : 10px
-      font-size :14px 
     .start-btn {
       border: none;
       outline: none;
