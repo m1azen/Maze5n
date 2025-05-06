@@ -103,3 +103,4 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
         window.location.href = "html.html";  // إذا كان مسجل دخول، توجهه مباشرة للصفحة
       } else {
         console.log("المستخدم غير مسجل دخول.");
+      }
