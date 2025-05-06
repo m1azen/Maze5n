@@ -9,7 +9,6 @@
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-    // إعداد Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0",
       authDomain: "admin-panel-5f716.firebaseapp.com",
@@ -24,14 +23,39 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // التحقق من تسجيل الدخول وحالة الكورسات
+    function showSuccessMessage() {
+      const successMsg = document.createElement("div");
+      successMsg.textContent = "✅ Free course activated successfully!";
+      successMsg.style.position = "fixed";
+      successMsg.style.top = "50%";
+      successMsg.style.left = "50%";
+      successMsg.style.transform = "translate(-50%, -50%)";
+      successMsg.style.background = "#00ff99";
+      successMsg.style.padding = "15px";
+      successMsg.style.borderRadius = "10px";
+      successMsg.style.color = "#004d40";
+      successMsg.style.fontSize = "20px";
+      successMsg.style.fontWeight = "bold";
+      successMsg.style.boxShadow = "0 4px 10px rgba(0,0,0,0.2)";
+      successMsg.style.zIndex = "9999";
+      document.body.appendChild(successMsg);
+
+      setTimeout(() => {
+        successMsg.style.display = "none";
+      }, 3000);
+    }
+
     onAuthStateChanged(auth, async (user) => {
-      const startButton = document.querySelector("button");
+      const startButtons = document.querySelectorAll(".start-btn");
+      const courseStatusTexts = document.querySelectorAll(".course-status");
+      const courseDetails = document.querySelectorAll(".course-detail");
 
       if (!user) {
-        startButton.addEventListener("click", () => {
-          alert("You need to log in first!");
-          window.location.href = "login.html";
+        startButtons.forEach(button => {
+          button.addEventListener("click", () => {
+            alert("You need to log in first!");
+            window.location.href = "login.html";
+          });
         });
       } else {
         const userRef = doc(db, "usersData", user.uid);
@@ -39,26 +63,38 @@
 
         if (userSnapshot.exists()) {
           const userData = userSnapshot.data();
-          const courseStatus = userData.courses.course1;
+          const courses = userData.courses;
 
-          if (courseStatus === "Inactive") {
-            startButton.textContent = "Activate Course";
-            startButton.addEventListener("click", async () => {
-              await updateDoc(userRef, { "courses.course1": "Active" });
-              alert("Course activated successfully!");
-              window.location.href = "sessions.html";
-            });
-          } else {
-            startButton.textContent = "Go to Sessions";
-            startButton.addEventListener("click", () => {
-              window.location.href = "sessions.html";
-            });
-          }
+          startButtons.forEach((button, index) => {
+            const courseKey = `course${index + 1}`;
+            const courseStatus = courses[courseKey];
+
+            courseDetails[index].textContent = "📢 This course is FREE! Learn the essential parts of using a computer: files, folders, keyboard, mouse, and more! 😍";
+            courseStatusTexts[index].textContent = courseStatus === "Inactive" 
+              ? "🚫 Course is NOT activated. Click below to activate it."
+              : "✅ Course is ACTIVE! You can start now.";
+
+            if (courseStatus === "Inactive") {
+              button.textContent = "Activate Course";
+              button.addEventListener("click", async () => {
+                await updateDoc(userRef, { [`courses.${courseKey}`]: "Active" });
+                courseStatusTexts[index].textContent = "✅ Course is ACTIVE! You can start now.";
+                showSuccessMessage();
+                setTimeout(() => {
+                  window.location.href = "sessions.html";
+                }, 3000);
+              });
+            } else {
+              button.textContent = "Go to Sessions";
+              button.addEventListener("click", () => {
+                window.location.href = "sessions.html";
+              });
+            }
+          });
         }
       }
     });
 
-    // إظهار المحتوى الرئيسي بعد اختفاء شاشة التحميل
     document.addEventListener("DOMContentLoaded", function () {
       setTimeout(() => {
         const splashScreen = document.querySelector(".splash");
@@ -98,12 +134,6 @@
       transition: opacity 0.5s ease-out;
     }
 
-    .splash img {
-      max-width: 300px;
-      height: auto;
-      animation: fadeInOut 5s forwards;
-    }
-
     .main {
       display: none;
       padding: 40px 20px;
@@ -128,23 +158,30 @@
       padding: 20px;
       text-align: center;
       cursor: pointer;
-      box-shadow: 0 10px 15px -3px rgba(33,150,243,.4), 0 4px 6px -4px rgba(33,150,243,.4);
       border-radius: 10px;
       background: linear-gradient(45deg, #04051dea 0%, #2b566e 100%);
-      transform: scale(1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 12px 20px rgba(33,150,243,0.6);
+    .course-status {
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      margin: 15px 0;
+      text-align: center;
     }
 
-    button {
+    .course-detail {
+      font-size: 16px;
+      color: #ffcc00;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .start-btn {
       border: none;
       outline: none;
       color: white;
-      text-transform: uppercase;
       font-weight: 700;
       font-size: 0.85rem;
       padding: 0.75rem 1.5rem;
@@ -165,8 +202,10 @@
       <div class="card">
         <div class="content">
           <div class="title">Computer Basics</div>
+          <p class="course-detail">📢 Checking course details...</p>
+          <p class="course-status">Checking course status...</p> 
         </div>
-        <button>Start Now</button>
+        <button class="start-btn">Start Now</button>
       </div>
     </div>
   </div>
