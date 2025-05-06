@@ -24,7 +24,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // التحقق من حالة تسجيل الدخول باستخدام Firebase
+    // التحقق من تسجيل الدخول وحالة الكورسات
     onAuthStateChanged(auth, async (user) => {
       const startButton = document.querySelector("button");
 
@@ -57,7 +57,23 @@
         }
       }
     });
+
+    // إظهار المحتوى الرئيسي بعد اختفاء شاشة التحميل
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(() => {
+        const splashScreen = document.querySelector(".splash");
+        const mainContent = document.querySelector(".main");
+
+        splashScreen.style.opacity = "0";
+        setTimeout(() => {
+          splashScreen.style.display = "none";
+          mainContent.style.display = "block";
+          mainContent.style.opacity = "1";
+        }, 500);
+      }, 5000);
+    });
   </script>
+
   <style>
     body {
       margin: 0;
@@ -79,6 +95,7 @@
       align-items: center;
       justify-content: center;
       z-index: 9999;
+      transition: opacity 0.5s ease-out;
     }
 
     .splash img {
@@ -91,6 +108,8 @@
       display: none;
       padding: 40px 20px;
       animation: fadeInMain 1s ease-in forwards;
+      opacity: 0;
+      transition: opacity 0.5s ease-in;
     }
 
     .courses {
@@ -137,6 +156,9 @@
   </style>
 </head>
 <body>
+  <div class="splash">
+    <img src="04955d34acd54cd096a4c29e26c2949f-free-removebg-preview.png" alt="Mazen Intro Image" />
+  </div>
   <div class="main">
     <h1 style="color: white;">📘 Free Courses with Mazen</h1>
     <div class="courses">
