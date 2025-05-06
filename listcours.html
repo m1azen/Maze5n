@@ -4,68 +4,181 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Courses with Mazen</title>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #007acc;
+      font-family: 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBm2J_GO7yr3nk6G8t6YtB3UAlod8V2oR0",
-      authDomain: "admin-panel-5f716.firebaseapp.com",
-      projectId: "admin-panel-5f716",
-      storageBucket: "admin-panel-5f716.firebasestorage.app",
-      messagingSenderId: "488571843727",
-      appId: "1:488571843727:web:babc4f1bbcc7eeb8705d77",
-      measurementId: "G-ZJ9835SCHW"
-    };
+    .splash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #007acc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    .splash img {
+      max-width: 300px;
+      height: auto;
+      animation: fadeInOut 5s forwards;
+    }
 
-    onAuthStateChanged(auth, async (user) => {
-      const startButton = document.querySelector("button");
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: scale(0.8); }
+      20% { opacity: 1; transform: scale(1); }
+      80% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.8); }
+    }
 
-      if (!user) {
-        alert("You need to log in first!");
-        window.location.href = "login.html";
-      } else {
-        const userRef = doc(db, "usersData", user.uid);
-        const userSnapshot = await getDoc(userRef);
+    .main {
+      display: none;
+      padding: 40px 20px;
+      animation: fadeInMain 1s ease-in forwards;
+    }
 
-        if (userSnapshot.exists()) {
-          const userData = userSnapshot.data();
-          const courseStatus = userData.courses.course1;
+    @keyframes fadeInMain {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-          if (courseStatus === "Inactive") {
-            startButton.textContent = "Activate Course";
-            startButton.addEventListener("click", async () => {
-              await updateDoc(userRef, { "courses.course1": "Active" });
-              alert("Course activated successfully!");
-              window.location.href = "sessions.html";
-            });
-          } else {
-            startButton.textContent = "Go to Sessions";
-            startButton.addEventListener("click", () => {
-              window.location.href = "sessions.html";
-            });
-          }
-        }
-      }
-    });
-  </script>
+    .courses {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 30px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      width: 320px;
+      padding: 20px 1px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 10px 15px -3px rgba(33,150,243,.4), 0 4px 6px -4px rgba(33,150,243,.4);
+      border-radius: 10px;
+      background: linear-gradient(45deg, #04051dea 0%, #2b566e 100%);
+      transform: scale(1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 20px rgba(33,150,243,0.6);
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .content .price {
+      color: white;
+      font-weight: 800;
+      font-size: 45px;
+      text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.42);
+    }
+
+    .content .description {
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 10px;
+      font-size: 15px;
+    }
+
+    .content .title {
+      font-weight: 800;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.64);
+      margin-top: 10px;
+      font-size: 26px;
+      letter-spacing: 1px;
+    }
+
+    button {
+      border: none;
+      outline: none;
+      color: white;
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.75rem 1.5rem;
+      background-color: rgb(33, 150, 243);
+      border-radius: 0.5rem;
+      width: 90%;
+      text-shadow: 0px 4px 18px #2c3442;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2196f3cc;
+      transform: scale(1.05);
+    }
+  </style>
 </head>
 <body>
+
+  <!-- Splash Screen -->
+  <div class="splash">
+    <img src="04955d34acd54cd096a4c29e26c2949f-free-removebg-preview.png" alt="Mazen Intro Image" />
+  </div>
+
+  <!-- Main Content -->
   <div class="main">
-    <h1 style="color: white;">📘 Free Courses with Mazen</h1>
+    <h1 style="color: white; margin-bottom: 30px;">📘 Free Courses with Mazen</h1>
     <div class="courses">
       <div class="card">
         <div class="content">
           <div class="title">Computer Basics</div>
+          <div class="price">FREE</div>
+          <div class="description">Learn the essential parts of using a computer: files, folders, keyboard, mouse, and more!</div>
         </div>
-        <button>Start Now</button>
+        <button onclick="handleStart()">Start Now</button>
       </div>
     </div>
   </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Splash screen timeout
+    setTimeout(() => {
+      document.querySelector(".splash").style.display = "none";
+      document.querySelector(".main").style.display = "block";
+    }, 5000);
+
+    // Simulated authentication and user data
+    const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+    const usersData = JSON.parse(localStorage.getItem("usersData")) || {
+      course1: "Inactive"
+    };
+
+    function handleStart() {
+      if (!isLoggedIn) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      if (usersData.course1 === "Inactive") {
+        alert("Course is not active. Activating now...");
+        usersData.course1 = "Active";
+        localStorage.setItem("usersData", JSON.stringify(usersData));
+        window.location.href = "sessions.html";
+      } else {
+        window.location.href = "sessions.html";
+      }
+    }
+  </script>
+
 </body>
 </html>
