@@ -15,23 +15,21 @@
 
 </head>
 <body>
-    <div class="navbar">
-        <div class="nav-buttons">
-          <div class="account-dropdown">
-          <button onclick="window.location.href='Myacaunt.html'">my account</button>
-            <div class="dropdown-content" id="dropdownContent" style="display: none;">
-              <p><strong>Username:</strong> <span id="displayUsername"></span></p>
-              <p><strong>Email:</strong> <span id="displayEmail"></span></p>
-              <button onclick="logout()">Logout</button>
-            </div>
-          </div>
-          <button onclick="window.location.href='yourexams.html'">exama</button>
-        <button onclick="window.location.href='listcours.html'">courses</button>
-         <button onclick="window.location.href='login.html'">Login</button>
-         <button onclick="window.location.href='createanaccount.html'">Create an Account</button>
-        </div>
-    
+  <div class="navbar">
         <img src="04955d34acd54cd096a4c29e26c2949f-free-removebg-preview.png" alt="Logo">
+        <button class="menu-button" onclick="toggleMenu()">☰</button>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <button onclick="window.location.href='Myacaunt.html'">my account</button>
+        <button onclick="window.location.href='yourexams.html'">exams</button>
+        <button onclick="window.location.href='listcours.html'">courses</button>
+        <button onclick="window.location.href='login.html'">Login</button>
+        <button onclick="window.location.href='createanaccount.html'">Create an Account</button>
+    </div>
+
+    
+      
       </div>
                         
     </div>
@@ -50,7 +48,7 @@
     <footer class="footer">
         <div class="social-links">
             <a href="https://wa.me/qr/CZO3X7WAZOEEE1" target="_blank">
-                <img src="https://e7.pngegg.com/pngimages/76/502/png-clipart-computer-icons-whatsapp-symbol-emoji-facebook-messenger-whatsapp-text-trademark.png" alt="WhatsApp">
+                <img src="https://cdn-icons-png.freepik.com/512/3670/3670051.png?ga=GA1.1.858790441.1746440103" alt="WhatsApp">
             </a>
             <a href="https://t.me/Mazengalal15" target="_blank">
                 <img src="https://cdn0.iconfinder.com/data/icons/tuts/256/telegram.png" alt="Telegram">
@@ -63,6 +61,11 @@
         <p></p>
         <p></p>
     </footer>
-
+   <script>
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.style.display = sidebar.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
 </body>
 </html>
