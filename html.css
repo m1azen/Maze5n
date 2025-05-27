@@ -5,7 +5,6 @@ body {
     justify-content: center;
     align-items: center;
     background: linear-gradient(135deg, #001f3f, #003366, #004080);
-
     font-family: Arial, sans-serif;
     color: white;
     text-align: center;
@@ -15,6 +14,7 @@ body {
     padding: 20px;
     background: linear-gradient(135deg, #00264d, #003366, #001f3f);
     border-radius: 20px;
+    width: 50vw; /* زيادة الحجم */
 }
 
 .navbar {
@@ -33,35 +33,64 @@ body {
     z-index: 1000;
 }
 
-/* عكس الصورة ووضعها في اليمين */
+/* تعديل الصورة لتكون على اليمين */
 .navbar img {
     padding: 20px;
-    height: 110px; /* ضبط الحجم */
-    background: transparent; /* ضمان الخلفية الشفافة */
+    height: 110px;
+    background: transparent;
+    position: absolute;
+    right: 20px; /* وضع الصورة في اليمين */
 }
 
-/* جعل الأزرار في اليسار */
-.nav-buttons {
-    display: flex;
-    flex-direction: row-reverse; /* لعكس اتجاه الأزرار */
-    gap: 10px;
-    margin-left: 20px;
-}
-
-/* تنسيق الزرار */
-.nav-buttons button {
+.menu-button {
     background-color: transparent;
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.5);
     padding: 8px 16px;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    position: absolute;
+    left: 20px; /* وضع الزرار في اليسار */
 }
 
-.nav-buttons button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+.sidebar {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 50vh; /* نصف الشاشة */
+    background: rgba(30, 60, 120, 0.9);
+    padding: 80px 20px 20px 20px; /* زوّدنا الـ padding من فوق */
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    z-index: 999;
+    overflow-y: auto;
+    border: 2px groove white; /* جروف أبيض من كل الجهات */
+    border-radius: 12px;
 }
+
+.sidebar button {
+    display: block;
+    width: 100%;
+    text-align: right;
+    margin: 15px 0; /* أول زر هينزل أكتر */
+    background: transparent;
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 15px;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sidebar button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: white;
+    transform: scale(1.03);
+}
+
 
 .centered-image {
     position: absolute;
@@ -73,6 +102,8 @@ body {
     height: auto;
     z-index: 1;
 }
+
+
 
 @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
 
