@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>لوحة توليد روابط الفيديو</title>
+  <style>
+    body{font-family:system-ui,Arial;padding:20px;background:#0b1020;color:#fff}
+    .card{max-width:800px;margin:auto;background:#11193a;padding:20px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+    label{display:block;margin:.5rem 0 .25rem}
+    input,textarea{width:100%;padding:.7rem;border-radius:10px;border:1px solid #2b3560;background:#0e1540;color:#fff}
+    button{margin-top:1rem;padding:.8rem 1.2rem;border:0;border-radius:12px;background:#4f7cff;color:#fff;cursor:pointer}
+    .out{margin-top:1rem;background:#0e1540;padding:.7rem;border-radius:10px;word-break:break-all}
+    small{opacity:.8}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>توليد رابط تشغيل مشفّر (Deep Link)</h2>
+    <p><small>مهم: استخدم رابط مباشر لملف MP4 أو بث HLS (m3u8). يوتيوب لن يعمل بالحماية القوية.</small></p>
+
+    <label>رابط الفيديو المباشر (MP4 أو m3u8)</label>
+    <input id="video" placeholder="https://cdn.example.com/path/video.m3u8" />
+
+    <label>اسم العميل (يظهر كعلامة مائية)</label>
+    <input id="client" placeholder="Ahmed Ali" />
+
+    <label>تاريخ انتهاء (اختياري)</label>
+    <input id="expires" type="datetime-local" />
+
+    <button id="gen">توليد الرابط</button>
+
+    <div class="out">
+      <div><b>رابط التشغيل (للعميل):</b></div>
+      <div id="deeplink"></div>
+    </div>
+
+    <div class="out">
+      <div><b>QR (اختياري للسهولة):</b></div>
+      <canvas id="qr" width="256" height="256"></canvas>
+    </div>
+    <p><small>المفتاح السري غير موجود هنا. يتم فك التشفير داخل التطبيقات فقط.</small></p>
+  </div>
+
+  <script>
+    // بسيط: Base64 بدون تشفير حقيقي في الـ Admin.
+    // التشفير الحقيقي يتم داخل التطبيق عبر مفتاح مدمج.
+    // فكرة: نخلي الـ Admin "يغلّف" البيانات فقط (obfuscation بسيط)
+    // والتطبيق يرفض أي payload غير ممهور بتوقيع HMAC.
+
+    async function toBase64(u8) {
+      let str = "";
+      u8.forEach(b => str += String.fromCharCode(b));
+      return btoa(str).replace(/=/g,"").replace(/\+/g,"-").replace(/\//g,"_");
+    }
+
+    function utf8(s){ return new TextEncoder().encode(s); }
+
+    // توقيع HMAC-شبيه "وهمي" من الـ Admin (غير آمن لوحده)
+    // التطبيق سيتحقق بتوقيع "حقيقي" بمفتاح داخلي (HMAC-SHA256).
+    // هنا بنحط حقل sig="" فارغ، والتطبيق يعيد التحقق داخليًا.
+    document.getElementById("gen").onclick = async () => {
+      const v = document.getElementById("video").value.trim();
+      const c = document.getElementById("client").value.trim();
+      const e = document.getElementById("expires").value ? new Date(document.getElementById("expires").value).toISOString() : null;
+
+      if(!v || !c){ alert("أدخل رابط الفيديو واسم العميل"); return; }
+
+      const payload = { v, c, e, ts: Date.now(), sig: "" };
+      const json = JSON.stringify(payload);
+      const b64 = await toBase64(utf8(json));
+      const deeplink = `myplayer://play?payload=${b64}`;
+
+      document.getElementById("deeplink").textContent = deeplink;
+
+      // QR بسيط بدون مكتبات
+      drawQR(deeplink);
+    };
+
+    // QR بدقة بسيطة (ليس مثالي لكنه كفاية للتجربة)
+    function drawQR(text){
+      const canvas = document.getElementById('qr');
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = "#000";
+      // رسم بدائي (ليس QR حقيقي) — لو عايز QR حقيقي استعمل مكتبة qrcode.js
+      for(let y=0;y<128;y++){
+        for(let x=0;x<128;x++){
+          const char = text[(x+y)%text.length].charCodeAt(0);
+          if((char + x*y) % 7 === 0){
+            ctx.fillRect(x*2, y*2, 2, 2);
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>
