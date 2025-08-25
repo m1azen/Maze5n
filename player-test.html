@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>تجربة مشغل آمن - Mazen</title>
+  <style>
+    :root{--bg:#0b0f14;--card:#0f1620;--fg:#e9f0f7;--muted:#9aa6b7;--accent:#4ea1ff}
+    body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,Segoe UI,Roboto,Arial}
+    .wrap{max-width:980px;margin:36px auto;padding:16px}
+    .card{background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.6)}
+    .head{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:12px;align-items:center}
+    .title{font-weight:800}
+    .video-area{position:relative;background:#000;height:560px;display:flex;align-items:center;justify-content:center}
+    /* iframe responsive */
+    .player-wrap{position:relative;width:100%;height:100%}
+    iframe{width:100%;height:100%;border:0;display:block}
+    /* overlay to block right-click / protect link */
+    .protect-overlay{position:absolute;inset:0;pointer-events:auto;}
+    .controls{display:flex;gap:10px;padding:12px;border-top:1px solid rgba(255,255,255,.03);align-items:center}
+    .btn{background:var(--accent);color:#031023;padding:10px 14px;border-radius:10px;font-weight:700;border:0;cursor:pointer}
+    .hint{margin-inline-start:auto;color:var(--muted);font-size:13px}
+    /* forensic watermark */
+    .wm{position:absolute;inset:0;pointer-events:none;font:700 12px/1.5 ui-monospace,Menlo,Consolas,monospace;color:#ffffff22;mix-blend-mode:normal}
+    .wm span{position:absolute;opacity:.6;white-space:nowrap}
+    /* small messages */
+    .msg{padding:14px;color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="head">
+        <div class="title">تجربة: مشغل فيديو آمن (YouTube) — Mazen</div>
+      </div>
+
+      <div class="video-area" id="videoArea">
+        <div class="player-wrap" id="playerWrap">
+          <!-- YouTube iframe سيُنشأ آليا عبر API -->
+        </div>
+
+        <!-- Overlay يحجب السحب/كليك يمين ويحمي الرابط (يدعم النقر على زر التشغيل) -->
+        <div class="protect-overlay" id="overlay"></div>
+
+        <!-- forensic watermark -->
+        <div class="wm" id="wm"></div>
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="playBtn">تشغيل آمن</button>
+        <button class="btn" id="pauseBtn">إيقاف</button>
+        <div class="hint" id="status">جاهز — مفعّل على: <code id="hostName"></code></div>
+      </div>
+
+      <div class="msg" id="note">
+        ملاحظة: هذه صفحة تجريبية. الحماية النهائية تتطلب أن الفيديو مُستضاف على CDN مع روابط موقعة أو DRM حقيقي.
+      </div>
+    </div>
+  </div>
+
+  <!-- YouTube IFrame API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    // ====== CONFIG (عدل هذه القيم حسب الحاجة) ======
+    const CONFIG = {
+      allowedDomains: ['m1azen.github.io', 'localhost'], // اسم الدومين اللي عايز التشغيل يشتغل منه
+      youtubeId: '4408tVFJ7zE', // من الرابط اللي بعته
+      watermarkInfo: { user: 'guest_user', id: 'sess-0001' }, // في الحقيقة هتيجي من السيرفر بعد login
+      enableDevtoolsTrap: true
+    };
+
+    // ====== Domain lock ======
+    const host = location.hostname.replace(/^www\\./, '');
+    document.getElementById('hostName').textContent = host;
+    if (!CONFIG.allowedDomains.includes(host)) {
+      document.getElementById('note').textContent = 'خطأ: هذه الصفحة لا تعمل على هذا الدومين. (Domain lock)';
+      // امنع أي تشغيل
+    }
+
+    // ====== Watermark builder ======
+    function buildWatermark() {
+      const box = document.getElementById('wm');
+      box.innerHTML = '';
+      const meta = CONFIG.watermarkInfo;
+      const tags = [
+        `USER: ${meta.user}`,
+        `SESSION: ${meta.id}`,
+        `IP: hidden`,
+        `TIME: ${new Date().toLocaleString()}`
+      ];
+      for (let i=0;i<10;i++){
+        const s = document.createElement('span');
+        s.textContent = tags[i % tags.length];
+        s.style.left = (8 + Math.random()*70) + '%';
+        s.style.top  = (6 + Math.random()*80) + '%';
+        s.style.fontSize = (11 + Math.random()*8) + 'px';
+        s.style.opacity = 0.25 + Math.random()*0.6;
+        box.appendChild(s);
+      }
+    }
+    buildWatermark();
+    setInterval(buildWatermark, 45_000); // تحدث كل 45 ثانية
+
+    // ====== block right click + common shortcuts ======
+    const overlay = document.getElementById('overlay');
+    overlay.addEventListener('contextmenu', e => e.preventDefault());
+    // منع سحب/نسخ
+    overlay.addEventListener('mousedown', e => {
+      // نسمح بالنقر العادي كي يتم الربط بزر التشغيل، لكن نمنع السحب بزر الماوس الأيمن
+      e.preventDefault();
+    });
+
+    // حظر اختصارات مفيدة لسرقة الفيديو
+    document.addEventListener('keydown', (e) => {
+      // حظر ctrl/cmd+u (view source), ctrl+shift+i (devtools), printscreen
+      if ((e.ctrlKey || e.metaKey) && ['u','s','i','j','c'].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+      }
+      if (e.key === 'PrintScreen') e.preventDefault();
+    });
+
+    // ====== DevTools trap (مؤقت وتجريبي) ======
+    if (CONFIG.enableDevtoolsTrap) {
+      (function devtoolsDetect(){
+        let opened = false;
+        const threshold = 120;
+        setInterval(() => {
+          const t0 = performance.now();
+          // وضع debugger قصير يمكنه أن يكشف أدوات المطور، قد يسبب false positives
+          // هذا مجرد محاولة بسيطة — غير مضمون 100%
+          debugger;
+          const dt = performance.now() - t0;
+          if (dt > threshold) opened = true;
+          if (opened) {
+            // إيقاف التشغيل الظاهري
+            try { player && player.pauseVideo(); } catch(e){}
+            document.getElementById('status').textContent = 'مُشغّل مُوقف — رُصد فتح أدوات المطور';
+            // إضافة طبقة سوداء لطمس الشاشة التجريبية
+            const vA = document.getElementById('videoArea');
+            vA.style.background = '#000';
+            vA.innerHTML = '<div style="color:#fff;padding:20px;text-align:center">Playback blocked — DevTools detected</div>';
+            clearInterval(this);
+          }
+        }, 1500);
+      })();
+    }
+
+    // ====== YouTube player via IFrame API ======
+    let player;
+    function onYouTubeIframeAPIReady() {
+      // إذا الدومين مسموح فقط
+      if (!CONFIG.allowedDomains.includes(host)) return;
+
+      player = new YT.Player('playerWrap', {
+        height: '100%',
+        width: '100%',
+        videoId: CONFIG.youtubeId,
+        playerVars: {
+          controls: 0,          // اخفاء الكنترولز المعياري
+          modestbranding: 1,    // تخفيف شعار اليوتيوب
+          rel: 0,               // عدم اظهار فيديوهات متعلقة بعد انتهاء الفيديو
+          iv_load_policy: 3,    // اخفاء التعليقات المدمجة
+          disablekb: 1,         // منع مفاتيح التوجيه
+          playsinline: 1,
+          // enablejsapi: 1   // مكتبة IFrame API تضيفها آلياً
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange,
+          'onError': onPlayerError
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      document.getElementById('status').textContent = 'جاهز للتشغيل — اضغط "تشغيل آمن"';
+      // تأكد أن iframe لا يظهر روابط التحميل بسهولة
+      // لا شيء مضمون 100% مع YouTube لكن هذا يخفي controls.
+    }
+    function onPlayerStateChange(ev) {
+      // لو شغل — حدث الحالة
+      // إذا وقفت unexpectedly نمرر رسالة
+    }
+    function onPlayerError(e) {
+      console.warn('YT error', e);
+    }
+
+    // play/pause buttons
+    document.getElementById('playBtn').addEventListener('click', () => {
+      if (!player) return alert('المشغل لسه ماجهزش أو الدومين غير مسموح');
+      // قبل التشغيل: محاكاة طلب توكن (في النظام الحقيقي خُذ من السيرفر JWT قصير العمر)
+      // هنا مجرد محاكاة: لو عايز تفعّل حقًا هضيف fetch('/api/get-token') إلخ.
+      // تشغيل الفيديو
+      player.playVideo();
+      document.getElementById('status').textContent = 'يُشغّل — مراقبة الأمان مفعل';
+    });
+    document.getElementById('pauseBtn').addEventListener('click', () => {
+      try { player && player.pauseVideo(); } catch(e){}
+    });
+
+    // Small tactic: عند فقدان التركيز (switch window) نضع ضبابية على الفيديو لزيادة صعوبة التسجيل
+    window.addEventListener('blur', () => {
+      const v = document.querySelector('.player-wrap iframe');
+      if (v) v.style.filter = 'blur(6px)';
+    });
+    window.addEventListener('focus', () => {
+      const v = document.querySelector('.player-wrap iframe');
+      if (v) v.style.filter = '';
+    });
+
+    // ====== notes & instructions for next steps ======
+    // 1) هذا حل تجريبي: للحماية الأفضل ارفع الفيديو على CDN خاص أو استخدم HLS + روابط موقعة أو DRMs.
+    // 2) للحصول على watermarks حقيقية/معلومات المستخدم، أرسل بيانات sess عبر API بعد تسجيل الدخول.
+    // 3) إذا عايز أضيف لك endpoint صغير (مثلاً على Vercel / Netlify functions) يولّد JWT قصير العمر ويرسله للصفحة، أقدر أكتبلك الكود.
+  </script>
+</body>
+</html>
