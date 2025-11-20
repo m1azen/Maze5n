@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Mazen Secure Player Web</title>
+
+  <!-- Plyr CSS -->
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+
+  <style>
+      body {
+          font-family: sans-serif;
+          background: #111;
+          color: #fff;
+          padding: 20px;
+          text-align: center;
+      }
+      .btn {
+          display: inline-block;
+          padding: 12px 18px;
+          background: #0d6efd;
+          color: #fff;
+          border-radius: 10px;
+          font-size: 18px;
+          margin-top: 15px;
+          text-decoration: none;
+          font-weight: 600;
+      }
+      .player-container {
+          max-width: 900px;
+          margin: 20px auto;
+      }
+  </style>
+</head>
+
+<body>
+
+<h2>🎬 Mazen Secure Player – Web Version</h2>
+
+<!-- زر تشغيل الفيديو داخل التطبيق -->
+<a class="btn"
+   href="mazenvideo://play?video=https://raw.githubusercontent.com/m1azen/Maze5n/main/VID-20251106-WA0003.mp4">
+    ▶ تشغيل الفيديو داخل Mazen Secure Player
+</a>
+
+<!-- مشغل الفيديو على الويب (إذا التطبيق غير موجود) -->
+<div class="player-container">
+    <video id="player" playsinline controls>
+        <source src="https://raw.githubusercontent.com/m1azen/Maze5n/main/VID-20251106-WA0003.mp4" type="video/mp4" />
+    </video>
+</div>
+
+<!-- Plyr JS -->
+<script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+<script>
+    const player = new Plyr('#player', {
+        ratio: '16:9',
+        fullscreen: { enabled: true },
+    });
+</script>
+
+</body>
+</html>
